@@ -1,0 +1,11 @@
+[Unit]
+Description=Turn power off after shutdown
+DefaultDependencies=no
+Before=umount.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python /opt/metar_poweroff/metar_poweroff.py
+
+[Install]
+WantedBy=halt.target poweroff.target
