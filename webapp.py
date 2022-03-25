@@ -1,6 +1,6 @@
 # webapp.py - Mark Harris
 # for E-Paper display
-# This will provide a web interface to control the e-Paper display.
+# This will provide a web interface to control the e-Paper display. 
 
 from flask import Flask, render_template, request, flash, redirect, url_for, send_file, Response
 import os
@@ -19,7 +19,7 @@ rem_data = "0"
 @app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
 @app.route("/metar", methods=["GET", "POST"])
-def epaper():
+def metar():
     data_field1, data_field2, data_field3, rem_data = airport, use_disp_format, interval, use_remarks
     data_field1, data_field2, data_field3, rem_data = get_data()
 
@@ -54,9 +54,9 @@ def epaper():
                                
         print(data_field1) # debug
         write_data(data_field1, data_field2, data_field3, rem_data)
-        return render_template("epaper.html", data_field1=data_field1, data_field2=data_field2, data_field3=data_field3, rem_data=rem_data)
+        return render_template("metar.html", data_field1=data_field1, data_field2=data_field2, data_field3=data_field3, rem_data=rem_data)
     else:
-        return render_template("epaper.html", data_field1=data_field1, data_field2=data_field2, data_field3=data_field3, rem_data=rem_data)
+        return render_template("metar.html", data_field1=data_field1, data_field2=data_field2, data_field3=data_field3, rem_data=rem_data)
 
  
 # Functions
