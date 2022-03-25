@@ -1,6 +1,7 @@
-# Shutdown.py - Mark Harris
-# Used to blank the e-paper display when RPi is shutdown
+# metar_poweroff.py - Mark Harris
 
+#from weather import *
+#from news import *
 from metar_display import *
 import json
 import sys
