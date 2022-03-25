@@ -99,14 +99,15 @@ Enter;
 If all is well the cmd line will display debug data including a raw metar string. Watch your e-paper display to see if it starts to blink as it updates. The full refresh can take a number of seconds so be patient. After a bit a layout should be displayed showing the default airport from metar_settings.py</br>
 If so, you are good to go!</br>
 
-Now edit the metar_settings.py file as you wish. These values are defaults that the script falls back on.</br>
-  Default User Settings</br>
-  airport = "KFLG" # enter default airport identifier to display. Be sure to use quotes</br>
-  interval = 1800  # enter default time in seconds between METAR updates - 3600 = 1 hour, no quotes</br>
-  use_disp_format = 7 # Choose which display layout to use. -1 = Random layout, -2 = Cycle layouts</br>
-  use_remarks = 1  # 0 = display airport information, 1 = display metar remarks info </br>
-  random_airports = ["KEYW","KDFW","KSEA","KORD", "KLAS","KCMR","KABQ","KDEN", \</br>
-                   "KPHX","KNBC","KBKV","KTTS"]</br>
+Now edit the 'metar_settings.py' file as you wish. These values are defaults that the script falls back on.</br>
+  <pre><code>
+  # Default User Settings
+  airport = "KFLG" # enter default airport identifier to display. Be sure to use quotes
+  interval = 1800  # enter default time in seconds between METAR updates - 3600 = 1 hour, no quotes
+  use_disp_format = 7 # Choose which display layout to use. -1 = Random layout, -2 = Cycle layouts
+  use_remarks = 1  # 0 = display airport information, 1 = display metar remarks info 
+  random_airports = ["KEYW","KDFW","KSEA","KORD", "KLAS","KCMR","KABQ","KDEN", \
+                   "KPHX","KNBC","KBKV","KTTS"]</pre></code>
 				   
 <b>TEST CMD LINE CONTROL:</b></br>
 The script was written to except up to 4 cmd line arguments;</br>
@@ -169,6 +170,4 @@ Copy the python script 'metar_poweroff.py' into /opt/metar_poweroff;</br>
   cd /opt
   sudo mkdir metar_poweroff
   cd metar_poweroff
-  sudo wget https://raw.githubusercontent.com/markyharris/metar/main/metar_poweroff.py/<pre></code>
-  
-  
+  sudo wget https://raw.githubusercontent.com/markyharris/metar/main/metar_poweroff.py</pre></code>
