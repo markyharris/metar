@@ -2,7 +2,7 @@ Power down service information
 from; https://forums.raspberrypi.com/viewtopic.php?t=147422
 
 
-Code: Select all and save as poweroff.service (already in cloned directory)
+Code: Select all and save as 'poweroff.service'. Available on github.
   [Unit]
   Description=Turn power off after shutdown
   DefaultDependencies=no
@@ -16,12 +16,18 @@ Code: Select all and save as poweroff.service (already in cloned directory)
   WantedBy=halt.target poweroff.target
 
 
-Put poweroff.service into; 
-  /lib/systemd/system 
+Power Off Service installation:
+Copy 'poweroff.service' into /lib/systemd/system; 
+  cd ~
+  cd /lib/systemd/system 
+  sudo wget https://raw.githubusercontent.com/markyharris/metar/main/poweroff.service
 
-Enable the service with;
-  cd /lib/systemd/system
+Enable the service by entering;
   sudo systemctl enable poweroff.service
 
-Put the python script metar_poweroff.py (already in cloned directory) into;
-  /opt/metar_poweroff/metar_poweroff.py
+Copy the python script 'metar_poweroff.py' into /opt/metar_poweroff;
+  cd ~  
+  cd /opt
+  sudo mkdir metar_poweroff
+  cd metar_poweroff
+  sudo wget https://raw.githubusercontent.com/markyharris/metar/main/metar_poweroff.py
