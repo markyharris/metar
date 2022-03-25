@@ -1,28 +1,27 @@
-Power down script information
+Power down service information
 from; https://forums.raspberrypi.com/viewtopic.php?t=147422
 
-Re: Poweroff script / systemd [solved]
-Mon May 23, 2016 5:59 am
 
-I have finally been able to run my poweroff program as late as possible during the shutdown process with the following poweroff.service
-Code: Select all
+Code: Select all and save as poweroff.service (already in cloned directory)
+  [Unit]
+  Description=Turn power off after shutdown
+  DefaultDependencies=no
+  Before=umount.target
 
-[Unit]
-Description=Turn power off after shutdown
-DefaultDependencies=no
-Before=umount.target
+  [Service]
+  Type=oneshot
+  ExecStart=/usr/bin/python /opt/metar_poweroff/metar_poweroff.py
 
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/python /opt/my_poweroff/my_poweroff.py
+  [Install]
+  WantedBy=halt.target poweroff.target
 
-[Install]
-WantedBy=halt.target poweroff.target
 
-Put this service into /lib/systemd/system, and a python script my_poweroff.py to be run at the end of the shutdown process into /opt/my_poweroff/my_poweroff.py
+Put poweroff.service into; 
+  /lib/systemd/system 
 
-Enable the service with
-Code: Select all
+Enable the service with;
+  cd /lib/systemd/system
+  sudo systemctl enable poweroff.service
 
-cd /lib/systemd/system
-sudo systemctl enable poweroff.service
+Put the python script metar_poweroff.py (already in cloned directory) into;
+  /opt/metar_poweroff/metar_poweroff.py
