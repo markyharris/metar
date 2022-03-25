@@ -31,26 +31,26 @@ Open Berrylan app on phone and select for 'BT WLAN setup' or 'BT WLAN' or 'raspb
   </ul>
   
 <b>LOGIN USING SSH CLIENT:</b></br>
-Open a SSH Client and enter the 'pi@IP address' to start the login process, i.e. 'pi@192.163.86.71'</br>
-Login using username 'pi' and password 'raspberry'. If a normal image was used, then SSH must be enabled before these clients will work. Berrylan automatically enables SSH. Otherwise use raspi-config to do so.</br>
+Open a SSH Client and enter the 'pi@IP address' to start the login process, i.e. 'pi@192.163.86.71'<br>
+Login using username 'pi' and password 'raspberry'. If a normal image was used, then SSH must be enabled before these clients will work. Berrylan automatically enables SSH. Otherwise use raspi-config to do so.<p>
 <i>Note: There are a number of SSH Clients. A few of the more popular are;
 <ul>
-  <li>KiTTY.</br>
-  <li>PuTTY and other PuTTY versions</br>
-  <li>MobaXterm</br>
-  <li>WinSCP</br>
-  <li>SmarTTY</br>
-  <li>Bitvise SSH Client</br>
-  <li>Terminal (for Mac)</br>
-  <li>Chrome SSH extension</br>
+  <li>KiTTY.
+  <li>PuTTY and other PuTTY versions
+  <li>MobaXterm
+  <li>WinSCP
+  <li>SmarTTY
+  <li>Bitvise SSH Client
+  <li>Terminal (for Mac)
+  <li>Chrome SSH extension
 </ul> </i>
 
-<b>SETUP SPI INTERFACE:</b></br>
+<b>SETUP SPI INTERFACE:</b><br>
 At the cmd line prompt; 'pi@raspberrypi:~ $' enter the following;
   <pre><code>
   sudo raspi-config
   3 - Interface Options
-  I4 SPI Enable this? Yes </code></pre>
+  I4 SPI Enable this? Yes </code></pre><br>
 <i>Note: You can change the hostname and password if desired at this point, but its optional</i></br>
 Answer 'Yes' when you exit raspi-config to Reboot the RPi </br>
 
@@ -111,60 +111,61 @@ Now edit the 'metar_settings.py' file as you wish. These values are defaults tha
 				   
 <b>TEST CMD LINE CONTROL:</b></br>
 The script was written to except up to 4 cmd line arguments;</br>
+<blockquote>
   1st argument - airport identifier - must be 4 character ICAO format</br>
   2nd argument - layout number - will accept -2, -1, and 0-7</br>
   3rd argument - update interval in seconds - 60 = 1 minute, 3600 = 1 hour</br>
-  4th argument - use remarks - 1 = display metar remarks key info, 0 = display airport information</br>
-They must be in the order shown, but not all of them are required. For instance only the Airport ID can be used, and the others will be filled in using the default settings in metar_settings.py</br>
-For example enter;</br>
+  4th argument - use remarks - 1 = display metar remarks key info, 0 = display airport information</blockquote>
+They must be in the order shown, but not all of them are required. For instance only entering the Airport ID and the others will be filled in using the default settings in metar_settings.py<br>
+For example enter;
 <pre><code>
   sudo python3 metar_main.py kflg 7 60 0</pre></code>
-The display will show the Flagstaff Airport using Layout 7 for 60 seconds before updating using airport info.</br>
-Assuming this is works properly, then using the webapp.py and metar.html scripts below should work just fine.</br>
-
-<b>TEST WEBAPP.PY:</b></br>
-From the metar directory enter;</br>
+The display will show the Flagstaff Airport using Layout 7 for 60 seconds before updating using airport info.<br>
+Assuming this is works properly, then using the webapp.py and metar.html scripts below should work just fine.<br>
+<br>
+<b>TEST WEBAPP.PY:</b><br>
+From the metar directory enter;<br>
 <pre><code>
   sudo python3 webapp.py</pre></code>
-This will run a Flask module that will start metar_main.py in last save configuration. Flask sets up a web server so we can also run an html file to control the display from any computer, tablet or phone that is on the same wifi network.</br>
-If all is good your display should be showing a layout of information.</br>
-Make note that when webapp.py starts, information will be displayed in your SSH client. You will need the URL that it provides. For instance; '* Running on http://192.168.86.71:5000/ (Press CTRL+C to quit)'</br>
-
-<b>TEST METAR.HTML:</b></br>
-Using the URL from the previous step, open a web browser and enter it in the URL. If all is well you will see a web page that allows for easy configuration and change to the display.</br>
-
-<b>SETUP RC.LOCAL FOR STARTUP:</b></br>
-This is optional, but if you would like the display to restart automatically after a shutdown, or accidental power outage then this is a good way to go. Also, the webapp.py must be running for the web interface to work properly. </br>
-Enter;</br>
+This will run a Flask module that will start metar_main.py in last save configuration. Flask sets up a web server so we can also run an html file to control the display from any computer, tablet or phone that is on the same wifi network.<br>
+If all is good your display should be showing a layout of information.<br>
+Make note that when webapp.py starts, information will be displayed in your SSH client. You will need the URL that it provides. For instance; '* Running on http://192.168.86.71:5000/ (Press CTRL+C to quit)'<br>
+<br>
+<b>TEST METAR.HTML:</b><br>
+Using the URL from the previous step, open a web browser and enter it in the URL. If all is well you will see a web page that allows for easy configuration and change to the display.<br>
+<br>
+<b>SETUP RC.LOCAL FOR STARTUP:</b><br>
+This is optional, but if you would like the display to restart automatically after a shutdown, or accidental power outage then this is a good way to go. Also, the webapp.py must be running for the web interface to work properly. <br>
+Enter;<br>
 <pre><code>
   cd ~
   cd /etc
   sudo nano rc.local</pre></code>
-Before the 'Exit' statement add;</br>
+Before the 'Exit' statement add;<br>
 <pre><code>
   sudo python3 /home/pi/metar/webapp.py &</pre></code>
-Then to save and reboot;</br>
+Then to save and reboot;<br>
 <pre><code>
   ctrl-x
   y
-  sudo reboot now</pre></code>
-<i>Note: There may be times when you don't want webapp.py to startup automatically, so simply open up rc.local again and comment out the line that was added then resave and reboot.</i></br>
-
-<b>SETUP POWEROFF.SERVICE FOR SHUTDOWN:</b></br>
-This is optional as well, but its nice to blank the epaper display when the unit is shutdown. A power outage won't blank the screen, but once the power comes back on it will reset the display if you setup rc.local above.</br>
-
-Power Off Service installation:</br>
-Copy 'poweroff.service' into /lib/systemd/system; </br>
+  sudo reboot now</pre></code><br>
+<i>Note: There may be times when you don't want webapp.py to startup automatically, so simply open up rc.local again and comment out the line that was added then resave and reboot.</i><br>
+<br>
+<b>SETUP POWEROFF.SERVICE FOR SHUTDOWN:</b><br>
+This is optional as well, but its nice to blank the epaper display when the unit is shutdown. A power outage won't blank the screen, but once the power comes back on it will reset the display if you setup rc.local above.<br>
+<br>
+Power Off Service installation:<br>
+Copy 'poweroff.service' into /lib/systemd/system; <br>
 <pre><code>
   cd ~
   cd /lib/systemd/system 
   sudo wget https://raw.githubusercontent.com/markyharris/metar/main/poweroff.service</pre></code>
 
-Enable the service by entering;</br>
+Enable the service by entering;<br>
 <pre><code>
   sudo systemctl enable poweroff.service</pre></code>
 
-Copy the python script 'metar_poweroff.py' into /opt/metar_poweroff;</br>
+Copy the python script 'metar_poweroff.py' into /opt/metar_poweroff;<br>
 <pre><code>
   cd ~  
   cd /opt
