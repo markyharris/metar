@@ -11,8 +11,8 @@ import requests
 import urllib.request
 
 # Setup fonts that could be chosen. Default font_choice is #5
-# Look in '/usr/share/fonts/truetype/' to see what is installed on
-# specific system and change as necessary.
+# Look in '/usr/share/fonts/truetype/' to see what is installed on 
+# specific system and change as necessary. 
 font_choice = 5
 if font_choice == 1:
     project_font = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
