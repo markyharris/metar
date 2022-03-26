@@ -1,9 +1,9 @@
 # E-Paper METAR Display
 This software will display various layouts of METAR data on a 7 by 5 inch 3-color E-Paper. Specifically the 7.5inch e-Paper HAT (B) by Waveshare. See https://www.waveshare.com/7.5inch-e-paper-hat-b.htm for more information and pricing from Waveshare.
 
-<p style="text-align:center;"><img src=https://github.com/markyharris/metar/raw/main/static/metar_collage.jpg width="400"></p>
+<p align="center"><img src=https://github.com/markyharris/metar/raw/main/static/metar_collage.jpg width="400"></p>
 
-This software is very specific to the size and 3-color nature of this display. However, the layouts are in a separate module and can be modified to fit other sizes of display if the desire is there. Theoretically a 2 color 7x5 could be used as well. See script 'metar_main.py' for comments on this.
+This software is written specifically to the size and 3-color nature of this display. However, the layouts are in a separate module and can be modified to fit other sizes of display if the desire is there. Theoretically a 2 color 7x5 could be used as well. See script 'metar_main.py' for comments on this.
 
 For specific info on using e-paper display with RPi, see;<br>
   https://www.waveshare.com/wiki/Template:Raspberry_Pi_Guides_for_SPI_e-Paper<br>
@@ -16,7 +16,8 @@ For information on the specific display used for this project see;<br>
 Download Balena Etcher - https://www.balena.io/etcher/</br>
 Download Berrylan Unix Bullseye Image - https://berrylan.org/</br>
 Download Berrylan App from either Apple App Store or Android Play Store to your phone<br><br>
-<i>NOTE: The Berrylan image is not strictly required. It provides an easy way to setup the WiFi and enable SSH on a headless RPi system such as this. There are other ways to do this such as temporarily connecting a keyboard and monitor to the RPi to start. However, if you choose to give this to a friend then having the ability to change the WiFi network through the Berrylan phone app can be very handy. If Berrylan is not desired, visit; https://www.raspberrypi.com/software/operating-systems/ to download the latest image. https://desertbot.io/blog/headless-raspberry-pi-4-ssh-wifi-setup provides steps to follow if Berrylan is not used.</i><br>
+<i>NOTE: The Berrylan image is not strictly required. It provides an easy way to setup the WiFi and enable SSH on a headless RPi system such as this. There are other ways to do this such as temporarily connecting a keyboard and monitor to the RPi to start. However, if you choose to give this to a friend then having the ability to change the WiFi network through the Berrylan phone app can be very handy. If Berrylan is not desired, visit; https://www.raspberrypi.com/software/operating-systems/ to download the latest image.<p> 
+https://desertbot.io/blog/headless-raspberry-pi-4-ssh-wifi-setup provides steps to follow to setup WiFi on a headless system if Berrylan is not used.</i><br>
 
 <b>WRITE IMAGE TO SD CARD:</b></br>
 Using Balena Etcher, write Image to Micro SD Card.<br>
@@ -32,7 +33,7 @@ Open Berrylan app on phone and select for 'BT WLAN setup' or 'BT WLAN' or 'raspb
   
 <b>LOGIN USING SSH CLIENT:</b></br>
 Open a SSH Client and enter the 'pi@IP address' to start the login process, i.e. 'pi@192.163.86.71'<br>
-Login using username 'pi' and password 'raspberry'. If a normal image was used, then SSH must be enabled before these clients will work. Berrylan automatically enables SSH. Otherwise use raspi-config to do so.<p>
+Login using username 'pi' and password 'raspberry'. If a normal image was used, then SSH must be enabled before these clients will work. Berrylan automatically enables SSH. Otherwise use 'raspi-config' to do so. See https://www.raspberrypi.com/documentation/computers/configuration.html for info on using 'raspi-config'<p>
 <i>Note: There are a number of SSH Clients. A few of the more popular are;
 <ul>
   <li>KiTTY.
@@ -79,7 +80,7 @@ Install necessary dependencies needed for the software;</br>
   sudo pip3 install Flask</pre></code>
     
 <b>FONTS:</b></br>
-The code is written with 'NotoMono-Regular.ttf' and 'LiberationMono-Bold.ttf' in used, so at minimum these need to be installed. If not enter;</br>
+The code is written with 'NotoMono-Regular.ttf' and 'LiberationMono-Bold.ttf' used, so at minimum these need to be installed. So enter;</br>
   <pre><code>
   cd /usr/share/fonts/truetype/
   sudo mkdir noto
@@ -116,31 +117,36 @@ The script was written to except up to 4 cmd line arguments;</br>
   2nd argument - layout number - will accept -2, -1, and 0-7</br>
   3rd argument - update interval in seconds - 60 = 1 minute, 3600 = 1 hour</br>
   4th argument - use remarks - 1 = display metar remarks key info, 0 = display airport information</blockquote>
-They must be in the order shown, but not all of them are required. For instance only entering the Airport ID and the others will be filled in using the default settings in metar_settings.py<br>
+They must be in the order shown, but not all of them are required. For instance you can enter only the Airport ID and the default settings will be used for the last 3 args<br>
+<p align="center"><img src=https://github.com/markyharris/metar/raw/main/static/metar_cmdline.jpg width="400"></p>
 For example enter;
 <pre><code>
   sudo python3 metar_main.py kflg 7 60 0</pre></code>
 The display will show the Flagstaff Airport using Layout 7 for 60 seconds before updating using airport info.<br>
-Assuming this is works properly, then using the webapp.py and metar.html scripts below should work just fine.<br>
+Assuming this is works properly, then using the webapp.py and metar.html scripts below will work just fine.<br>
 <br>
 <b>TEST WEBAPP.PY:</b><br>
 From the metar directory enter;<br>
 <pre><code>
   sudo python3 webapp.py</pre></code>
-This will run a Flask module that will start metar_main.py in last save configuration. Flask sets up a web server so we can also run an html file to control the display from any computer, tablet or phone that is on the same wifi network.<br>
+This will run a Flask module that will start 'metar_main.py' using the last save configuration. Flask sets up a web server so we can also run an html file to control the display from any computer, tablet or phone that is on the same WiFi network.<br>
 If all is good your display should be showing a layout of information.<br>
-Make note that when webapp.py starts, information will be displayed in your SSH client. You will need the URL that it provides. For instance; '* Running on http://192.168.86.71:5000/ (Press CTRL+C to quit)'<br>
+Make note that when webapp.py starts, information will be displayed in your SSH client. You will need the URL that it provides. For instance; <b>'* Running on http://192.168.86.71:5000/ (Press CTRL+C to quit)'</b><br>
 <br>
 <b>TEST METAR.HTML:</b><br>
-Using the URL from the previous step, open a web browser and enter it in the URL. If all is well you will see a web page that allows for easy configuration and change to the display.<br>
+Using the URL from the previous step, open a web browser and enter it in the URL. If all is well you will see a web page that allows for easy control of the E-Paper display.<br>
+<p align="center"><img src=https://github.com/markyharris/metar/raw/main/static/metar_html.jpg width="400"></p>
+<i>Note: The html file must be run from a computer, tablet or phone that is connected to the same WiFi network using the URL provided when WiFi was originally setup. The URL must have ':5000' appended to the IP Address, ie. http://192.168.86.71:5000/ (Your IP will be different, this is just an example).</i><br>
 <br>
 <b>SETUP RC.LOCAL FOR STARTUP:</b><br>
 This is optional, but if you would like the display to restart automatically after a shutdown, or accidental power outage then this is a good way to go. Also, the webapp.py must be running for the web interface to work properly. <br>
+<br>
 Enter;<br>
 <pre><code>
   cd ~
   cd /etc
   sudo nano rc.local</pre></code>
+  <p align="center"><img src=https://github.com/markyharris/metar/raw/main/static/metar_rclocal.jpg width="400"></p>
 Before the 'Exit' statement add;<br>
 <pre><code>
   sudo python3 /home/pi/metar/webapp.py &</pre></code>
@@ -149,12 +155,11 @@ Then to save and reboot;<br>
   ctrl-x
   y
   sudo reboot now</pre></code><br>
-<i>Note: There may be times when you don't want webapp.py to startup automatically, so simply open up rc.local again and comment out the line that was added then resave and reboot.</i><br>
+<i>Note: There may be times when you don't want 'webapp.py' to startup automatically, so simply open up rc.local again and comment out the line that was added then resave and reboot.</i><br>
 <br>
 <b>SETUP POWEROFF.SERVICE FOR SHUTDOWN:</b><br>
 This is optional as well, but its nice to blank the epaper display when the unit is shutdown. A power outage won't blank the screen, but once the power comes back on it will reset the display if you setup rc.local above.<br>
 <br>
-Power Off Service installation:<br>
 Copy 'poweroff.service' into /lib/systemd/system; <br>
 <pre><code>
   cd ~
