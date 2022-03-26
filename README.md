@@ -178,7 +178,7 @@ Copy the python script 'metar_poweroff.py' into /opt/metar_poweroff;<br>
   cd metar_poweroff
   sudo wget https://raw.githubusercontent.com/markyharris/metar/main/metar_poweroff.py</pre></code>
 <br>
-<b>MISC:</B>
+<b>MISC:</b><br>
 At this point the installation is complete, however it is suggested that the image on the SD Card is backed up to your computer in case something goes wrong, rather than going through this installation process again.<br> 
 To do so;
 <ul>
