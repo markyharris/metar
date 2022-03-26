@@ -1,7 +1,7 @@
 # E-Paper METAR Display
 This software will display various layouts of METAR data on a 7 by 5 inch 3-color E-Paper. Specifically the 7.5inch e-Paper HAT (B) by Waveshare. See https://www.waveshare.com/7.5inch-e-paper-hat-b.htm for more information and pricing from Waveshare.
 
-<center><img src=https://github.com/markyharris/metar/raw/main/static/layout1.jpg width="400"></center>
+<p style="text-align:center;"><img src=https://github.com/markyharris/metar/raw/main/static/metar_collage.jpg width="400"></p>
 
 This software is very specific to the size and 3-color nature of this display. However, the layouts are in a separate module and can be modified to fit other sizes of display if the desire is there. Theoretically a 2 color 7x5 could be used as well. See script 'metar_main.py' for comments on this.
 
