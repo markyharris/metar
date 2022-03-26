@@ -5,7 +5,7 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, send_file, Response
 import os
 import sys
-from shutdown import *
+from metar_poweroff import *
 from metar_settings import *
 
 app = Flask(__name__)

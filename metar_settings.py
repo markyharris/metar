@@ -14,7 +14,7 @@ use_remarks = 1  # 0 = display airport information, 1 = display metar remarks in
 # For the same airports in the same locations on screen, place 12 airports in list. The 13th will be the default airport
 # For randomly selected airports, put more than 12 in list. 12 will randomly be displayed, 13th will be default
 # If you put less than 12 airports in list, it will pad the missing spots with the default airport above.
-random_airports = ["KEYW","KDFW","KSEA","KORD", "KLAS","KCMR","KABQ","KDEN", \
-                   "KPHX","KNBC","KBKV","KTTS"] #, "KTPA", "KLAS","KGEU","KOLS", \
+random_airports = ["KEYW","KFVE","KSEA","KCVG", "KLAS","KCMR","KGRR","KMSN", \
+                   "KLAX","KNBC","KFVE","KBUF"] #, "KTPA", "KLAS","KGEU","KOLS", \
                   # "KSAN", "KPDX", "KBOI", "KMSP", "KSTL", "KBNA", "KTYS"] 
 
