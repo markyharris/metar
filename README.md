@@ -182,12 +182,11 @@ Copy the python script 'metar_poweroff.py' into /opt/metar_poweroff;<br>
 At this point the installation is complete, however it is suggested that the image on the SD Card is backed up to your computer in case something goes wrong, rather than going through this installation process again.<br> 
 To do so;
 <ul>
-  <li>download Win32DiskImager from; https://sourceforge.net/projects/win32diskimager/
+  <li>Download Win32DiskImager from; https://sourceforge.net/projects/win32diskimager/
   <li>Insert SD Card into your computer's card reader.
   <li>Click the folder icon and locate a directory to store the image and provide a name, ie. metar_display.img<br>
   <li>Click 'Read Only Allocated Partitions'
   <li>Click 'Read' and let it do its thing.
   <li>Once complete eject SD Card and re-install in the RPi
 </ul>
-<br>
 Mount the display and RPi in the frame of your choice and enjoy. - Mark
