@@ -1362,7 +1362,7 @@ def layout6(display, metar, remarks, print_table, use_remarks):
     print(lat, lon)
 
     # Image URL is created using https://vfrmap.com/map_api.html
-    url = "https://vfrmap.com/api?req=map&type=ifrlc&lat="+str(lat)+"&lon="+str(lon)+"&zoom=10&width=790&height=470&api_key=1234"
+    url = "http://vfrmap.com/api?req=map&type=ifrlc&lat="+str(lat)+"&lon="+str(lon)+"&zoom=10&width=790&height=470&api_key=1234"
     display.show_pic(url, COL0, LINE2, "b")
     
     if flightcategory == "VFR":
