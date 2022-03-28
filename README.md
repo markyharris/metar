@@ -24,7 +24,7 @@ Using Balena Etcher, write Image to Micro SD Card.<br>
 Put SD card into RPi and boot-up completely. This will take a minute or two. Watch the access LED on RPi for feedback.<br>
 
 <b>SETUP WIFI USING BERRYLAN:</b><br>
-Open Berrylan app on phone and select for 'BT WLAN setup' or 'BT WLAN' or 'raspberrypi' depending on what is displayed. The most common is 'BT WLAN'. If you see more than one, then pick the first one and go through the steps. If it ends up not being this particular RPi, then run it again and select the next one. You may have to give the app alittle time to find it however, so don't be too impatient.</br>
+Open Berrylan app on phone and select for 'BT WLAN setup' or 'BT WLAN' or 'raspberrypi' depending on what is displayed. The most common is <b>'BT WLAN'</b>. If you see more than one, then pick the first one and go through the steps. If it ends up not being this particular RPi, then run it again and select the next one. You may have to give the app alittle time to find it however, so don't be too impatient.</br>
   <ul>
   <li>Select WiFi SSID to use</br>
   <li>Enter the WiFi password</br>
@@ -123,7 +123,7 @@ For example enter;
 <pre><code>
   sudo python3 metar_main.py kflg 7 60 0</pre></code>
 The display will show the Flagstaff Airport using Layout 7 for 60 seconds before updating using airport info.<br>
-Assuming this is works properly, then using the webapp.py and metar.html scripts below will work just fine.<br>
+Assuming this is works properly, then using the 'webapp.py' and metar.html scripts below will work just fine.<br>
 <br>
 <b>TEST WEBAPP.PY:</b><br>
 From the metar directory enter;<br>
