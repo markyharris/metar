@@ -48,7 +48,7 @@ import os
 from waveshare_epd import epd7in5b_V2 
 
 # Layouts - add new layouts to this list as necessary
-layout_list = [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7] # ,layout6 Add layout routine names here
+layout_list = [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7,layout8] # ,layout6 Add layout routine names here
 
 # Check for cmdline args and use passed variables instead of the defaults above
 if len(sys.argv) > 1:
@@ -116,9 +116,9 @@ if __name__ == "__main__":
     epd = epd7in5b_V2.EPD() # Instantiate instance for display.
   
     while True:        
-        try:
+#        try:
 #            error = 1/0 #debug  # forces error to test the try-except statements
-#       if True:  # used instead of the try-except statements for debug purposes.
+       if True:  # used instead of the try-except statements for debug purposes.
             current_time = time.strftime("%m/%d/%Y %H:%M", time.localtime())
             
             metar = Metar(airport)
@@ -147,7 +147,7 @@ if __name__ == "__main__":
             epd.init()
             epd.sleep()
             
-        except Exception as e:
+#        except Exception as e:
             time.sleep(2)
             print("Error Occurred in Main While Loop")
             exception_type, exception_object, exception_traceback = sys.exc_info()

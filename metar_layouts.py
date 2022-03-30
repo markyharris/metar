@@ -1650,3 +1650,142 @@ def layout7(display, metar, remarks, print_table, use_remarks):
         display.draw_red.text((x_pos, y_pos), cctype, fill=0, font=font24b)
         x_pos, y_pos = center_text(ccheight, font24b, OUTER_CIRCLES[7][0], OUTER_CIRCLES[7][1]+10)
         display.draw_red.text((x_pos, y_pos), ccheight, fill=0, font=font24b)
+        
+    
+############
+# layout8  #
+############
+# Worst Weather by airport
+def layout8(display, metar, remarks, print_table, use_remarks):
+    fc_ap_dict = {}
+    vfr_dict,mvfr_dict,ifr_dict,lifr_dict = get_flightcat()
+
+    # Data layout for layout8.
+    # 0,0 in upper left hand corner. 800,480 in lower right corner
+    LINE0 = 15
+    LINE1 = 105
+    LINE2 = 195
+    LINE3 = 285
+    LINE4 = 375
+    LINE5 = 465
+
+    COL0 = 20
+    COL1 = 290
+    COL2 = 550
+    COL3 = 810
+    
+    RADIUS = 10
+    MARGIN = 10
+    SPACING = (2*RADIUS)+MARGIN
+    ICON_OFFSET = COL1-COL0-60
+    NUM_AIRPORTS = 15
+
+    # Display box with airport and flight category. The box must be drawn first than the text
+    # To create rounded corner box provide the following variables in this order   
+    # up_left_x, up_left_y, box_width, box_height, radius, box_color    
+    def print_box(flight_cat, airport, pos1_x, pos1_y, pos2_x, pos2_y):
+        metar = Metar(airport)
+#        flightcategory, icon = flight_category(metar)
+        flightcategory = flight_cat
+        output = airport+":"+flightcategory+" "
+        w, h = display.draw_black.textsize(output, font=font36b)
+        w_name, h_name = display.draw_black.textsize(metar.data2["properties"]["name"][:26], font=font14b)
+        if flightcategory == "VFR":
+            icon = "sun"
+            display.round_line(pos1_x, pos1_y, pos2_x-pos1_x-SPACING, pos2_y-pos1_y-SPACING, RADIUS, "b", 0, 3)
+            display.draw_black.text(((pos2_x-pos1_x)/2-(w/2)+(pos1_x-COL0), (pos2_y-pos1_y)/2-(h/2)+(pos1_y-LINE0)-10), output, fill=0, font=font36b)
+            display.draw_icon(pos1_x+ICON_OFFSET, pos1_y, "b", 30, 30, icon)
+            display.draw_black.text(((pos2_x-pos1_x)/2-(w_name/2)+(pos1_x-COL0), pos1_y+40), metar.data2["properties"]["name"][:26], fill=0, font=font14b) 
+        elif flightcategory == "MVFR":
+            icon = "25_clouds"
+            display.round_box(pos1_x, pos1_y, pos2_x-pos1_x-SPACING, pos2_y-pos1_y-SPACING, RADIUS, "b")
+            display.draw_black.text(((pos2_x-pos1_x)/2-(w/2)+(pos1_x-COL0), (pos2_y-pos1_y)/2-(h/2)+(pos1_y-LINE0)-10), output, fill=255, font=font36b)
+            display.draw_icon(pos1_x+ICON_OFFSET, pos1_y, "wb", 30, 30, icon)
+            display.draw_black.text(((pos2_x-pos1_x)/2-(w_name/2)+(pos1_x-COL0), pos1_y+40), metar.data2["properties"]["name"][:26], fill=255, font=font14b) 
+        elif flightcategory == "IFR":
+            icon = "thunder"
+            display.round_line(pos1_x, pos1_y, pos2_x-pos1_x-SPACING, pos2_y-pos1_y-SPACING, RADIUS, "r")
+            display.draw_red.text(((pos2_x-pos1_x)/2-(w/2)+(pos1_x-COL0), (pos2_y-pos1_y)/2-(h/2)+(pos1_y-LINE0)-10), output, fill=0, font=font36b)
+            display.draw_icon(pos1_x+ICON_OFFSET, pos1_y, "r", 30, 30, icon) 
+            display.draw_red.text(((pos2_x-pos1_x)/2-(w_name/2)+(pos1_x-COL0), pos1_y+40), metar.data2["properties"]["name"][:26], fill=0, font=font14b) 
+        elif flightcategory == "LIFR":
+            icon = "mist"
+            display.round_box(pos1_x, pos1_y, pos2_x-pos1_x-SPACING, pos2_y-pos1_y-SPACING, RADIUS, "r")
+            display.draw_red.text(((pos2_x-pos1_x)/2-(w/2)+(pos1_x-COL0), (pos2_y-pos1_y)/2-(h/2)+(pos1_y-LINE0)-10), output, fill=255, font=font36b)
+            display.draw_icon(pos1_x+ICON_OFFSET, pos1_y, "wr", 30, 30, icon) 
+            display.draw_red.text(((pos2_x-pos1_x)/2-(w_name/2)+(pos1_x-COL0), pos1_y+40), metar.data2["properties"]["name"][:26], fill=255, font=font14b) 
+        else:
+            display.round_line(pos1_x, pos1_y, pos2_x-pos1_x-SPACING, pos2_y-pos1_y-SPACING, RADIUS, "b")
+            display.draw_red.text(((pos2_x-pos1_x)/2-(w/2)+(pos1_x-COL0), (pos2_y-pos1_y)/2-(h/2)+(pos1_y-LINE0)-10), output, fill=255, font=font36b)
+            display.draw_icon(pos1_x+ICON_OFFSET, pos1_y, "wr", 30, 30, icon) 
+            display.draw_red.text(((pos2_x-pos1_x)/2-(w_name/2)+(pos1_x-COL0), pos1_y+40), metar.data2["properties"]["name"][:26], fill=255, font=font14b) 
+
+    # build dictionary
+    if len(lifr_dict) > 0:
+        for key, value in lifr_dict.items(): 
+            fc_ap_dict[key] = value
+        
+    if len(ifr_dict) > 0:            
+        for key, value in ifr_dict.items(): 
+            fc_ap_dict[key] = value
+        
+    if len(mvfr_dict) > 0:                                
+        for key, value in mvfr_dict.items(): 
+            fc_ap_dict[key] = value
+        
+    if len(fc_ap_dict) < NUM_AIRPORTS:
+        for key, value in vfr_dict.items():
+            fc_ap_dict[key] = value
+            if len(fc_ap_dict) >= NUM_AIRPORTS:
+                break
+    
+    fc_ap_dict = dict(list(fc_ap_dict.items())[:NUM_AIRPORTS]) # Trim dict
+    
+#    print(len(fc_ap_dict)) # debug        
+#    print(fc_ap_dict) # debug
+    keys_ap = list(fc_ap_dict.keys())
+    values_ap = list(fc_ap_dict.values())
+
+    # Column 1
+    airport, flight_cat = keys_ap[0], values_ap[0]    
+    print_box(flight_cat, airport, COL0, LINE0, COL1, LINE1)
+    airport, flight_cat = keys_ap[1], values_ap[1]    
+    print_box(flight_cat, airport, COL0, LINE1, COL1, LINE2)
+    airport, flight_cat = keys_ap[2], values_ap[2]    
+    print_box(flight_cat, airport, COL0, LINE2, COL1, LINE3)    
+    airport, flight_cat = keys_ap[3], values_ap[3]    
+    print_box(flight_cat, airport, COL0, LINE3, COL1, LINE4)
+    airport, flight_cat = keys_ap[4], values_ap[4]    
+    print_box(flight_cat, airport, COL0, LINE4, COL1, LINE5)
+
+    # Column 2
+    airport, flight_cat = keys_ap[5], values_ap[5]    
+    print_box(flight_cat, airport, COL1, LINE0, COL2, LINE1)
+    airport, flight_cat = keys_ap[6], values_ap[6]
+    print_box(flight_cat, airport, COL1, LINE1, COL2, LINE2)
+    airport, flight_cat = keys_ap[7], values_ap[7]
+    print_box(flight_cat, airport, COL1, LINE2, COL2, LINE3)
+    airport, flight_cat = keys_ap[8], values_ap[8]
+    print_box(flight_cat, airport, COL1, LINE3, COL2, LINE4)
+    airport, flight_cat = keys_ap[9], values_ap[9]
+    print_box(flight_cat, airport, COL1, LINE4, COL2, LINE5)
+
+    # Column 3
+    airport, flight_cat = keys_ap[10], values_ap[10]
+    print_box(flight_cat, airport, COL2, LINE0, COL3, LINE1)
+    airport, flight_cat = keys_ap[11], values_ap[11]
+    print_box(flight_cat, airport, COL2, LINE1, COL3, LINE2)
+    airport, flight_cat = keys_ap[12], values_ap[12]
+    print_box(flight_cat, airport, COL2, LINE2, COL3, LINE3)
+    airport, flight_cat = keys_ap[13], values_ap[13]
+    print_box(flight_cat, airport, COL2, LINE3, COL3, LINE4)
+    airport, flight_cat = keys_ap[14], values_ap[14]
+    print_box(flight_cat, airport, COL2, LINE4, COL3, LINE5)
+    
+    now = datetime.now()
+    next_update = now + timedelta(0,int(interval)) # days, seconds
+    next_update_text = "Next Update at "+next_update.strftime("%I:%M %p, %m/%d/%Y")
+    w_upd, h_upd = display.draw_black.textsize(next_update_text, font=font20b)       
+    display.draw_black.text((400-(w_upd/2), 460), next_update_text, fill=0, font=font20b)
+
+

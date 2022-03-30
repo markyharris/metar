@@ -3,11 +3,75 @@
 
 # Imports
 from metar_remarks import *
+import urllib.request, urllib.error, urllib.parse
+import xml.etree.ElementTree as ET
 
 # Misc Variables
 decode = []      # used to decode the raw metar
 print_table = [] # Store decoded remark definitions to display
 remarks = ""     # Build remarks string to display
+
+# Class Bravo airports used to find bad weather to display on Multiple Airports Layout5
+class_b = ["KPHX", "KLAX", "KNKX", "KSAN", "KSFO", "KDEN", "KMCO", "KMIA", "KTPA", "KATL", \
+           "PHNL", "KORD", "KCVG", "KMSY", "KADW", "KBWI", "KBOS", "KDTW", "KMSP", "KMCI", \
+           "KSTL", "KLAS", "KLSV", "KEWR", "KJFK", "KLGA", "KCLT", "KCLE", "KPHL", "KPIT", \
+           "KMEM", "KDAL", "KDFW", "KHOU", "KIAH", "KSLC", "KDCA", "KIAD", "KSEA"]
+
+# Class Charlie airports used to find bad weather to display on Multiple Airports Layout5
+class_c = ['KBHM', 'KHSV', 'KMOB', 'PANC', 'KDMA', 'KTUS', 'KLIT', 'KXNA', 'KBAB', 'KBUR', \
+           'KFAT', 'KMRY', 'KOAK', 'KONT', 'KRIV', 'KSBA', 'KSJC', 'KSMF', 'KSNA', 'KCOS', \
+           'KBDL', 'KDAB', 'KFLL', 'KJAX', 'KNDZ', 'KNPA', 'KNSE', 'KPBI', 'KPNS', 'KRSW', \
+           'KSFB', 'KSRQ', 'KTLH', 'KSAV', 'PHOG', 'KBOI', 'KCMI', 'KMDW', 'KMLI', 'KPIA', \
+           'KSPI', 'KEVV', 'KFWA', 'KIND', 'KSBN', 'KCID', 'KDSM', 'KICT', 'KLEX', 'KSDF', \
+           'KBAD', 'KBTR', 'KLFT', 'KSHV', 'KBGR', 'KPWM', 'KFNT', 'KGRR', 'KLAN', 'KCBM', \
+           'KJAN', 'KSGF', 'KBIL', 'KLNK', 'KOFF', 'KOMA', 'KRNO', 'KMHT', 'KACY', 'KABQ', \
+           'KALB', 'KBUF', 'KISP', 'KROC', 'KSYR', 'KAVL', 'KFAY', 'KGSO', 'KPOB', 'KRDU', \
+           'KCAK', 'KCMH', 'KDAY', 'KTOL', 'KOKC', 'KTIK', 'KTUL', 'KPDX', 'KABE', 'KPVD', \
+           'KCAE', 'KCHS', 'KGSP', 'KMYR', 'KSSC', 'KBNA', 'KCHA', 'KTYS', 'KABI', 'KAMA', \
+           'KAUS', 'KCRP', 'KDLF', 'KDYS', 'KELP', 'KHRL', 'KLBB', 'KMAF', 'KSAT', 'KBTV', \
+           'KORF', 'KRIC', 'KROA', 'KGEG', 'KNUW', 'KSKA', 'KCRW', 'KGRB', 'KMKE', 'KMSN', \
+           'TJSJ', 'TIST']
+           
+# Get Flight Categories for Class B and Class C airports
+def get_flightcat():
+    # api url
+    url = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&mostRecentForEachStation=constraint&hoursBeforeNow=2.5&stationString="
+
+    fc_dict = {}
+    vfr_dict = {}
+    mvfr_dict = {}
+    ifr_dict = {}
+    lifr_dict = {}
+
+    # Build URL with class b and class c airports
+    for ap in class_b:
+        url = url+ap+","
+    for ap in class_c:
+        url = url+ap+","
+        
+    content = urllib.request.urlopen(url).read()
+    root = ET.fromstring(content) #Process XML data returned from FAA
+    for data in root.iter('data'):
+            num_results = data.attrib['num_results']
+            print(num_results)
+            
+    for metar in root.iter('METAR'):
+        stationId = metar.find('station_id').text
+        flightcategory = metar.find('flight_category').text
+        fc_dict[stationId] = flightcategory
+        
+    for key in fc_dict:
+        if "MVFR" in fc_dict[key]:
+            mvfr_dict[key] = "MVFR"
+        elif "IFR" in fc_dict[key]:
+            ifr_dict[key] = "IFR"
+        elif "LIFR" in fc_dict[key]:
+            lifr_dict[key] = "LIFR"
+        else:
+            vfr_dict[key] = "VFR"
+
+    return(vfr_dict,mvfr_dict,ifr_dict,lifr_dict)
+    
     
 # Decodes the flight category from the raw metar string
 def flight_category(metar):
