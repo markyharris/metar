@@ -114,6 +114,7 @@ $(document).ready(function(){
 
         <label for="fname"><b>Choose Update Interval:</b></label><br>
 		<select name="data_field3" id="data_field3">
+		  <option value="0" {% if data_field3=="0" %} selected="selected" {% endif %}>Auto Interval</option>
 		  <option value="60" {% if data_field3=="60" %} selected="selected" {% endif %}>1 Minute</option>
 		  <option value="600" {% if data_field3=="600" %} selected="selected" {% endif %}>10 Minutes</option>
 		  <option value="1200" {% if data_field3=="1200" %} selected="selected" {% endif %}>20 Minutes</option>
@@ -122,7 +123,9 @@ $(document).ready(function(){
 		  <option value="7200" {% if data_field3=="7200" %} selected="selected" {% endif %}>2 Hours</option>
 
 		</select>
-		<br><p>
+		<br>
+		<i><b>Note:</b> Auto Interval changes the update based on Flight Category.<br> 
+		VFR=1 hour, MVFR=30 mins, IFR=20 mins and LIFR=10 mins</i><p>
 
         <button class="btn btn-primary" type="submit">Submit</button>
         </div>		

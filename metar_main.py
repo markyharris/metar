@@ -116,13 +116,14 @@ if __name__ == "__main__":
     epd = epd7in5b_V2.EPD() # Instantiate instance for display.
   
     while True:        
-#        try:
+        try:
 #            error = 1/0 #debug  # forces error to test the try-except statements
-       if True:  # used instead of the try-except statements for debug purposes.
+#       if True:  # used instead of the try-except statements for debug purposes.
             current_time = time.strftime("%m/%d/%Y %H:%M", time.localtime())
             
             metar = Metar(airport)
             remarks, print_table = decode_remarks(metar.data["properties"]["rawMessage"]) # debug
+            flightcategory, icon = flight_category(metar)
             
             if len(metar.data["properties"]["rawMessage"]) > 0:
                 print(metar.data["properties"]["rawMessage"]+"\n")
@@ -142,12 +143,32 @@ if __name__ == "__main__":
             print("Metar Updated")
             
             main() # Build METAR data to display using specific layout
-                        
-            time.sleep(interval) # Sets interval of updates. 3600 = 1 hour
+            
+            # Setup update interval
+            # The update interval can be selected via cmd line or web iterface
+            # If Auto Interval is selected, then Flight Category dictates update
+            # So the worse the weather, the more often it updates.
+            if interval != 0: # if not auto interval selected
+                print("sleep ",interval) # debug
+                time.sleep(interval) # Sets interval of updates. 3600 = 1 hour
+            else:
+                if flightcategory == "VFR":
+                    print("Sleep 3600") # debug
+                    time.sleep(3600) # 1 hour if weather is good
+                elif flightcategory == "MVFR":
+                    print("Sleep 1800") # debug
+                    time.sleep(1800) # 30 mins if marginal
+                elif flightcategory == "IFR":
+                    print("Sleep 1200") # debug
+                    time.sleep(1200) # 20 mins if stormy
+                elif flightcategory == "LIFR":
+                    print("Sleep 600") # debug
+                    time.sleep(600) # 10 mins if stormy and low visibility
+          
             epd.init()
             epd.sleep()
             
-#        except Exception as e:
+        except Exception as e:
             time.sleep(2)
             print("Error Occurred in Main While Loop")
             exception_type, exception_object, exception_traceback = sys.exc_info()

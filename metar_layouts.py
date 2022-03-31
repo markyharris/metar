@@ -1392,7 +1392,7 @@ def layout6(display, metar, remarks, print_table, use_remarks):
 # layout7  #
 ############
 # Circles theme
-def layout7(display, metar, remarks, print_table, use_remarks):
+def layout7(display, metar, remarks, print_table, use_remarks):    
     def circle_points(r, n):
         circles = []
         for r, n in zip(r, n):
@@ -1677,7 +1677,7 @@ def layout8(display, metar, remarks, print_table, use_remarks):
     RADIUS = 10
     MARGIN = 10
     SPACING = (2*RADIUS)+MARGIN
-    ICON_OFFSET = COL1-COL0-60
+    ICON_OFFSET = COL1-COL0-65
     NUM_AIRPORTS = 15
 
     # Display box with airport and flight category. The box must be drawn first than the text
@@ -1685,7 +1685,6 @@ def layout8(display, metar, remarks, print_table, use_remarks):
     # up_left_x, up_left_y, box_width, box_height, radius, box_color    
     def print_box(flight_cat, airport, pos1_x, pos1_y, pos2_x, pos2_y):
         metar = Metar(airport)
-#        flightcategory, icon = flight_category(metar)
         flightcategory = flight_cat
         output = airport+":"+flightcategory+" "
         w, h = display.draw_black.textsize(output, font=font36b)
@@ -1741,8 +1740,6 @@ def layout8(display, metar, remarks, print_table, use_remarks):
     
     fc_ap_dict = dict(list(fc_ap_dict.items())[:NUM_AIRPORTS]) # Trim dict
     
-#    print(len(fc_ap_dict)) # debug        
-#    print(fc_ap_dict) # debug
     keys_ap = list(fc_ap_dict.keys())
     values_ap = list(fc_ap_dict.values())
 
