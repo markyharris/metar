@@ -1,4 +1,5 @@
 # E-Paper METAR Display
+This project is explained and amplified on Instructables.com. See; https://www.instructables.com/7x5-E-Paper-METAR-Display/
 This software will display various layouts of METAR data on a 7 by 5 inch 3-color E-Paper. Specifically the 7.5inch e-Paper HAT (B) by Waveshare. See https://www.waveshare.com/7.5inch-e-paper-hat-b.htm for more information and pricing from Waveshare.
 
 <p align="center"><img src=https://github.com/markyharris/metar/raw/main/static/metar_collage.jpg width="400"></p>
