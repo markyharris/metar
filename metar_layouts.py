@@ -32,6 +32,16 @@ import numpy as np
 d = " " # d = delimiter used to split metar on 'spaces' then re-join them into 2 parts
 cycle_num = 0
 
+# Utility routines   
+def center_line(display,text,font=font24b,pos_x=400):
+    w, h = display.draw_black.textsize(text, font=font)
+    return(pos_x-(w/2))
+
+def last_update():
+    now = datetime.now()
+    last_update = "Last Updated at "+now.strftime("%I:%M %p") #, %m/%d/%Y"
+    return(last_update)
+
 
 ###########################
 #  Cycle Through Each -2  #
@@ -76,47 +86,40 @@ def layout0(display, metar, remarks, print_table, use_remarks):
     COL1 = 20
     COL2 = 100
     
-    now = datetime.now()
-    next_update = now + timedelta(0,int(interval)) # days, seconds
-    next_update_text = "Next Update at "+next_update.strftime("%I:%M %p, %m/%d/%Y")
-
     # Create Grid box
     display.draw_red.rectangle((5, 5, 795, 475), fill=255, outline=0, width=5)
     display.draw_red.line((5, 380, 795, 380), fill=0, width=5)  # Horizontal 1
 
     # Flight Category
     print(flightcategory) # debug
-    w_upd, h_upd = display.draw_black.textsize(next_update_text, font=font16b)   
-    w_apt, h_apt = display.draw_black.textsize(airport, font=font48b)
-    w, h = display.draw_black.textsize(flightcategory, font=font296b)
     
     if flightcategory == "VFR":
         display.draw_black.rectangle((5, 5, 795, 380), fill=255, outline=0, width=10)
         display.draw_icon(680, LINE0-30, "r", 100, 100, icon)
         display.draw_black.text((COL1, LINE2), airport, fill=0, font=font48b)
-        display.draw_black.text((400-(w/2)+5, LINE0), flightcategory, fill=0, font=font296b)
-        display.draw_black.text((400-(w_upd/2), LINE0+290), next_update_text, fill=0, font=font16b)
+        display.draw_black.text((center_line(display,flightcategory,font296b), LINE0), flightcategory, fill=0, font=font296b)
+        display.draw_black.text((center_line(display,last_update(),font16b), LINE0+290), last_update(), fill=0, font=font16b)
     elif flightcategory == "MVFR":
         display.draw_black.rectangle((5, 5, 795, 380), fill=0, outline=0, width=10)
         display.draw_black.text((COL1, LINE2), airport, fill=255, font=font48b)
-        display.draw_black.text((400-(w/2)+5, LINE0), flightcategory, fill=255, font=font296b)
-        display.draw_black.text((400-(w_upd/2), LINE0+290), next_update_text, fill=255, font=font16b)
+        display.draw_black.text((center_line(display,flightcategory,font296b), LINE0), flightcategory, fill=255, font=font296b)
+        display.draw_black.text((center_line(display,last_update(),font16b), LINE0+290), last_update(), fill=255, font=font16b)
     elif flightcategory == "IFR":
         display.draw_red.rectangle((5, 5, 795, 380), fill=255, outline=0, width=10)
         display.draw_icon(680, LINE0-30, "r", 100, 100, icon)
         display.draw_red.text((COL1, LINE2), airport, fill=0, font=font48b)
-        display.draw_red.text((400-(w/2)+5, LINE0), flightcategory, fill=0, font=font296b)
-        display.draw_red.text((400-(w_upd/2), LINE0+290), next_update_text, fill=0, font=font16b)
+        display.draw_red.text((center_line(display,flightcategory,font296b), LINE0), flightcategory, fill=0, font=font296b)
+        display.draw_red.text((center_line(display,last_update(),font16b), LINE0+290), last_update(), fill=0, font=font16b)
     elif flightcategory == "LIFR":
         display.draw_red.rectangle((5, 5, 795, 380), fill=0, outline=0, width=10)
         display.draw_red.text((COL1, LINE2), airport, fill=255, font=font48b)
-        display.draw_red.text((400-(w/2)+5, LINE0), flightcategory, fill=255, font=font296b)
-        display.draw_red.text((400-(w_upd/2), LINE0+290), next_update_text, fill=255, font=font16b)
+        display.draw_red.text((center_line(display,flightcategory,font296b), LINE0), flightcategory, fill=255, font=font296b)
+        display.draw_red.text((center_line(display,last_update(),font16b), LINE0+290), last_update(), fill=255, font=font16b)
     else:
         display.draw_black.rectangle((5, 5, 795, 380), fill=255, outline=0, width=10)
         display.draw_black.text((COL1, LINE2), airport, fill=0, font=font48b)
-        display.draw_black.text((400-(w/2)+5, LINE0), "N/A", fill=0, font=font296b)
-        display.draw_black.text((400-(w_upd/2), LINE0+290), next_update_text, fill=0, font=font16b)
+        display.draw_black.text((center_line(display,flightcategory,font296b), LINE0), "N/A", fill=0, font=font296b)
+        display.draw_black.text((center_line(display,last_update(),font16b), LINE0+290), last_update(), fill=0, font=font16b)
 
     # Display Raw METAR
     rawmetar = "METAR: "+metar.data["properties"]["rawMessage"]
@@ -193,22 +196,22 @@ def layout1(display, metar, remarks, print_table, use_remarks):
 
     # Flight Category
     print(flightcategory) # debug
-    w, h = display.draw_black.textsize(flightcategory, font=font96b)
+
     if flightcategory == "VFR":
         display.draw_black.rectangle((276, 170, 522, 350), fill=255, outline=0, width=10)
-        display.draw_black.text((400-(w/2)-2, 205), flightcategory, fill=0, font=font96b) 
+        display.draw_black.text((center_line(display,flightcategory,font96b), 205), flightcategory, fill=0, font=font96b) 
     elif flightcategory == "MVFR":
         display.draw_black.rectangle((276, 170, 522, 350), fill=0, outline=0, width=10)
-        display.draw_black.text((400-(w/2)-2, 205), flightcategory, fill=255, font=font96b)
+        display.draw_black.text((center_line(display,flightcategory,font96b), 205), flightcategory, fill=255, font=font96b)
     elif flightcategory == "IFR":
         display.draw_red.rectangle((276, 170, 522, 350), fill=255, outline=0, width=10)
-        display.draw_red.text((400-(w/2)-2, 205), flightcategory, fill=0, font=font96b)
+        display.draw_red.text((center_line(display,flightcategory,font96b), 205), flightcategory, fill=0, font=font96b)
     elif flightcategory == "LIFR":
         display.draw_red.rectangle((276, 170, 522, 350), fill=0, outline=0, width=10)
-        display.draw_red.text((400-(w/2)-2, 205), flightcategory, fill=255, font=font96b)    
+        display.draw_red.text((center_line(display,flightcategory,font96b), 205), flightcategory, fill=255, font=font96b)    
     else:
         display.draw_black.rectangle((276, 170, 522, 350), fill=255, outline=0, width=10)
-        display.draw_black.text((400-(w/2)-2, 205), "N/A", fill=0, font=font96b) 
+        display.draw_black.text((center_line(display,"N/A",font96b), 205), "N/A", fill=0, font=font96b) 
 
     # Display Raw METAR
     rawmetar = "METAR: "+metar.data["properties"]["rawMessage"]
@@ -455,10 +458,7 @@ def layout1(display, metar, remarks, print_table, use_remarks):
             display.draw_red.text((286, LINE6+26), remarks_pt2, fill=0, font=font16b)
             
         else:
-#            print(remarks) # debug
-            now = datetime.now()
-            next_update = now + timedelta(0,int(interval)) # days, seconds
-            display.draw_black.text((286, LINE6+4), airport+" Updated " + now.strftime("%I:%M %p")+" - Next Update: "+next_update.strftime("%I:%M %p"), fill=0, font=font16b)
+            display.draw_black.text((286, LINE6+4), airport+" "+last_update(), fill=0, font=font16b)
             display.draw_red.text((286, LINE6+26), remarks, fill=0, font=font16b)
             
         display.draw_black.text((286, LINE6+44), print_table[0][:30], fill=0, font=font14) 
@@ -474,9 +474,7 @@ def layout1(display, metar, remarks, print_table, use_remarks):
         display.draw_black.text((540, LINE6+98), print_table[7][:30], fill=0, font=font14)
        
     else:
-        now = datetime.now()
-        next_update = now + timedelta(0,int(interval)) # days, seconds
-        display.draw_red.text((286, LINE6+4), airport+" Updated " + now.strftime("%I:%M %p")+" - Next Update: "+next_update.strftime("%I:%M %p"), fill=0, font=font16b)
+        display.draw_red.text((286, LINE6+4), airport+" "+last_update(), fill=0, font=font16b)
         display.draw_black.text((286, LINE6+26),"Name: " + metar.data2["properties"]["name"], fill=0, font=font14b) 
         display.draw_black.text((286, LINE6+44), "Time Zone: " + metar.data2["properties"]["timeZone"], fill=0, font=font14)
         display.draw_black.text((286, LINE6+62), "Elevation: " + '{0:.0f}'.format(metar.data2["properties"]["elevation"]["value"]*3.28084)+" ft", fill=0, font=font14)
@@ -484,6 +482,7 @@ def layout1(display, metar, remarks, print_table, use_remarks):
         lat, lon = metar.data2["geometry"]["coordinates"]
         display.draw_black.text((286, LINE6+80), "Coordinates: " + str(lat) + " " + str(lon), fill=0, font=font14)
         display.draw_black.text((286, LINE6+98), "URL: " + metar.data2["properties"]["@id"], fill=0, font=font14)
+
 
 ################
 #   Layout 2   #
@@ -526,9 +525,7 @@ def layout2(display,metar, remarks, print_table, use_remarks):
     display.draw_icon( 378, LINE0+3, "b", 50, 50, icon)
     display.draw_icon( 375, LINE0, "r", 50, 50, icon)
     
-    now = datetime.now()
-    next_update = now + timedelta(0,int(interval)) # days, seconds
-    display.draw_black.text((COL2+100, LINE0+10), "Next Update at\n"+next_update.strftime("%I:%M %p, %m/%d/%Y"), fill=0, font=font16b)
+#    display.draw_black.text((COL2+100, LINE0+10), last_update(), fill=0, font=font16b)
     
     # Display Raw METAR
     rawmetar = "METAR: "+metar.data["properties"]["rawMessage"]
@@ -754,10 +751,7 @@ def layout2(display,metar, remarks, print_table, use_remarks):
             display.draw_red.text((405, LINE6+26), remarks_pt2, fill=0, font=font16b)
             
         else:
-#            print(remarks) # debug
-            now = datetime.now()
-            next_update = now + timedelta(0,int(interval)) # days, seconds
-            display.draw_black.text((405, LINE6+4), airport+" Updated " + now.strftime("%I:%M %p"), fill=0, font=font16b)
+            display.draw_black.text((405, LINE6+4), airport+" "+last_update(), fill=0, font=font16b)
             display.draw_red.text((405, LINE6+26), remarks, fill=0, font=font16b)
             
         display.draw_black.text((405, LINE6+44), print_table[0][:22], fill=0, font=font14) 
@@ -801,53 +795,45 @@ def layout3(display, metar, remarks, print_table, use_remarks):
    
     # Data layout for layout1 using pixels.
     # 0,0 in upper left hand corner. 800,480 in lower right corner
-    LINE0 = 100 # 75
+    LINE0 = 100
     LINE1 = 15
     LINE2 = 445
     COL1 = 30
     COL2 = 100
-
-    now = datetime.now()
-    next_update = now + timedelta(0,int(interval)) # days, seconds
-    next_update_text = "Next Update at "+next_update.strftime("%I:%M %p, %m/%d/%Y")
     
     # Flight Category
     print(flightcategory) # debug
-    w_apt, h_apt = display.draw_black.textsize(airport, font=font48b)
-    w_name, h_apt = display.draw_black.textsize(metar.data2["properties"]["name"], font=font24)
-    w_updt, h_updt = display.draw_black.textsize(next_update_text, font=font16b)
-    w, h = display.draw_black.textsize(flightcategory, font=font296b)
     
     if flightcategory == "VFR":
         display.round_line(25, 25, 755, 435, 20, "b")
-        display.draw_black.text((400-(w_apt/2)+5, LINE1+5), airport, fill=0, font=font48b)
-        display.draw_black.text((400-(w_name/2)+5, LINE1+50), metar.data2["properties"]["name"], fill=0, font=font24)
-        display.draw_black.text((400-(w/2)+5, LINE0), flightcategory, fill=0, font=font296b)
-        display.draw_black.text((400-(w_updt/2), LINE2), next_update_text, fill=0, font=font16b)
+        display.draw_black.text((center_line(display,airport,font48b), LINE1+5), airport, fill=0, font=font48b)
+        display.draw_black.text((center_line(display,metar.data2["properties"]["name"],font24), LINE1+50), metar.data2["properties"]["name"], fill=0, font=font24)
+        display.draw_black.text((center_line(display,flightcategory,font296b), LINE0), flightcategory, fill=0, font=font296b)
+        display.draw_black.text((center_line(display,last_update(),font16b), LINE2), last_update(), fill=0, font=font16b)
     elif flightcategory == "MVFR":
         display.round_box(25, 25, 755, 435, 20, "b")
-        display.draw_black.text((400-(w_apt/2)+5, LINE1+5), airport, fill=255, font=font48b)
-        display.draw_black.text((400-(w_name/2)+5, LINE1+50), metar.data2["properties"]["name"], fill=255, font=font24)
-        display.draw_black.text((400-(w/2)+5, LINE0), flightcategory, fill=255, font=font296b)
-        display.draw_black.text((400-(w_updt/2), LINE2), next_update_text, fill=255, font=font16b)
+        display.draw_black.text((center_line(display,airport,font48b), LINE1+5), airport, fill=255, font=font48b)
+        display.draw_black.text((center_line(display,metar.data2["properties"]["name"],font24), LINE1+50), metar.data2["properties"]["name"], fill=255, font=font24)
+        display.draw_black.text((center_line(display,flightcategory,font296b), LINE0), flightcategory, fill=255, font=font296b)
+        display.draw_black.text((center_line(display,last_update(),font16b), LINE2), last_update(), fill=255, font=font16b)
     elif flightcategory == "IFR":
         display.round_line(25, 25, 755, 435, 20, "r")
-        display.draw_red.text((400-(w_apt/2)+5, LINE1+5), airport, fill=0, font=font48b)
-        display.draw_red.text((400-(w_name/2)+5, LINE1+50), metar.data2["properties"]["name"], fill=0, font=font24)
-        display.draw_red.text((400-(w/2)+5, LINE0), flightcategory, fill=0, font=font296b)
-        display.draw_red.text((400-(w_updt/2), LINE2), next_update_text, fill=0, font=font16b)
+        display.draw_red.text((center_line(display,airport,font48b), LINE1+5), airport, fill=0, font=font48b)
+        display.draw_red.text((center_line(display,metar.data2["properties"]["name"],font24), LINE1+50), metar.data2["properties"]["name"], fill=0, font=font24)
+        display.draw_red.text((center_line(display,flightcategory,font296b), LINE0), flightcategory, fill=0, font=font296b)
+        display.draw_red.text((center_line(display,last_update(),font16b), LINE2), last_update(), fill=0, font=font16b)
     elif flightcategory == "LIFR":
         display.round_box(25, 25, 755, 435, 20, "r")
-        display.draw_red.text((400-(w_apt/2)+5, LINE1+5), airport, fill=255, font=font48b)
-        display.draw_red.text((400-(w_name/2)+5, LINE1+50), metar.data2["properties"]["name"], fill=255, font=font24)
-        display.draw_red.text((400-(w/2)+5, LINE0), flightcategory, fill=255, font=font296b)
-        display.draw_red.text((400-(w_updt/2), LINE2), next_update_text, fill=255, font=font16b)
+        display.draw_red.text((center_line(display,airport,font48b), LINE1+5), airport, fill=255, font=font48b)
+        display.draw_red.text((center_line(display,metar.data2["properties"]["name"],font24), LINE1+50), metar.data2["properties"]["name"], fill=255, font=font24)
+        display.draw_red.text((center_line(display,flightcategory,font296b), LINE0), flightcategory, fill=255, font=font296b)
+        display.draw_red.text((center_line(display,last_update(),font16b), LINE2), last_update(), fill=255, font=font16b)
     else:
         display.round_line(25, 25, 755, 435, 20, "b")
-        display.draw_black.text((400-(w_apt/2)+5, LINE1+5), airport, fill=0, font=font48b)
-        display.draw_black.text((400-(w_name/2)+5, LINE1+50), metar.data2["properties"]["name"], fill=0, font=font24)
-        display.draw_black.text((400-(w/2)+5, LINE0), "N/A", fill=0, font=font296b)
-        display.draw_black.text((400-(w_updt/2), LINE2), next_update_text, fill=0, font=font16b)
+        display.draw_black.text((center_line(display,airport,font48b), LINE1+5), airport, fill=0, font=font48b)
+        display.draw_black.text((center_line(display,metar.data2["properties"]["name"],font24), LINE1+50), metar.data2["properties"]["name"], fill=0, font=font24)
+        display.draw_black.text((center_line(display,"N/A",font296b), LINE0), "N/A", fill=0, font=font296b)
+        display.draw_black.text((center_line(display,last_update(),font16b), LINE2), last_update(), fill=0, font=font16b)
 
 
 ################
@@ -883,10 +869,6 @@ def layout4(display, metar, remarks, print_table, use_remarks):
     COL3 = 480
     ICON_OFFSET = 200
     MARGIN = 5
-    
-    now = datetime.now()
-    next_update = now + timedelta(0,int(interval)) # days, seconds
-    next_update_text = "Next Update at "+next_update.strftime("%I:%M %p, %m/%d/%Y")
 
     # Create Rounded solid boxes
     # up_left_x, up_left_y, box_width, box_height, radius, box_color="b"
@@ -911,22 +893,22 @@ def layout4(display, metar, remarks, print_table, use_remarks):
     
     # Flight Category
     print(flightcategory) # debug
-    w, h = display.draw_black.textsize(flightcategory, font=font196b)
+
     if flightcategory == "VFR":
         display.round_line(COL2+5,190,COL3,270,20,"b",0,5)
-        display.draw_black.text((267-(w/2)+270, LINE10), flightcategory, fill=0, font=font196b) 
+        display.draw_black.text((center_line(display,flightcategory,font196b,534), LINE10), flightcategory, fill=0, font=font196b) 
     elif flightcategory == "MVFR":
         display.round_box(COL2+5, 190, COL3, 270, 20, "b")
-        display.draw_black.text((267-(w/2)+270, LINE10), flightcategory, fill=255, font=font196b)
+        display.draw_black.text((center_line(display,flightcategory,font196b,534), LINE10), flightcategory, fill=255, font=font196b)
     elif flightcategory == "IFR":
         display.round_line(COL2+5,190,COL3,270,20,"r",0,5)
-        display.draw_red.text((267-(w/2)+270, LINE10), flightcategory, fill=0, font=font196b)
+        display.draw_red.text((center_line(display,flightcategory,font196b,534), LINE10), flightcategory, fill=0, font=font196b)
     elif flightcategory == "LIFR":
         display.round_box(COL2+5, 190, COL3, 270, 20, "r")
-        display.draw_red.text((267-(w/2)+270, LINE10), flightcategory, fill=255, font=font196b)    
+        display.draw_red.text((center_line(display,flightcategory,font196b,534), LINE10), flightcategory, fill=255, font=font196b)    
     else:
         display.round_line(COL2-5,190,COL3,270,20,"b",0,5)
-        display.draw_black.text((267-(w/2)+270, LINE10), "N/A", fill=0, font=font196b) 
+        display.draw_black.text((center_line(display,"N/A",font196b,534), LINE10), "N/A", fill=0, font=font196b) 
 
     # Display Raw METAR
     rawmetar = "METAR: "+metar.data["properties"]["rawMessage"]
@@ -961,8 +943,7 @@ def layout4(display, metar, remarks, print_table, use_remarks):
         print("1 Lines") # debug
         display.draw_red.text((COL2+5, LINE0), rawmetar, fill=255, font=font24b)
         
-    w, h = display.draw_black.textsize(next_update_text, font=font16)    
-    display.draw_red.text((267-(w/2)+267, LINE0+130), next_update_text, fill=255, font=font16)
+    display.draw_red.text((center_line(display,last_update(),font16,534), LINE0+130), last_update(), fill=255, font=font16)
 
     # Display Airport ID and weather Icon
     # Display Weather Description
@@ -1219,16 +1200,13 @@ def layout5(display, metar, remarks, print_table, use_remarks):
     # Display Raw METAR
     rawmetar = "METAR: "+metar.data["properties"]["rawMessage"]
     w, h = display.draw_black.textsize(rawmetar, font=font16b)
-    now = datetime.now()
-    next_update = now + timedelta(0,int(interval)) # days, seconds
-    next_update_text = "Next Update at "+next_update.strftime("%I:%M %p") #, %m/%d/%Y"
 
     if flightcategory == "VFR":
         display.round_line(COL0, LINE4, COL3-COL0-SPACING, 470-LINE4-MARGIN, RADIUS, "b")
         display.draw_black.text((COL0+10, LINE4+10), output, fill=0, font=font36b)
         display.draw_icon(COL0+ICON_OFFSET, LINE4+10, "b", 30, 30, icon)
         display.draw_black.text((COL0+10, LINE4+50), metar.data2["properties"]["name"][:26], fill=0, font=font14) 
-        display.draw_black.text((COL0+10, LINE4+75), next_update_text, fill=0, font=font16b) 
+        display.draw_black.text((COL0+10, LINE4+75), last_update(), fill=0, font=font16b) 
 
         if w/2 > 600: 
             print("3 Lines") # debug
@@ -1253,7 +1231,7 @@ def layout5(display, metar, remarks, print_table, use_remarks):
         display.draw_black.text((COL0+10, LINE4+10), output, fill=255, font=font36b)
         display.draw_icon(COL0+ICON_OFFSET, LINE4+10, "wb", 30, 30, icon)
         display.draw_black.text((COL0+10, LINE4+50), metar.data2["properties"]["name"][:26], fill=255, font=font14) 
-        display.draw_black.text((COL0+10, LINE4+75), next_update_text, fill=255, font=font16b) 
+        display.draw_black.text((COL0+10, LINE4+75), last_update(), fill=255, font=font16b) 
 
         if w/2 > 600: 
             print("3 Lines") # debug
@@ -1278,7 +1256,7 @@ def layout5(display, metar, remarks, print_table, use_remarks):
         display.draw_red.text((COL0+10, LINE4+10), output, fill=0, font=font36b)
         display.draw_icon(COL0+ICON_OFFSET, LINE4+10, "r", 30, 30, icon)
         display.draw_red.text((COL0+10, LINE4+50), metar.data2["properties"]["name"][:26], fill=0, font=font14) 
-        display.draw_red.text((COL0+10, LINE4+75), next_update_text, fill=0, font=font16b)  
+        display.draw_red.text((COL0+10, LINE4+75), last_update(), fill=0, font=font16b)  
 
         if w/2 > 600: 
             print("3 Lines") # debug
@@ -1303,7 +1281,7 @@ def layout5(display, metar, remarks, print_table, use_remarks):
         display.draw_red.text((COL0+10, LINE4+10), output, fill=255, font=font36b)
         display.draw_icon(COL0+ICON_OFFSET, LINE4+10, "wr", 30, 30, icon)
         display.draw_red.text((COL0+10, LINE4+50), metar.data2["properties"]["name"][:26], fill=255, font=font14) 
-        display.draw_red.text((COL0+10, LINE4+75), next_update_text, fill=255, font=font16b) 
+        display.draw_red.text((COL0+10, LINE4+75), last_update(), fill=255, font=font16b) 
 
         if w/2 > 600: 
             print("3 Lines") # debug
@@ -1351,13 +1329,7 @@ def layout6(display, metar, remarks, print_table, use_remarks):
     BOX_HEIGHT = 85
     RADIUS = 20
         
-    output = airport+": "+flightcategory
-    w, h = display.draw_black.textsize(output, font=font48b)
-    now = datetime.now()
-    next_update = now + timedelta(0,int(interval)) # days, seconds
-    next_update_text = "Next Update at "+next_update.strftime("%I:%M %p") #, %m/%d/%Y"
-    w_upd, h_upd = display.draw_black.textsize(next_update_text, font=font16b)
-    
+    output = airport+": "+flightcategory   
     lon, lat = metar.data2["geometry"]["coordinates"]
     print(lat, lon)
 
@@ -1367,25 +1339,25 @@ def layout6(display, metar, remarks, print_table, use_remarks):
     
     if flightcategory == "VFR":
         display.round_line(COL1, LINE3, BOX_WIDTH, BOX_HEIGHT, RADIUS, "b", 0, 3)
-        display.draw_black.text((400-(w/2), LINE0), output, fill=0, font=font48b)
-        display.draw_black.text((400-(w_upd/2), LINE1), next_update_text, fill=0, font=font16b)
+        display.draw_black.text((center_line(display,output,font48b), LINE0), output, fill=0, font=font48b)
+        display.draw_black.text((center_line(display,last_update(),font16b), LINE1),last_update(), fill=0, font=font16b)
         
     elif flightcategory == "MVFR":
         display.round_box(COL1, LINE3, BOX_WIDTH, BOX_HEIGHT, RADIUS, "b", 0, 3)
-        display.draw_black.text((400-(w/2), LINE0), output, fill=255, font=font48b)
-        display.draw_black.text((400-(w_upd/2), LINE1), next_update_text, fill=255, font=font16b)
+        display.draw_black.text((center_line(display,output,font48b), LINE0), output, fill=255, font=font48b)
+        display.draw_black.text((center_line(display,last_update(),font16b), LINE1), last_update(), fill=255, font=font16b)
 
     elif flightcategory == "IFR":
         display.round_line(COL1, LINE3, BOX_WIDTH, BOX_HEIGHT, RADIUS, "b", 0, 3) # Needed to blank out background
         display.round_line(COL1, LINE3, BOX_WIDTH, BOX_HEIGHT, RADIUS, "r", 0, 3)
-        display.draw_red.text((400-(w/2), LINE0), output, fill=0, font=font48b)
-        display.draw_red.text((400-(w_upd/2), LINE1), next_update_text, fill=0, font=font16b)
+        display.draw_red.text((center_line(display,output,font48b), LINE0), output, fill=0, font=font48b)
+        display.draw_red.text((center_line(display,last_update(),font16b), LINE1), last_update(), fill=0, font=font16b)
         
     else:
         display.round_line(COL1, LINE3, BOX_WIDTH, BOX_HEIGHT, RADIUS, "b", 0, 3)
         display.round_box(COL1, LINE3, BOX_WIDTH, BOX_HEIGHT, RADIUS, "r", 0, 3)
-        display.draw_red.text((400-(w/2), LINE0), output, fill=255, font=font48b)
-        display.draw_red.text((400-(w_upd/2), LINE1), next_update_text, fill=255, font=font16b)
+        display.draw_red.text((center_line(display,output,font48b), LINE0), output, fill=255, font=font48b)
+        display.draw_red.text((center_line(display,last_update(),font16b), LINE1), last_update(), fill=255, font=font16b)
 
         
 ############
@@ -1779,18 +1751,18 @@ def layout8(display, metar, remarks, print_table, use_remarks):
     airport, flight_cat = keys_ap[14], values_ap[14]
     print_box(flight_cat, airport, COL2, LINE4, COL3, LINE5)
     
-    now = datetime.now()
-    next_update = now + timedelta(0,int(interval)) # days, seconds
-    next_update_text = "Next Update at "+next_update.strftime("%I:%M %p, %m/%d/%Y")
-    w_upd, h_upd = display.draw_black.textsize(next_update_text, font=font20b)       
-    display.draw_black.text((400-(w_upd/2), 460), next_update_text, fill=0, font=font20b)
+#    now = datetime.now()
+#    next_update = now + timedelta(0,int(interval)) # days, seconds
+#    next_update_text = "Next Update at "+next_update.strftime("%I:%M %p, %m/%d/%Y")
+#    w_upd, h_upd = display.draw_black.textsize(next_update_text, font=font20b)       
+    display.draw_black.text((center_line(display,last_update(),font20b), 460), last_update(), fill=0, font=font20b)
 
 
 ################
 #   Layout 9   #
 ################
 # Metar with Large Winds Icons
-def layout9(display, metar, remarks, print_table, use_remarks):
+def layout9(display, metar, remarks, print_table, use_remarks):    
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -1811,29 +1783,21 @@ def layout9(display, metar, remarks, print_table, use_remarks):
     COL1 = 5
     COL2 = 405
     
-    ICON_OFFSET = 40
+    ICON_OFFSET = 45
     ICON_SIZE = 300
     
-    now = datetime.now()
-    next_update = now + timedelta(0,int(interval)) # days, seconds
-    next_update_text = "Next Update at "+next_update.strftime("%I:%M %p, %m/%d/%Y")
-
     # Create Grid box
     display.draw_red.rectangle((5, 5, 795, 460), fill=255, outline=0, width=5)
-    display.draw_red.line((5, 100, 795, 100), fill=0, width=5)  # Horizontal 1
-    display.draw_red.line((400, 100, 400, 460), fill=0, width=5)  # Horizontal 1
+    display.draw_red.line((5, 100, 795, 100), fill=0, width=5)  
+    display.draw_red.line((400, 100, 400, 460), fill=0, width=5)  
 
     # Flight Category
     print(flightcategory) # debug
-    w_upd, h_upd = display.draw_black.textsize(next_update_text, font=font16b)   
-    w_apt, h_apt = display.draw_black.textsize(airport, font=font48b)
-    w, h = display.draw_black.textsize(flightcategory, font=font296b)
-    display.draw_black.text((400-(w_upd/2), LINE3), next_update_text, fill=0, font=font16b)
+    display.draw_black.text((center_line(display,last_update(),font16b), LINE3), last_update(), fill=0, font=font16b)
 
     # Display Raw METAR
     rawmetar = "METAR: "+metar.data["properties"]["rawMessage"]
     w, h = display.draw_black.textsize(rawmetar, font=font24)
-#    print(w, w/2, w/3) # debug
 
     if w/3 > 770:
         print("4 Lines") # debug
@@ -1863,7 +1827,6 @@ def layout9(display, metar, remarks, print_table, use_remarks):
         print("1 Lines") # debug
         display.draw_black.text((COL1+10, LINE1+30), rawmetar, fill=0, font=font24)
 
-
     # Display Wind Direction
     if metar.data["properties"]["windDirection"]["value"] != None:
         winddir = '{0:.0f}'.format(metar.data["properties"]["windDirection"]["value"])
@@ -1880,8 +1843,9 @@ def layout9(display, metar, remarks, print_table, use_remarks):
         winddir = winddir + chr(176)
     if winddir == "000"+chr(176):
         winddir = "Calm"
-    w, h = display.draw_black.textsize("Wind Direction:"+winddir, font=font24b)
-    display.draw_black.text((600-(w/2), LINE4-25), "Wind Direction:"+winddir, fill=0, font=font24b)
+
+    wind_txt = "Wind Direction:"+winddir
+    display.draw_black.text((center_line(display,wind_txt,font24b,600), LINE4-25), wind_txt, fill=0, font=font24b)
     display.draw_icon(COL2+ICON_OFFSET, LINE5, "r", ICON_SIZE, ICON_SIZE, wind_arrow(winddir_raw))  
 
     # Display Wind Speed
@@ -1912,6 +1876,5 @@ def layout9(display, metar, remarks, print_table, use_remarks):
         else:
             gustsp = " Gust:"+decoded_wngust+"kt"
             
-    w, h = display.draw_black.textsize("Speed:"+windsp+gustsp, font=font24b)
-    display.draw_black.text(((200)-(w/2), LINE4-25), "Speed:"+windsp+gustsp, fill=0, font=font24b) 
-
+    windsp_txt = "Speed:"+windsp+gustsp
+    display.draw_black.text((center_line(display,windsp_txt,font24b,200), LINE4-25), windsp_txt, fill=0, font=font24b) 
