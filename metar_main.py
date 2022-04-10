@@ -48,7 +48,7 @@ import os
 from waveshare_epd import epd7in5b_V2 
 
 # Layouts - add new layouts to this list as necessary
-layout_list = [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7,layout8] # ,layout6 Add layout routine names here
+layout_list = [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7,layout8,layout9] # ,layout6 Add layout routine names here
 
 # Check for cmdline args and use passed variables instead of the defaults above
 if len(sys.argv) > 1:

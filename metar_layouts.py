@@ -1786,3 +1786,132 @@ def layout8(display, metar, remarks, print_table, use_remarks):
     display.draw_black.text((400-(w_upd/2), 460), next_update_text, fill=0, font=font20b)
 
 
+################
+#   Layout 9   #
+################
+# Metar with Large Winds Icons
+def layout9(display, metar, remarks, print_table, use_remarks):
+    # Get metar data along with flightcategory and related icon
+    decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
+    decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
+    = decode_rawmessage(metar.data["properties"]["rawMessage"]) # pass airport name
+    
+    flightcategory, icon = flight_category(metar)
+    airport = decoded_airport
+   
+    # Data layout for layout1 using pixels.
+    # 0,0 in upper left hand corner. 800,480 in lower right corner
+    LINE0 = 50
+    LINE1 = 10
+    LINE2 = 20
+    LINE3 = 463
+    LINE4 = 450
+    LINE5 = 110
+    
+    COL1 = 5
+    COL2 = 405
+    
+    ICON_OFFSET = 40
+    ICON_SIZE = 300
+    
+    now = datetime.now()
+    next_update = now + timedelta(0,int(interval)) # days, seconds
+    next_update_text = "Next Update at "+next_update.strftime("%I:%M %p, %m/%d/%Y")
+
+    # Create Grid box
+    display.draw_red.rectangle((5, 5, 795, 460), fill=255, outline=0, width=5)
+    display.draw_red.line((5, 100, 795, 100), fill=0, width=5)  # Horizontal 1
+    display.draw_red.line((400, 100, 400, 460), fill=0, width=5)  # Horizontal 1
+
+    # Flight Category
+    print(flightcategory) # debug
+    w_upd, h_upd = display.draw_black.textsize(next_update_text, font=font16b)   
+    w_apt, h_apt = display.draw_black.textsize(airport, font=font48b)
+    w, h = display.draw_black.textsize(flightcategory, font=font296b)
+    display.draw_black.text((400-(w_upd/2), LINE3), next_update_text, fill=0, font=font16b)
+
+    # Display Raw METAR
+    rawmetar = "METAR: "+metar.data["properties"]["rawMessage"]
+    w, h = display.draw_black.textsize(rawmetar, font=font24)
+#    print(w, w/2, w/3) # debug
+
+    if w/3 > 770:
+        print("4 Lines") # debug
+        rmline1 = d.join(rawmetar.split()[:9])
+        rmline2 = d.join(rawmetar.split()[9:18])
+        rmline3 = d.join(rawmetar.split()[18:27])
+        rmline4 = d.join(rawmetar.split()[27:])
+        display.draw_black.text((COL1+10, LINE1), rmline1, fill=0, font=font20)
+        display.draw_black.text((COL1+10, LINE1+20), rmline2, fill=0, font=font20)
+        display.draw_black.text((COL1+10, LINE1+40), rmline3, fill=0, font=font20)
+        display.draw_black.text((COL1+10, LINE1+60), rmline4, fill=0, font=font20)
+    elif w/2 > 770: # and w/3 > 770
+        print("3 Lines") # debug
+        rmline1 = d.join(rawmetar.split()[:8])
+        rmline2 = d.join(rawmetar.split()[8:16])
+        rmline3 = d.join(rawmetar.split()[16:])
+        display.draw_black.text((COL1+10, LINE1), rmline1, fill=0, font=font24)
+        display.draw_black.text((COL1+10, LINE1+30), rmline2, fill=0, font=font24)
+        display.draw_black.text((COL1+10, LINE1+60), rmline3, fill=0, font=font24)
+    elif w > 770: # w/2 < 770 and 
+        print("2 Lines") # debug
+        rmline1 = d.join(rawmetar.split()[:8])
+        rmline2 = d.join(rawmetar.split()[8:])
+        display.draw_black.text((COL1+10, LINE1+15), rmline1, fill=0, font=font24)
+        display.draw_black.text((COL1+10, LINE1+45), rmline2, fill=0, font=font24)
+    else:
+        print("1 Lines") # debug
+        display.draw_black.text((COL1+10, LINE1+30), rawmetar, fill=0, font=font24)
+
+
+    # Display Wind Direction
+    if metar.data["properties"]["windDirection"]["value"] != None:
+        winddir = '{0:.0f}'.format(metar.data["properties"]["windDirection"]["value"])
+    else:
+        winddir = decoded_wndir
+    if len(winddir) == 2:
+        winddir = "0"+winddir
+    if len(winddir) == 1:
+        winddir = "00"+winddir
+    winddir_raw = winddir
+    if winddir == "VRB":
+        pass
+    else:
+        winddir = winddir + chr(176)
+    if winddir == "000"+chr(176):
+        winddir = "Calm"
+    w, h = display.draw_black.textsize("Wind Direction:"+winddir, font=font24b)
+    display.draw_black.text((600-(w/2), LINE4-25), "Wind Direction:"+winddir, fill=0, font=font24b)
+    display.draw_icon(COL2+ICON_OFFSET, LINE5, "r", ICON_SIZE, ICON_SIZE, wind_arrow(winddir_raw))  
+
+    # Display Wind Speed
+    if metar.data["properties"]["windSpeed"]["value"] != None:
+        windsp = '{0:.1f}'.format(metar.data["properties"]["windSpeed"]["value"]*.621371)
+    else:
+        windsp = decoded_wnspd
+    if windsp == "00" or windsp == "0.0":
+        windsp = "Calm"
+    if windsp == "Calm" or float(windsp) < 5.0:
+        display.draw_icon(COL1+ICON_OFFSET, LINE5, "r", ICON_SIZE, ICON_SIZE, "windvanelow")
+    elif float(windsp) >= 5.0 and float(windsp) < 15.0:
+        display.draw_icon(COL1+ICON_OFFSET, LINE5, "r", ICON_SIZE, ICON_SIZE, "windvanemed")
+    elif float(windsp) >= 15.0: 
+        display.draw_icon(COL1+ICON_OFFSET, LINE5, "r", ICON_SIZE, ICON_SIZE, "windvanehigh")
+
+    if windsp == "Calm":
+        pass
+    else:
+        windsp = windsp+"kt"
+        
+    # Display Wind Gust Speed   
+    if metar.data["properties"]["windGust"]["value"] != None:
+        gustsp = " Gust:"+'{0:.1f}'.format(metar.data["properties"]["windGust"]["value"]*.621371)+"kt"
+    else:
+        if decoded_wngust == "Not Present":
+            gustsp = ""
+        else:
+            gustsp = " Gust:"+decoded_wngust+"kt"
+            
+    w, h = display.draw_black.textsize("Speed:"+windsp+gustsp, font=font24b)
+    display.draw_black.text(((200)-(w/2), LINE4-25), "Speed:"+windsp+gustsp, fill=0, font=font24b) 
+
