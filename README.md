@@ -131,9 +131,11 @@ Assuming this is works properly, then using the 'webapp.py' and metar.html scrip
 From the metar directory enter;<br>
 <pre><code>
   sudo python3 webapp.py</pre></code>
-This will run a Flask module that will start 'metar_main.py' using the last save configuration. Flask sets up a web server so we can also run an html file to control the display from any computer, tablet or phone that is on the same WiFi network.<br>
-If all is good your display should be showing a layout of information.<br>
-Make note that when webapp.py starts, information will be displayed in your SSH client. You will need the URL that it provides. For instance; <b>'* Running on http://192.168.86.71:5000/ (Press CTRL+C to quit)'</b><br>
+This will run a Flask module that will run 'metar_main.py'. Flask sets up a web server so we can also run an html file to control the display from any computer, tablet or phone that is on the same WiFi network.<br>
+<br>
+When first run, your E-Paper display will show a screen providing the proper URL to use to access the admin web page. This screen will stay for on 60 seconds then will start to cycle through each display layout from there. Each time the RPi is restarted, the admin URL will be displayed. This will help if the in the future a new IP is assigned to your RPi. <br>
+<br>
+Make note that when webapp.py starts, admin web page information will also be displayed in your SSH client. You will need the URL that it provides. For instance; '* Running on http://192.168.86.71:5000/ (Press CTRL+C to quit)'. This is an example, yours will be different.</b><br>
 <br>
 <b>TEST METAR.HTML:</b><br>
 Using the URL from the previous step, open a web browser and enter it in the URL. If all is well you will see a web page that allows for easy control of the E-Paper display.<br>
