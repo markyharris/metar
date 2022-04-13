@@ -2,11 +2,11 @@
 This project is explained and amplified on Instructables.com. See; https://www.instructables.com/7x5-E-Paper-METAR-Display/<p>
 <br>
 If you would like to update to the latest version of this software enter;
-<code>
+<pre><code>
 cd metar
 sudo git reset --hard
 sudo git pull
-</code>
+</code></pre>
 	
 This software will display various layouts of METAR data on a 7 by 5 inch 3-color E-Paper. Specifically the 7.5inch e-Paper HAT (B) by Waveshare. See https://www.waveshare.com/7.5inch-e-paper-hat-b.htm for more information and pricing from Waveshare.
 
