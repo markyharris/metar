@@ -5,6 +5,7 @@
 from metar_remarks import *
 import urllib.request, urllib.error, urllib.parse
 import xml.etree.ElementTree as ET
+import socket
 
 # Misc Variables
 decode = []      # used to decode the raw metar
@@ -31,7 +32,17 @@ class_c = ['KBHM', 'KHSV', 'KMOB', 'PANC', 'KDMA', 'KTUS', 'KLIT', 'KXNA', 'KBAB
            'KAUS', 'KCRP', 'KDLF', 'KDYS', 'KELP', 'KHRL', 'KLBB', 'KMAF', 'KSAT', 'KBTV', \
            'KORF', 'KRIC', 'KROA', 'KGEG', 'KNUW', 'KSKA', 'KCRW', 'KGRB', 'KMKE', 'KMSN', \
            'TJSJ', 'TIST']
-           
+        
+# Get RPi IP address to display on Boot up.
+def get_ip_address():
+    ip_address = '';
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8",80))
+    ip_address = s.getsockname()[0]
+    s.close()
+#    print(ip_address) # debug
+    return ip_address
+
 # Get Flight Categories for Class B and Class C airports
 def get_flightcat():
     # api url

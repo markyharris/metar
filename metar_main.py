@@ -59,20 +59,20 @@ if len(sys.argv) > 1:
     
 if len(sys.argv) == 3:
     use_disp_format = int(sys.argv[2])
-    if (use_disp_format < -2 or use_disp_format > len(layout_list)-1):
+    if (use_disp_format < -3 or use_disp_format > len(layout_list)-1):
         use_disp_format = -2
         
 if len(sys.argv) == 4:
     interval = int(sys.argv[3])
     use_disp_format = int(sys.argv[2])
-    if (use_disp_format < -2 or use_disp_format > len(layout_list)-1):
+    if (use_disp_format < -3 or use_disp_format > len(layout_list)-1):
         use_disp_format = -2
         
 if len(sys.argv) == 5:
     use_remarks = int(sys.argv[4])
     interval = int(sys.argv[3])
     use_disp_format = int(sys.argv[2])
-    if (use_disp_format < -2 or use_disp_format > len(layout_list)-1):
+    if (use_disp_format < -3 or use_disp_format > len(layout_list)-1):
         use_disp_format = -2
 
 #print(len(sys.argv)) # debug
@@ -86,6 +86,11 @@ def main():
         random_layout(display, metar, remarks, print_table, use_remarks, layout_list)
     elif use_disp_format == -2:
         cycle_layout(display, metar, remarks, print_table, use_remarks, layout_list)
+    elif use_disp_format == -3:
+        disp_ip(display, get_ip_address())
+#        use_disp_format = -2
+#        interval = 1800
+
     else:    
         for index, item in enumerate(layout_list):
             if index == use_disp_format:
@@ -141,9 +146,9 @@ if __name__ == "__main__":
             # Update values
             metar.update(airport)
             print("Metar Updated")
-            
+
             main() # Build METAR data to display using specific layout
-            
+                                    
             # Setup update interval
             # The update interval can be selected via cmd line or web iterface
             # If Auto Interval is selected, then Flight Category dictates update
@@ -151,6 +156,12 @@ if __name__ == "__main__":
             if interval != 0: # if not auto interval selected
                 print("sleep ",interval) # debug
                 time.sleep(interval) # Sets interval of updates. 3600 = 1 hour
+
+                # Reset display format and interval when RPi first boots up and displays URL
+                if use_disp_format == -3: # -3 = Display Admin URL
+                    use_disp_format = -2 # -2 = Cycle through all layouts
+                    interval = 1800
+
             else:
                 if flightcategory == "VFR":
                     print("Sleep 3600") # debug
@@ -161,7 +172,7 @@ if __name__ == "__main__":
                 elif flightcategory == "IFR":
                     print("Sleep 1200") # debug
                     time.sleep(1200) # 20 mins if stormy
-                elif flightcategory == "LIFR":
+                elif flightcategory == "LIFR": 
                     print("Sleep 600") # debug
                     time.sleep(600) # 10 mins if stormy and low visibility
           

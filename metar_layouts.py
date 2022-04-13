@@ -44,6 +44,28 @@ def last_update():
 
 
 ###########################
+#  Display IP Address -3  #
+###########################
+def disp_ip(display, ip_address):
+    LINE0 = 120
+    LINE1 = 220
+    LINE2 = 300
+    LINE3 = 350
+    LINE4 = 420
+    RADIUS = 20
+    
+    admin_url = "http://"+get_ip_address()+":5000"
+    msg1 = "METAR Display will show within 60 seconds"
+    
+    display.round_line(40, 40, 725, 410, RADIUS, "r")
+    display.draw_red.text((center_line(display,"For Admin URL, Enter:",font48b), LINE0), "For Admin URL, Enter:", fill=0, font=font48b)
+    display.draw_black.text((center_line(display,admin_url,font36b), LINE1), admin_url, fill=0, font=font36b)
+    display.draw_red.text((center_line(display,"Into a Web Browser",font36b), LINE2), "Into a Web Browser", fill=0, font=font36b)
+    display.draw_red.text((center_line(display,"on Same Network",font36b), LINE3), "on Same Network", fill=0, font=font36b)
+    display.draw_black.text((center_line(display,msg1,font16b), LINE4), msg1, fill=0, font=font16b)
+
+
+###########################
 #  Cycle Through Each -2  #
 ###########################
 def cycle_layout(display, metar, remarks, print_table, use_remarks, layout_list):

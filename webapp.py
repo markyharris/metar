@@ -42,7 +42,7 @@ def metar():
             
         elif display == "off":
             os.system("ps -ef | grep 'metar_main.py' | awk '{print $2}' | xargs sudo kill")
-            os.system('sudo python3 ' + PATH + 'shutdown.py &')
+            os.system('sudo python3 ' + PATH + 'metar_poweroff.py &')
             flash("Turning Off E-Paper Display - One Moment...")
 
         else:
@@ -83,7 +83,7 @@ def get_data():
 # Start of Flask
 if __name__ == '__main__':
 #    error = 1/0 # Force webapp to stop executing for debug purposes
-    data_field1, data_field2, data_field3, rem_data = get_data() # read what is in data.txt to get last run
+    data_field1, data_field2, data_field3, rem_data = "KFLG","-3","60","0" #get_data()  # read what is in data.txt to get last run
     
     os.system('sudo python3 ' + PATH + 'metar_main.py ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + rem_data + ' &')        
     app.run(debug=True, use_reloader=False, host='0.0.0.0') # use use_reloader=False to stop double loading
