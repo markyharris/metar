@@ -1,7 +1,7 @@
 # E-Paper METAR Display
 This project is explained and amplified on Instructables.com. See; https://www.instructables.com/7x5-E-Paper-METAR-Display/<p>
 
-If you would like to update to the latest version of this software enter;
+If this software is already installed and you just want to update to the latest version of this software enter;
 <pre><code>
 cd metar
 sudo git reset --hard
