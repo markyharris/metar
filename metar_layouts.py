@@ -237,7 +237,7 @@ def layout1(display, metar, remarks, print_table, use_remarks):
 
     # Display Raw METAR
     rawmetar = "METAR: "+metar.data["properties"]["rawMessage"]
-    w, h = display.draw_black.textsize(rawmetar, font=font24)
+    w, h = display.draw_black.textsize(rawmetar, font=font24b)
 #    print(w, w/2, w/3) # debug
 
     if w/3 > 770:
@@ -246,27 +246,27 @@ def layout1(display, metar, remarks, print_table, use_remarks):
         rmline2 = d.join(rawmetar.split()[9:18])
         rmline3 = d.join(rawmetar.split()[18:27])
         rmline4 = d.join(rawmetar.split()[27:])
-        display.draw_black.text((COL1, LINE0), rmline1, fill=0, font=font20)
-        display.draw_black.text((COL1, LINE0+20), rmline2, fill=0, font=font20)
-        display.draw_black.text((COL1, LINE0+40), rmline3, fill=0, font=font20)
-        display.draw_black.text((COL1, LINE0+60), rmline4, fill=0, font=font20)
+        display.draw_black.text((COL1, LINE0), rmline1, fill=0, font=font20b)
+        display.draw_black.text((COL1, LINE0+20), rmline2, fill=0, font=font20b)
+        display.draw_black.text((COL1, LINE0+40), rmline3, fill=0, font=font20b)
+        display.draw_black.text((COL1, LINE0+60), rmline4, fill=0, font=font20b)
     elif w/2 > 770: # and w/3 > 770
         print("3 Lines") # debug
         rmline1 = d.join(rawmetar.split()[:8])
         rmline2 = d.join(rawmetar.split()[8:16])
         rmline3 = d.join(rawmetar.split()[16:])
-        display.draw_black.text((COL1, LINE0), rmline1, fill=0, font=font24)
-        display.draw_black.text((COL1, LINE0+30), rmline2, fill=0, font=font24)
-        display.draw_black.text((COL1, LINE0+60), rmline3, fill=0, font=font24)
+        display.draw_black.text((COL1, LINE0), rmline1, fill=0, font=font24b)
+        display.draw_black.text((COL1, LINE0+30), rmline2, fill=0, font=font24b)
+        display.draw_black.text((COL1, LINE0+60), rmline3, fill=0, font=font24b)
     elif w > 770: # w/2 < 770 and 
         print("2 Lines") # debug
         rmline1 = d.join(rawmetar.split()[:8])
         rmline2 = d.join(rawmetar.split()[8:])
-        display.draw_black.text((COL1, LINE0+15), rmline1, fill=0, font=font24)
-        display.draw_black.text((COL1, LINE0+45), rmline2, fill=0, font=font24)
+        display.draw_black.text((COL1, LINE0+15), rmline1, fill=0, font=font24b)
+        display.draw_black.text((COL1, LINE0+45), rmline2, fill=0, font=font24b)
     else:
         print("1 Lines") # debug
-        display.draw_black.text((COL1, LINE0+30), rawmetar, fill=0, font=font24)
+        display.draw_black.text((COL1, LINE0+30), rawmetar, fill=0, font=font24b)
 
     # Display Weather Description
     if metar.data["properties"]["textDescription"] != None:
@@ -275,10 +275,10 @@ def layout1(display, metar, remarks, print_table, use_remarks):
         descript = "n/a" 
 
     display.draw_black.text((COL1, LINE2), "Weather:", fill=0, font=font24)    
-    w, h = display.draw_black.textsize(descript, font=font24)
+    w, h = display.draw_black.textsize(descript, font=font24b)
 #    print("Description Width = " + str(w)) # debug
     
-    display.draw_black.text((COL1, LINE2+25), descript, fill=0, font=font24)
+    display.draw_black.text((COL1, LINE2+25), descript, fill=0, font=font24b)
     if (w+ICON_OFFSET1) < ICON_OFFSET:
         desc_icon_offset = ICON_OFFSET
     else:
@@ -326,7 +326,7 @@ def layout1(display, metar, remarks, print_table, use_remarks):
         display.draw_icon(COL2+ICON_OFFSET, LINE2+5, "r", 50, 50, "cold")  
         
     tempf = tempf + " f"
-    display.draw_black.text((COL2, LINE2), "Temperature:\n"+tempf, fill=0, font=font24)
+    display.draw_black.text((COL2, LINE2), "Temperature:\n"+tempf, fill=0, font=font24b)
 
     # Display Wind Direction
     if metar.data["properties"]["windDirection"]["value"] != None:
@@ -344,7 +344,7 @@ def layout1(display, metar, remarks, print_table, use_remarks):
         winddir = winddir + chr(176)
     if winddir == "000"+chr(176):
         winddir = "Calm"
-    display.draw_black.text((COL1, LINE3), "Wind Vector:\n"+winddir, fill=0, font=font24)
+    display.draw_black.text((COL1, LINE3), "Wind Vector:\n"+winddir, fill=0, font=font24b)
     display.draw_icon(COL1+ICON_OFFSET, LINE3+5, "r", 50, 50, wind_arrow(winddir_raw))  
 
     # Display Wind Speed
@@ -365,7 +365,7 @@ def layout1(display, metar, remarks, print_table, use_remarks):
         pass
     else:
         windsp = windsp+" KT"
-    display.draw_black.text((COL2, LINE3), "Wind Speed:\n"+windsp, fill=0, font=font24) 
+    display.draw_black.text((COL2, LINE3), "Wind Speed:\n"+windsp, fill=0, font=font24b) 
         
     # Display Wind Gust Speed   
     if metar.data["properties"]["windGust"]["value"] != None:
@@ -375,7 +375,7 @@ def layout1(display, metar, remarks, print_table, use_remarks):
             gustsp = decoded_wngust
         else:
             gustsp = decoded_wngust+" KT"    
-    display.draw_black.text((COL1, LINE4), "Wind Gust:\n"+gustsp, fill=0, font=font24)
+    display.draw_black.text((COL1, LINE4), "Wind Gust:\n"+gustsp, fill=0, font=font24b)
     if gustsp == "Not Present":
         display.draw_icon(COL1+ICON_OFFSET, LINE4+5, "r", 50, 50, "wind vane1")
     else:
@@ -399,14 +399,14 @@ def layout1(display, metar, remarks, print_table, use_remarks):
         display.draw_icon(COL2+ICON_OFFSET, LINE4+5, "r", 50, 50, "baro100")
         
     baro = baro+" inHg" 
-    display.draw_black.text((COL2, LINE4), "Baro Press:\n"+baro, fill=0, font=font24)    
+    display.draw_black.text((COL2, LINE4), "Baro Press:\n"+baro, fill=0, font=font24b)    
         
     # Display Visibility    
     if metar.data["properties"]["visibility"]["value"] != None:
         vis = '{0:.1f}'.format(metar.data["properties"]["visibility"]["value"]*.000621371)+" miles"
     else:
         vis = "n/a"    
-    display.draw_black.text((COL1, LINE5), "Visibility:\n"+vis, fill=0, font=font24)
+    display.draw_black.text((COL1, LINE5), "Visibility:\n"+vis, fill=0, font=font24b)
     display.draw_icon(COL1+ICON_OFFSET, LINE5+5, "r", 50, 50, "vis")
         
     # Display Humidity
@@ -428,11 +428,11 @@ def layout1(display, metar, remarks, print_table, use_remarks):
         
     if relhumid != "n/a":
         relhumid = relhumid+" %"    
-    display.draw_black.text((COL2, LINE5), "Humidity:\n"+relhumid, fill=0, font=font24)
+    display.draw_black.text((COL2, LINE5), "Humidity:\n"+relhumid, fill=0, font=font24b)
 
     # Display Cloud Cover
     # Grab the first 3 layers of clouds being reported
-    display.draw_black.text((COL1, LINE6), "Cloud Cover:\n", fill=0, font=font24)
+    display.draw_black.text((COL1, LINE6), "Cloud Cover:\n", fill=0, font=font24b)
     for i in range(len(metar.data["properties"]["cloudLayers"])):
         if i == 3:
             break
@@ -447,7 +447,7 @@ def layout1(display, metar, remarks, print_table, use_remarks):
         if cctype == None:
             cctype == "n/a"
     
-        display.draw_black.text((COL1, LINE6+27+(27*i)), cctype+" "+ccheight, fill=0, font=font24)
+        display.draw_black.text((COL1, LINE6+27+(27*i)), cctype+" "+ccheight, fill=0, font=font24b)
         
         if i == 0: # Draw lowest level cloud layer icon
             if cctype == "OVC" or cctype == "VV": # Overcast
@@ -483,27 +483,27 @@ def layout1(display, metar, remarks, print_table, use_remarks):
             display.draw_black.text((286, LINE6+4), airport+" "+last_update(), fill=0, font=font16b)
             display.draw_red.text((286, LINE6+26), remarks, fill=0, font=font16b)
             
-        display.draw_black.text((286, LINE6+44), print_table[0][:30], fill=0, font=font14) 
-        display.draw_black.text((540, LINE6+44), print_table[1][:30], fill=0, font=font14) 
+        display.draw_black.text((286, LINE6+44), print_table[0][:30], fill=0, font=font14b) 
+        display.draw_black.text((540, LINE6+44), print_table[1][:30], fill=0, font=font14b) 
 
-        display.draw_black.text((286, LINE6+62), print_table[2][:30], fill=0, font=font14)
-        display.draw_black.text((540, LINE6+62), print_table[3][:30], fill=0, font=font14)
+        display.draw_black.text((286, LINE6+62), print_table[2][:30], fill=0, font=font14b)
+        display.draw_black.text((540, LINE6+62), print_table[3][:30], fill=0, font=font14b)
 
-        display.draw_black.text((286, LINE6+80), print_table[4][:30], fill=0, font=font14)
-        display.draw_black.text((540, LINE6+80), print_table[5][:30], fill=0, font=font14)
+        display.draw_black.text((286, LINE6+80), print_table[4][:30], fill=0, font=font14b)
+        display.draw_black.text((540, LINE6+80), print_table[5][:30], fill=0, font=font14b)
 
-        display.draw_black.text((286, LINE6+98), print_table[6][:30], fill=0, font=font14)
-        display.draw_black.text((540, LINE6+98), print_table[7][:30], fill=0, font=font14)
+        display.draw_black.text((286, LINE6+98), print_table[6][:30], fill=0, font=font14b)
+        display.draw_black.text((540, LINE6+98), print_table[7][:30], fill=0, font=font14b)
        
     else:
         display.draw_red.text((286, LINE6+4), airport+" "+last_update(), fill=0, font=font16b)
         display.draw_black.text((286, LINE6+26),"Name: " + metar.data2["properties"]["name"], fill=0, font=font14b) 
-        display.draw_black.text((286, LINE6+44), "Time Zone: " + metar.data2["properties"]["timeZone"], fill=0, font=font14)
-        display.draw_black.text((286, LINE6+62), "Elevation: " + '{0:.0f}'.format(metar.data2["properties"]["elevation"]["value"]*3.28084)+" ft", fill=0, font=font14)
+        display.draw_black.text((286, LINE6+44), "Time Zone: " + metar.data2["properties"]["timeZone"], fill=0, font=font14b)
+        display.draw_black.text((286, LINE6+62), "Elevation: " + '{0:.0f}'.format(metar.data2["properties"]["elevation"]["value"]*3.28084)+" ft", fill=0, font=font14b)
         
         lat, lon = metar.data2["geometry"]["coordinates"]
-        display.draw_black.text((286, LINE6+80), "Coordinates: " + str(lat) + " " + str(lon), fill=0, font=font14)
-        display.draw_black.text((286, LINE6+98), "URL: " + metar.data2["properties"]["@id"], fill=0, font=font14)
+        display.draw_black.text((286, LINE6+80), "Coordinates: " + str(lat) + " " + str(lon), fill=0, font=font14b)
+        display.draw_black.text((286, LINE6+98), "URL: " + metar.data2["properties"]["@id"], fill=0, font=font14b)
 
 
 ################
@@ -542,8 +542,8 @@ def layout2(display,metar, remarks, print_table, use_remarks):
     display.draw_black.line((5, 350, 795, 350), fill=0, width=1)  # Horizontal 4
 
     # Airport ID, Flight Category and Icon
-    display.draw_black.text((COL1+3, LINE0+3), airport+" - "+flightcategory, fill=0, font=font48)
-    display.draw_red.text((COL1, LINE0), airport+" - "+flightcategory, fill=0, font=font48)
+    display.draw_black.text((COL1+3, LINE0+3), airport+" - "+flightcategory, fill=0, font=font48b)
+    display.draw_red.text((COL1, LINE0), airport+" - "+flightcategory, fill=0, font=font48b)
     display.draw_icon( 378, LINE0+3, "b", 50, 50, icon)
     display.draw_icon( 375, LINE0, "r", 50, 50, icon)
     
@@ -557,10 +557,10 @@ def layout2(display,metar, remarks, print_table, use_remarks):
     if w > 470:
         rmline1 = d.join(rawmetar.split()[:10])
         rmline2 = d.join(rawmetar.split()[10:])
-        display.draw_black.text((COL1, LINE1-10), rmline1, fill=0, font=font14)
-        display.draw_black.text((COL1, LINE1+10), rmline2, fill=0, font=font14)
+        display.draw_black.text((COL1, LINE1-10), rmline1, fill=0, font=font16b)
+        display.draw_black.text((COL1, LINE1+10), rmline2, fill=0, font=font16b)
     else:
-        display.draw_black.text((COL1, LINE1), rawmetar, fill=0, font=font16)
+        display.draw_black.text((COL1, LINE1), rawmetar, fill=0, font=font16b)
         
     # Display Weather Description
     if metar.data["properties"]["textDescription"] != None:
@@ -568,14 +568,14 @@ def layout2(display,metar, remarks, print_table, use_remarks):
     else:
         descript = "n/a" 
 
-    display.draw_black.text((COL1, LINE2), "Weather:", fill=0, font=font24)    
+    display.draw_black.text((COL1, LINE2), "Weather:", fill=0, font=font24b)    
     w, h = display.draw_black.textsize(descript)
 #    print("Description Width = " + str(w)) # debug
     
     if w > 135:
-        display.draw_black.text((COL1, LINE2+25), descript, fill=0, font=font16)
+        display.draw_black.text((COL1, LINE2+25), descript, fill=0, font=font16b)
     else:
-        display.draw_black.text((COL1, LINE2+25), descript, fill=0, font=font24)
+        display.draw_black.text((COL1, LINE2+25), descript, fill=0, font=font24b)
     
     if "Snow" in descript:
         display.draw_icon(COL1+300, LINE2+5, "r", 50, 50, "snow")
@@ -619,7 +619,7 @@ def layout2(display,metar, remarks, print_table, use_remarks):
         display.draw_icon(COL2+300, LINE2+5, "r", 50, 50, "cold")  
         
     tempf = tempf + " f"
-    display.draw_black.text((COL2, LINE2), "Temperature:\n"+tempf, fill=0, font=font24)
+    display.draw_black.text((COL2, LINE2), "Temperature:\n"+tempf, fill=0, font=font24b)
 
     # Display Wind Direction
     if metar.data["properties"]["windDirection"]["value"] != None:
@@ -637,7 +637,7 @@ def layout2(display,metar, remarks, print_table, use_remarks):
         winddir = winddir + chr(176)
     if winddir == "000"+chr(176):
         winddir = "Calm"
-    display.draw_black.text((COL1, LINE3), "Wind Direction:\n"+winddir, fill=0, font=font24)
+    display.draw_black.text((COL1, LINE3), "Wind Direction:\n"+winddir, fill=0, font=font24b)
     display.draw_icon(COL1+300, LINE3+5, "r", 50, 50, wind_arrow(winddir_raw))  
 #    print(wind_arrow(winddir_raw)) # debug
 
@@ -659,7 +659,7 @@ def layout2(display,metar, remarks, print_table, use_remarks):
         pass
     else:
         windsp = windsp+" KT"
-    display.draw_black.text((COL2, LINE3), "Wind Speed:\n"+windsp, fill=0, font=font24) 
+    display.draw_black.text((COL2, LINE3), "Wind Speed:\n"+windsp, fill=0, font=font24b) 
         
     # Display Wind Gust Speed   
     if metar.data["properties"]["windGust"]["value"] != None:
@@ -669,7 +669,7 @@ def layout2(display,metar, remarks, print_table, use_remarks):
             gustsp = decoded_wngust
         else:
             gustsp = decoded_wngust+" KT"    
-    display.draw_black.text((COL1, LINE4), "Wind Gust:\n"+gustsp, fill=0, font=font24)
+    display.draw_black.text((COL1, LINE4), "Wind Gust:\n"+gustsp, fill=0, font=font24b)
     if gustsp == "Not Present":
         display.draw_icon(COL1+300, LINE4+5, "r", 50, 50, "wind vane1")
     else:
@@ -693,14 +693,14 @@ def layout2(display,metar, remarks, print_table, use_remarks):
         display.draw_icon(COL2+300, LINE4+5, "r", 50, 50, "baro100")
         
     baro = baro+" inHg" 
-    display.draw_black.text((COL2, LINE4), "Baro Pressure:\n"+baro, fill=0, font=font24)    
+    display.draw_black.text((COL2, LINE4), "Baro Pressure:\n"+baro, fill=0, font=font24b)    
         
     # Display Visibility    
     if metar.data["properties"]["visibility"]["value"] != None:
         vis = '{0:.1f}'.format(metar.data["properties"]["visibility"]["value"]*.000621371)+" miles"
     else:
         vis = "n/a"    
-    display.draw_black.text((COL1, LINE5), "Visibility:\n"+vis, fill=0, font=font24)
+    display.draw_black.text((COL1, LINE5), "Visibility:\n"+vis, fill=0, font=font24b)
     display.draw_icon(COL1+300, LINE5+5, "r", 50, 50, "vis")
         
     # Display Humidity
@@ -722,12 +722,12 @@ def layout2(display,metar, remarks, print_table, use_remarks):
         
     if relhumid != "n/a":
         relhumid = relhumid+" %"    
-    display.draw_black.text((COL2, LINE5), "Humidity:\n"+relhumid, fill=0, font=font24)
+    display.draw_black.text((COL2, LINE5), "Humidity:\n"+relhumid, fill=0, font=font24b)
 
     # Display Cloud Cover
     # Grab the first 3 layers of clouds being reported
 #    print(len(metar.data["properties"]["cloudLayers"])) # debug    
-    display.draw_black.text((COL1, LINE6), "Cloud Cover:\n", fill=0, font=font24)
+    display.draw_black.text((COL1, LINE6), "Cloud Cover:\n", fill=0, font=font24b)
     for i in range(len(metar.data["properties"]["cloudLayers"])):
         if i == 3:
             break
@@ -742,7 +742,7 @@ def layout2(display,metar, remarks, print_table, use_remarks):
         if cctype == None:
             cctype == "n/a"
     
-        display.draw_black.text((COL1, LINE6+27+(27*i)), cctype+" "+ccheight, fill=0, font=font24)
+        display.draw_black.text((COL1, LINE6+27+(27*i)), cctype+" "+ccheight, fill=0, font=font24b)
         
         if i == 0: # Draw lowest level cloud layer icon
             if cctype == "OVC" or cctype == "VV": # Overcast
@@ -776,31 +776,31 @@ def layout2(display,metar, remarks, print_table, use_remarks):
             display.draw_black.text((405, LINE6+4), airport+" "+last_update(), fill=0, font=font16b)
             display.draw_red.text((405, LINE6+26), remarks, fill=0, font=font16b)
             
-        display.draw_black.text((405, LINE6+44), print_table[0][:22], fill=0, font=font14) 
-        display.draw_black.text((605, LINE6+44), print_table[1][:22], fill=0, font=font14) 
+        display.draw_black.text((405, LINE6+44), print_table[0][:22], fill=0, font=font14b) 
+        display.draw_black.text((605, LINE6+44), print_table[1][:22], fill=0, font=font14b) 
 
-        display.draw_black.text((405, LINE6+62), print_table[2][:22], fill=0, font=font14)
-        display.draw_black.text((605, LINE6+62), print_table[3][:22], fill=0, font=font14)
+        display.draw_black.text((405, LINE6+62), print_table[2][:22], fill=0, font=font14b)
+        display.draw_black.text((605, LINE6+62), print_table[3][:22], fill=0, font=font14b)
 
-        display.draw_black.text((405, LINE6+80), print_table[4][:22], fill=0, font=font14)
-        display.draw_black.text((605, LINE6+80), print_table[5][:22], fill=0, font=font14)
+        display.draw_black.text((405, LINE6+80), print_table[4][:22], fill=0, font=font14b)
+        display.draw_black.text((605, LINE6+80), print_table[5][:22], fill=0, font=font14b)
 
-        display.draw_black.text((405, LINE6+98), print_table[6][:22], fill=0, font=font14)
-        display.draw_black.text((605, LINE6+98), print_table[7][:22], fill=0, font=font14)
+        display.draw_black.text((405, LINE6+98), print_table[6][:22], fill=0, font=font14b)
+        display.draw_black.text((605, LINE6+98), print_table[7][:22], fill=0, font=font14b)
        
     else:
         now = datetime.now()    
         display.draw_red.text((COL2, LINE6+4), "INFO: Updated " + now.strftime("%I:%M %p, %m/%d/%Y"), fill=0, font=font14b)
-        display.draw_black.text((COL2, LINE6+22),"Name: " + metar.data2["properties"]["name"], fill=0, font=font14) 
-        display.draw_black.text((COL2, LINE6+40), "Time Zone: " + metar.data2["properties"]["timeZone"], fill=0, font=font14)
-        display.draw_black.text((COL2, LINE6+58), "Elevation: " + '{0:.0f}'.format(metar.data2["properties"]["elevation"]["value"]*3.28084)+" ft", fill=0, font=font14)
+        display.draw_black.text((COL2, LINE6+22),"Name: " + metar.data2["properties"]["name"], fill=0, font=font14b) 
+        display.draw_black.text((COL2, LINE6+40), "Time Zone: " + metar.data2["properties"]["timeZone"], fill=0, font=font14b)
+        display.draw_black.text((COL2, LINE6+58), "Elevation: " + '{0:.0f}'.format(metar.data2["properties"]["elevation"]["value"]*3.28084)+" ft", fill=0, font=font14b)
         
         lat, lon = metar.data2["geometry"]["coordinates"]
-        display.draw_black.text((COL2, LINE6+76), "Coordinates: " + str(lat) + " " + str(lon), fill=0, font=font14)
-        display.draw_black.text((COL2, LINE6+94), "URL: " + metar.data2["properties"]["@id"], fill=0, font=font14)
+        display.draw_black.text((COL2, LINE6+76), "Coordinates: " + str(lat) + " " + str(lon), fill=0, font=font14b)
+        display.draw_black.text((COL2, LINE6+94), "URL: " + metar.data2["properties"]["@id"], fill=0, font=font14b)
         
 
-################
+################ 
 #   Layout 3   #
 ################
 # Large flight category, no metar listed
@@ -952,7 +952,7 @@ def layout4(display, metar, remarks, print_table, use_remarks):
         rmline1 = d.join(rawmetar.split()[:5])
         rmline2 = d.join(rawmetar.split()[5:11])
         rmline3 = d.join(rawmetar.split()[11:])
-        display.draw_red.text((COL2+5, LINE0), rmline1, fill=255, font=font24)
+        display.draw_red.text((COL2+5, LINE0), rmline1, fill=255, font=font24b)
         display.draw_red.text((COL2+5, LINE0+30), rmline2, fill=255, font=font24b)
         display.draw_red.text((COL2+5, LINE0+60), rmline3, fill=255, font=font24b)
     elif w > 500: # w/2 < 770 and 
