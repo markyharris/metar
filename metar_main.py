@@ -220,3 +220,4 @@ if __name__ == "__main__":
             time.sleep(60) # Sets interval of updates. 60 = 1 minute
             epd.init()
             epd.sleep()
+            

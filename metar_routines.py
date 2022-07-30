@@ -88,8 +88,11 @@ def get_flightcat():
 def flight_category(metar):
     flightcategory = "VFR"
     icon = "sun"
-    vis_in_miles = round(metar.data["properties"]["visibility"]["value"]*3.28084/5280, 1)
-#    print(vis_in_miles) # debug
+    try:
+        vis_in_miles = round(metar.data["properties"]["visibility"]["value"]*3.28084/5280, 1)
+    except:
+        vis_in_miles = 1 # Set an assumed default
+#    print("vis_in_miles: ",vis_in_miles) # debug
       
     for i in range(len(metar.data["properties"]["cloudLayers"])):
         sky_condition = metar.data["properties"]["cloudLayers"][i]["amount"]
@@ -225,14 +228,20 @@ def decode_rawmessage(airport_name):
     # Get Wind Direction, Wind Speed and Wind Gust    
     if decode[2] == "AUTO" or decode[2] == "COR": # check for AUTO or COR in 3rd postion
         decode[2], decode[3] = decode[3], decode[2] # switch AUTO and Windspeed to put wind speed into decode[2]
-    decoded_wndir = decode[2][:3] # get winds direction
-    decoded_wnspd = decode[2][3:5] # get wind speed
+    if decode[2] == "VCTS":
+        decoded_wndir = 0 # set default winds direction
+        decoded_wnspd = 0 # set default wind speed
+    else:        
+        decoded_wndir = decode[2][:3] # get winds direction
+        decoded_wnspd = decode[2][3:5] # get wind speed
     if len(decode[2]) == 10:
         decoded_wngust = decode[2][6:8] # get wind gusts if present
 
     # Get Visibility    NEEDS WORK
     for i in range(len(decode)):
-        if len(decode[i]) == 1: 
+#        print("i: ",i) # debug
+        
+        if len(decode[i]) == 1 and i < len(decode): 
             decode[i] = decode[i]+" "+decode[i+1]
             
         if "SM" in decode[i] and i != 0:
