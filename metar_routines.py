@@ -1,5 +1,6 @@
 # metar_routines.py
 # Metar Decoding Routines - Mark Harris
+# UPDATED FAA API 11-2023
 
 # Imports
 from metar_remarks import *

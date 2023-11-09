@@ -1,5 +1,7 @@
 # metar_main.py
 # E-Paper METAR Display - by Mark Harris
+# Version 1.2
+# UPDATED FAA API 11-2023
 #
 # Thanks to Aerodynamics for providing a great start for this project
 # Visit his page at;
