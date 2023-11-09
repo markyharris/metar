@@ -46,7 +46,8 @@ def get_ip_address():
 # Get Flight Categories for Class B and Class C airports
 def get_flightcat():
     # api url
-    url = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&mostRecentForEachStation=constraint&hoursBeforeNow=2.5&stationString="
+#    url = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&mostRecentForEachStation=constraint&hoursBeforeNow=2.5&stationString="
+    url = "https://aviationweather-cprk.ncep.noaa.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&mostRecentForEachStation=constraint&hoursBeforeNow=2.5&stationString="
 
     fc_dict = {}
     vfr_dict = {}
@@ -61,6 +62,7 @@ def get_flightcat():
         url = url+ap+","
         
     content = urllib.request.urlopen(url).read()
+    
     root = ET.fromstring(content) #Process XML data returned from FAA
     for data in root.iter('data'):
             num_results = data.attrib['num_results']

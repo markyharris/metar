@@ -121,7 +121,8 @@ if __name__ == "__main__":
     epd = epd7in5b_V2.EPD() # Instantiate instance for display.
   
     while True:        
-        try:
+#        try:
+        while True: # debug
 #            error = 1/0 #debug  # forces error to test the try-except statements
 #       if True:  # used instead of the try-except statements for debug purposes.
             current_time = time.strftime("%m/%d/%Y %H:%M", time.localtime())
@@ -179,7 +180,7 @@ if __name__ == "__main__":
             epd.init()
             epd.sleep()
             
-        except Exception as e:
+            """ except Exception as e:
             time.sleep(2)
             print("Error Occurred in Main While Loop")
             exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -219,5 +220,4 @@ if __name__ == "__main__":
             print("Done")
             time.sleep(60) # Sets interval of updates. 60 = 1 minute
             epd.init()
-            epd.sleep()
-            
+            epd.sleep() """           

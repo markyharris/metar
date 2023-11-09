@@ -440,11 +440,11 @@ def layout1(display, metar, remarks, print_table, use_remarks):
         ccheight = metar.data["properties"]["cloudLayers"][i]["base"]["value"]
         cctype = metar.data["properties"]["cloudLayers"][i]["amount"]
         
-        if ccheight == None:
+        if ccheight is None:
             ccheight = ""
         else:
             ccheight = '{0:.0f}'.format(ccheight * 3.28084)+" ft"
-        if cctype == None:
+        if cctype is None:
             cctype == "n/a"
     
         display.draw_black.text((COL1, LINE6+27+(27*i)), cctype+" "+ccheight, fill=0, font=font24b)
@@ -735,11 +735,11 @@ def layout2(display,metar, remarks, print_table, use_remarks):
         ccheight = metar.data["properties"]["cloudLayers"][i]["base"]["value"]
         cctype = metar.data["properties"]["cloudLayers"][i]["amount"]
         
-        if ccheight == None:
+        if ccheight is None:
             ccheight = ""
         else:
             ccheight = '{0:.0f}'.format(ccheight * 3.28084)+" ft"
-        if cctype == None:
+        if cctype is None:
             cctype == "n/a"
     
         display.draw_black.text((COL1, LINE6+27+(27*i)), cctype+" "+ccheight, fill=0, font=font24b)
@@ -1087,11 +1087,11 @@ def layout4(display, metar, remarks, print_table, use_remarks):
         ccheight = metar.data["properties"]["cloudLayers"][i]["base"]["value"]
         cctype = metar.data["properties"]["cloudLayers"][i]["amount"]
         
-        if ccheight == None:
+        if ccheight is None:
             ccheight = ""
         else:
             ccheight = '{0:.0f}'.format(ccheight * 3.28084)+" ft"
-        if cctype == None:
+        if cctype is None:
             cctype == "n/a"
     
         display.draw_black.text((COL0+5, LINE8+20), cctype+" "+ccheight, fill=255, font=font24b)
@@ -1633,11 +1633,11 @@ def layout7(display, metar, remarks, print_table, use_remarks):
         ccheight = metar.data["properties"]["cloudLayers"][i]["base"]["value"]
         cctype = metar.data["properties"]["cloudLayers"][i]["amount"]
         
-        if ccheight == None:
+        if ccheight is None:
             ccheight = ""
         else:
             ccheight = '{0:.0f}'.format(ccheight * 3.28084)+"ft"
-        if cctype == None:
+        if cctype is None:
             cctype == "n/a"
     
         x_pos, y_pos = center_text(cctype, font24b, OUTER_CIRCLES[7][0], OUTER_CIRCLES[7][1]-10)
