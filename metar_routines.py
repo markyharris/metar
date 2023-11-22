@@ -71,7 +71,10 @@ def get_flightcat():
             
     for metar in root.iter('METAR'):
         stationId = metar.find('station_id').text
-        flightcategory = metar.find('flight_category').text
+        if metar.find('flight_category') == None: ##! FAA API CHANGE
+            flightcategory = "NA"
+        else:
+            flightcategory = metar.find('flight_category').text
         fc_dict[stationId] = flightcategory
         
     for key in fc_dict:
