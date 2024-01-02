@@ -1,0 +1,482 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://aviationweather.gov/data/schema/metar1_0.json",
+  "description": "Set of surface observations (METARs)",
+  "type": "array",
+  "default": [],
+  "title": "Observations",
+  "items": {
+    "type": "object",
+    "default": {},
+    "title": "METARs",
+    "required": [
+      "metar_id",
+      "icaoId",
+      "receiptTime",
+      "obsTime",
+      "reportTime",
+      "temp",
+      "dewp",
+      "wdir",
+      "wspd",
+      "wgst",
+      "visib",
+      "altim",
+      "slp",
+      "qcField",
+      "wxString",
+      "presTend",
+      "maxT",
+      "minT",
+      "maxT24",
+      "minT24",
+      "precip",
+      "pcp3hr",
+      "pcp6hr",
+      "pcp24hr",
+      "snow",
+      "vertVis",
+      "metarType",
+      "rawOb",
+      "mostRecent",
+      "lat",
+      "lon",
+      "elev",
+      "prior",
+      "name",
+      "clouds"
+    ],
+    "properties": {
+      "metar_id": {
+        "type": "integer",
+        "default": 0,
+        "title": "Unique id number (autoincrement)",
+        "examples": [
+          93352910
+        ]
+      },
+      "icaoId": {
+        "type": "string",
+        "default": "",
+        "title": "ICAO identifier",
+        "examples": [
+          "KORD"
+        ]
+      },
+      "receiptTime": {
+        "type": "string",
+        "default": "",
+        "title": "The time the observation was received (yyyy-mm-dd hh:mm:ss)",
+        "examples": [
+          "2023-11-03 21:54:03"
+        ]
+      },
+      "obsTime": {
+        "type": "integer",
+        "default": 0,
+        "title": "The observation time (unix timestamp)",
+        "examples": [
+          1699048260
+        ]
+      },
+      "reportTime": {
+        "type": "string",
+        "default": "",
+        "title": "The time of the report (yyyy-mm-dd hh:mm:ss)",
+        "examples": [
+          "2023-11-03 22:00:00"
+        ]
+      },
+      "temp": {
+        "type": "number",
+        "default": 0,
+        "title": "Temperature in Celcius",
+        "examples": [
+          14.4
+        ]
+      },
+      "dewp": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "default": null,
+        "title": "Dewpoint temperature in Celcius",
+        "examples": [
+          2.8
+        ]
+      },
+      "wdir": {
+        "type": [
+          "integer",
+          "string"
+        ],
+        "default": 0,
+        "title": "Wind direction in degrees or VRB for variable winds",
+        "examples": [
+          230,
+          "VRB"
+        ]
+      },
+      "wspd": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null,
+        "title": "Wind speed in knots",
+        "examples": [
+          6
+        ]
+      },
+      "wgst": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null,
+        "title": "Wind gusts in knots",
+        "examples": [
+          12
+        ]
+      },
+      "visib": {
+        "type": [
+          "number",
+          "string",
+          "null"
+        ],
+        "default": null,
+        "title": "Visibility in statute miles, 10+ is greater than 10 sm",
+        "examples": [
+          3,
+          "10+",
+          null
+        ]
+      },
+      "altim": {
+        "type": "number",
+        "default": null,
+        "title": "Altimeter setting in hectoPascals",
+        "examples": [
+          1016.3
+        ]
+      },
+      "slp": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "default": null,
+        "title": "Sea level pressure in hectoPascals",
+        "examples": [
+          1016.2,
+          null
+        ]
+      },
+      "qcField": {
+        "type": "integer",
+        "default": 0,
+        "title": "Quality control bitfield - 0x1=corrected, 0x2=auto, 0x4=auto_station, 0x8=maintenance_indicator_on, 0x10=no_signal, 0x20=lightning_sensor_off, 0x40=freezing_rain_sensor_off, 0x80=present_weather_sensor_off",
+        "examples": [
+          4
+        ]
+      },
+      "wxString": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "default": null,
+        "title": "Encoded present weather string",
+        "examples": [
+          "-RA",
+          "SN",
+          "TSRA"
+        ]
+      },
+      "presTend": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "default": null,
+        "title": "Pressure tendency over last 3 hours in hectoPascals",
+        "examples": [
+          null
+        ]
+      },
+      "maxT": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "default": null,
+        "title": "Maximum temperature over last 6 hours in Celcius",
+        "examples": [
+          23.4,
+          null
+        ]
+      },
+      "minT": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "default": null,
+        "title": "Minimum temperature over last 6 hours in Celcius",
+        "examples": [
+          12.3,
+          null
+        ]
+      },
+      "maxT24": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "default": null,
+        "title": "Maximum temperature over last 24 hours in Celcius",
+        "examples": [
+          23.4
+        ]
+      },
+      "minT24": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "default": null,
+        "title": "Minimum temperature over last 24 hours in Celcius",
+        "examples": [
+          12.3
+        ]
+      },
+      "precip": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "default": null,
+        "title": "Precipitation over last hour in inches",
+        "examples": [
+          0.01,
+          null
+        ]
+      },
+      "pcp3hr": {
+        "type": "null",
+        "default": null,
+        "title": "Precipitation over last 3 hours in inches",
+        "examples": [
+          0.1,
+          null
+        ]
+      },
+      "pcp6hr": {
+        "type": "null",
+        "default": null,
+        "title": "Precipitation over last 6 hours in inches",
+        "examples": [
+          0.23,
+          null
+        ]
+      },
+      "pcp24hr": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "default": null,
+        "title": "Precipitation over last 24 hours in inches",
+        "examples": [
+          0.53,
+          null
+        ]
+      },
+      "snow": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "default": null,
+        "title": "Snow depth in inches",
+        "examples": [
+          1,
+          null
+        ]
+      },
+      "vertVis": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "default": null,
+        "title": "Vertical visibility in feet",
+        "examples": [
+          100,
+          null
+        ]
+      },
+      "metarType": {
+        "type": "string",
+        "default": "",
+        "title": "Type of encoding",
+        "enum": [
+          "METAR",
+          "SPECI",
+          "SYNOP",
+          "BUOY",
+          "CMAN"
+        ],
+        "examples": [
+          "METAR"
+        ]
+      },
+      "rawOb": {
+        "type": "string",
+        "default": "",
+        "title": "Raw text of observation",
+        "examples": [
+          "KORD 032151Z 23006KT 10SM BKN110 OVC250 14/03 A3000 RMK AO2 SLP162 VIRGA OHD T01440028"
+        ]
+      },
+      "mostRecent": {
+        "type": "integer",
+        "default": 0,
+        "title": "Most recent flag (1=most recent, 0=not)",
+        "examples": [
+          1
+        ]
+      },
+      "lat": {
+        "type": "number",
+        "default": 0,
+        "title": "Latitude of site in degrees",
+        "examples": [
+          41.9602
+        ]
+      },
+      "lon": {
+        "type": "number",
+        "default": 0,
+        "title": "Longitude of site in degrees",
+        "examples": [
+          -87.9316
+        ]
+      },
+      "elev": {
+        "type": "integer",
+        "default": 0,
+        "title": "Elevation of site in meters",
+        "examples": [
+          202
+        ]
+      },
+      "prior": {
+        "type": "integer",
+        "default": 0,
+        "title": "Priority of site for proessive disclosure (0-9)",
+        "examples": [
+          0
+        ]
+      },
+      "name": {
+        "type": "string",
+        "default": "",
+        "title": "Full name of the site",
+        "examples": [
+          "Chicago/O'Hare Intl, IL, US"
+        ]
+      },
+      "clouds": {
+        "type": "array",
+        "default": [],
+        "title": "Clouds",
+        "items": {
+          "type": "object",
+          "title": "Cloud layer",
+          "required": [
+            "cover",
+            "base"
+          ],
+          "properties": {
+            "cover": {
+              "type": "string",
+              "title": "Cover coverage",
+              "enum": [
+                "CLR",
+                "CAVOK",
+                "FEW",
+                "SCT",
+                "BKN",
+                "OVC",
+                "OVX"
+              ],
+              "examples": [
+                "BKN",
+                "OVC"
+              ]
+            },
+            "base": {
+              "type": "integer",
+              "title": "Cloud base in feet",
+              "examples": [
+                11000,
+                25000
+              ]
+            }
+          }
+        }
+      }
+    },
+    "examples": [
+      {
+        "metar_id": 93352910,
+        "icaoId": "KORD",
+        "receiptTime": "2023-11-03 21:54:03",
+        "obsTime": 1699048260,
+        "reportTime": "2023-11-03 22:00:00",
+        "temp": 14.4,
+        "dewp": 2.8,
+        "wdir": 230,
+        "wspd": 6,
+        "wgst": null,
+        "visib": "10+",
+        "altim": 1016,
+        "slp": 1016.2,
+        "qcField": 4,
+        "wxString": null,
+        "presTend": null,
+        "maxT": null,
+        "minT": null,
+        "maxT24": null,
+        "minT24": null,
+        "precip": null,
+        "pcp3hr": null,
+        "pcp6hr": null,
+        "pcp24hr": null,
+        "snow": null,
+        "vertVis": null,
+        "metarType": "METAR",
+        "rawOb": "KORD 032151Z 23006KT 10SM BKN110 OVC250 14/03 A3000 RMK AO2 SLP162 VIRGA OHD T01440028",
+        "mostRecent": 1,
+        "lat": 41.9602,
+        "lon": -87.9316,
+        "elev": 202,
+        "prior": 0,
+        "name": "Chicago/O'Hare Intl, IL, US",
+        "clouds": [
+          {
+            "cover": "BKN",
+            "base": 11000
+          },
+          {
+            "cover": "OVC",
+            "base": 25000
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,9 +1,11 @@
 # metar_routines.py
 # Metar Decoding Routines - Mark Harris
-# UPDATED FAA API 11-2023
+# Version 2.1
+# UPDATED FAA API 12-2023, https://aviationweather.gov/data/api/
 
 # Imports
 from metar_remarks import *
+from metar_settings import *
 import urllib.request, urllib.error, urllib.parse
 import xml.etree.ElementTree as ET
 import socket
@@ -34,6 +36,219 @@ class_c = ['KBHM', 'KHSV', 'KMOB', 'PANC', 'KDMA', 'KTUS', 'KLIT', 'KXNA', 'KBAB
            'KORF', 'KRIC', 'KROA', 'KGEG', 'KNUW', 'KSKA', 'KCRW', 'KGRB', 'KMKE', 'KMSN', \
            'TJSJ', 'TIST']
         
+        
+# Conversion routines   
+def knots_to_kmh(knots):
+    return (float(knots) * 1.852,' km/h')
+
+def knots_to_ms(knots):
+    return (float(knots) * 0.5144444444444444, ' m/s')
+
+def knots_to_mph(knots):
+    return (float(knots) * 1.151, ' mph')
+
+def cel_to_fahren(celsius): # Celsius to Fahrenheit
+    fahrenheit = (float(celsius) * 9 / 5) + 32
+    return (fahrenheit, ' '+chr(176)+'F')
+
+def miles_to_kil(miles): # Statute Miles to Kilometers
+    return (miles * 1.609344, ' km')
+
+def hpa_to_inHg(hpa): # hectoPascals to in/hg
+    hpa = round(float(hpa) * 0.02953,2)
+    return (str(hpa),' inHg')
+
+def feet_to_meters(feet): # feet to meters
+    feet =  round(feet * 0.3048,0)
+    return (str(feet),' m')
+
+
+# API Get Routines used to extract data from the METAR json string.
+def get_metartype(metar): # "Type of encoding" string
+    metartype = metar.data[0]["metarType"]
+    print('metartype:',metartype)
+    return(metartype)
+
+def get_clouds(metar):
+    cctype_lst = []   # "Cloud layer - Cover coverage" string
+    ccheight_lst = [] # "Cloud base in feet" integer
+    dis_unit = ' ft'
+    print("metar.data[0]['clouds']:",metar.data[0]['clouds']) # debug
+    for i in range(len(metar.data[0]['clouds'])):
+        if i == 3:
+            break 
+            
+        cctype = metar.data[0]['clouds'][i]['cover']
+        ccheight = metar.data[0]['clouds'][i]['base']
+        
+        if ccheight is None:
+            ccheight = "n/a"
+        else:
+            if cloud_layer_units == 1:
+                ccheight,dis_unit = feet_to_meters(ccheight)
+            else:
+                ccheight = '{0:.0f}'.format(ccheight)
+            
+        if cctype is None:
+            cctype == "n/a"
+            
+        cctype_lst.append(cctype)
+        ccheight_lst.append(ccheight)
+            
+    print('cctype_lst:',cctype_lst,', ccheight_lst:',ccheight_lst,'dis_unit:',dis_unit)
+    return(cctype_lst,ccheight_lst,dis_unit)
+
+def get_altim(metar): # "Altimeter setting in hectoPascals" number
+    print('metar.data[0]["altim"]:', metar.data[0]["altim"]) # debug
+    dis_unit = ' hPa'
+    if metar.data[0]["altim"] != None:
+        baro = '{0:.0f}'.format(metar.data[0]["altim"])
+        if pressure_units == 1:
+            baro,dis_unit = hpa_to_inHg(baro)
+            baro = '{0:.2f}'.format(float(baro))
+    else:
+        baro = 'n/a'
+    print('baro:',baro,'dis_unit:',dis_unit) # debug
+    return(baro,dis_unit)
+
+def get_temp(metar): # "Temperature in Celcius" number
+    print('metar.data[0]["temp"]:',metar.data[0]["temp"]) # debug
+    dis_unit = ' '+chr(176)+'C'
+    if metar.data[0]["temp"] != None:
+        tempf = '{0:.1f}'.format((metar.data[0]["temp"]))
+    else:
+        temp1 = float(decoded_temp)
+        tempfloat = (temp1*1.8)+32
+        tempf = '{0:.1f}'.format(tempfloat)
+    if temperature_units == 1:
+        tempf,dis_unit = cel_to_fahren(tempf)
+    print('tempf:', tempf,'dis_unit:',dis_unit) # debug
+    return(str(tempf),dis_unit)
+
+def get_visib(metar): # "Visibility in statute miles, 10+ is greater than 10 sm" number
+    print('metar.data[0]["visib"]:',metar.data[0]["visib"]) # debug
+    dis_unit = ' miles'
+    if metar.data[0]["visib"] != None:
+        if type(metar.data[0]["visib"]) == int or type(metar.data[0]["visib"]) == float:
+            tmp_vis = float(metar.data[0]["visib"])
+        else:
+#            print('metar.data[0]["visib"]',metar.data[0]["visib"]) # debug
+            tmp_vis = metar.data[0]["visib"].strip('+')
+#            print(tmp_vis) # debug
+            tmp_vis = float(tmp_vis)
+        vis = '{0:.1f}'.format(tmp_vis)
+        if visibility_units == 1:
+            vis,dis_unit = miles_to_kil(tmp_vis)
+            vis = str(round(vis,1))
+    else:
+        vis = "n/a"
+    print('vis:',vis,'dis_unit:',dis_unit) # debug
+    return(vis,dis_unit)
+
+def get_wxstring(metar): # "Encoded present weather string" string
+    if metar.data[0]["wxString"] != None:
+        descript = metar.data[0]["wxString"]
+    else:
+        descript = "n/a"
+    print('descript:',descript) # debug
+    return(descript)
+
+def get_rawOb(metar): # "Raw text of observation" string
+    if metar.data[0]['rawOb'] != None:
+        rawmetar = metar.data[0]['rawOb']
+    else:
+        rawmetar = 'n/a'
+    print ('rawmetar:',rawmetar) # debug
+    return(rawmetar)
+
+def get_wdir(metar): # "Wind direction in degrees or VRB for variable winds" integer
+    print('metar.data[0]["wdir"]:',metar.data[0]["wdir"]) # debug
+    if metar.data[0]["wdir"] == 'VRB':
+        winddir = 'VRB'        
+    elif metar.data[0]["wdir"] != None:
+        winddir = '{0:.0f}'.format(metar.data[0]["wdir"])
+    else:
+        winddir = 'n/a'
+        
+    if len(winddir) == 2:
+        winddir = "0"+winddir
+        
+    if len(winddir) == 1:
+        winddir = "00"+winddir
+    winddir_raw = winddir
+    
+    if winddir == "VRB":
+        pass
+    else:
+        winddir = winddir + chr(176)
+        
+    if winddir == "000"+chr(176):
+        winddir = "Calm"
+        
+    print('winddir:',winddir) # debug
+    return(winddir,winddir_raw)
+
+def get_wspd(metar): # "Wind speed in knots" integer
+    print('metar.data[0]["wspd"]:',metar.data[0]["wspd"]) # debug
+    dis_unit = ''
+    if metar.data[0]["wspd"] != None:
+        windsp = '{0:.1f}'.format(metar.data[0]["wspd"])
+        dis_unit = ' kt'
+        if wind_speed_units == 0:
+            windsp,dis_unit = knots_to_kmh(windsp)
+            windsp = str(round(float(windsp),1))
+        elif wind_speed_units == 1:
+            windsp,dis_unit = knots_to_ms(windsp)
+            windsp = str(round(float(windsp),1))
+        elif wind_speed_units == 3:
+            windsp,dis_unit = knots_to_mph(windsp)
+            windsp = str(round(float(windsp),1))
+        else:
+            pass # Knots, default from API
+    else:
+        windsp = "n/a"
+        
+    if windsp == "00" or windsp == "0.0":
+        windsp = "Calm"
+
+    print('windsp:',windsp,'dis_unit:',dis_unit) # debug
+    return(windsp,dis_unit)
+
+def get_wgst(metar): # "Wind gusts in knots" integer
+    print('metar.data[0]["wgst"]:',metar.data[0]["wgst"]) # debug
+    dis_unit = ''
+    if metar.data[0]["wgst"] != None:
+        gustsp = '{0:.1f}'.format(metar.data[0]["wgst"])
+        dis_unit = ' kt'
+        if wind_speed_units == 0:
+            gustsp,dis_unit = knots_to_kmh(gustsp)
+            gustsp = str(round(float(gustsp),1))
+        elif wind_speed_units == 1:
+            gustsp,dis_unit = knots_to_ms(gustsp)
+            gustsp = str(round(float(gustsp),1))
+        elif wind_speed_units == 3:
+            gustsp,dis_unit = knots_to_mph(gustsp)
+            gustsp = str(round(float(gustsp),1))
+        else:
+            pass # Knots, default from API
+
+    else:
+        gustsp = 'n/a'
+        
+    print('gustsp:',gustsp,'dis_unit:',dis_unit) # debug
+    return(gustsp,dis_unit)
+
+def get_misc(metar): # icaoid,obstime,elev,lat,lon,name = get_misc(metar)
+    icaoid = metar.data[0]["icaoId"]   # "ICAO identifier" string
+    obstime = metar.data[0]["obsTime"] # "The observation time (unix timestamp)" integer
+    elev = metar.data[0]["elev"]       # "Elevation of site in meters" integer
+    lat = metar.data[0]["lat"]         # "Latitude of site in degrees" number
+    lon = metar.data[0]["lon"]         # "Longitude of site in degrees" number
+    name = metar.data[0]["name"]       # "Full name of the site" string
+    print(icaoid,obstime,elev,lat,lon,name) 
+    return(icaoid,obstime,elev,lat,lon,name)
+
+
 # Get RPi IP address to display on Boot up.
 def get_ip_address():
     ip_address = '';
@@ -65,6 +280,8 @@ def get_flightcat():
     content = urllib.request.urlopen(url).read()
     
     root = ET.fromstring(content) #Process XML data returned from FAA
+#    print(root) # debug
+    
     for data in root.iter('data'):
             num_results = data.attrib['num_results']
             print(num_results)
@@ -92,22 +309,23 @@ def get_flightcat():
     
 # Decodes the flight category from the raw metar string
 def flight_category(metar):
+    # set defaults
     flightcategory = "VFR"
     icon = "sun"
+    
+    # Get Visibility
     try:
-        vis_in_miles = round(metar.data["properties"]["visibility"]["value"]*3.28084/5280, 1)
+        vis_in_miles = float(metar.data[0]['visib'].strip("+"))
     except:
         vis_in_miles = 1 # Set an assumed default
-#    print("vis_in_miles: ",vis_in_miles) # debug
-      
-    for i in range(len(metar.data["properties"]["cloudLayers"])):
-        sky_condition = metar.data["properties"]["cloudLayers"][i]["amount"]
-#        print("sky_condition: "+sky_condition) # debug
         
-        if metar.data["properties"]["cloudLayers"][i]["base"]["value"] != None:
-            sky_ceiling = metar.data["properties"]["cloudLayers"][i]["base"]["value"]*3.28084
-        else:
-            sky_ceiling = 0
+    print("vis_in_miles: ",vis_in_miles) # debug
+    print("num_clouds layers:",len(metar.data[0]['clouds'])) # debug
+      
+    # Get Cloud Cover
+    for i in range(len(metar.data[0]['clouds'])): #["properties"]["cloudLayers"])):
+        sky_condition = metar.data[0]['clouds'][i]['cover'] #["properties"]["cloudLayers"][i]["amount"]
+        sky_ceiling = metar.data[0]['clouds'][i]['base'] #["properties"]["cloudLayers"][i]["amount"]
             
         if sky_condition == "OVC" or sky_condition == "BKN" or sky_condition == "OVX" or sky_condition == "VV":                 
             if sky_ceiling < 500:
@@ -134,8 +352,9 @@ def flight_category(metar):
             icon = "thunder"
         elif vis_in_miles >= 3.0 and vis_in_miles <= 5.0:
             flightcategory = "MVFR" 
-            icon = "25_clouds"      
-
+            icon = "25_clouds"
+    
+    print('flightcategory=',flightcategory,', icon=',icon) # debug
     return (flightcategory, icon)  
 
 

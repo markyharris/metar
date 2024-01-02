@@ -1,7 +1,7 @@
 # metar_main.py
 # E-Paper METAR Display - by Mark Harris
-# Version 1.2
-# UPDATED FAA API 11-2023
+# Version 2.1
+# UPDATED to New FAA API 12-2023, https://aviationweather.gov/data/api/
 #
 # Thanks to Aerodynamics for providing a great start for this project
 # Visit his page at;
@@ -130,15 +130,16 @@ if __name__ == "__main__":
             current_time = time.strftime("%m/%d/%Y %H:%M", time.localtime())
             
             metar = Metar(airport)
-            remarks, print_table = decode_remarks(metar.data["properties"]["rawMessage"]) # debug
+
+            remarks, print_table = decode_remarks(metar.data[0]['rawOb']) #["properties"]["rawMessage"]
             flightcategory, icon = flight_category(metar)
             
-            if len(metar.data["properties"]["rawMessage"]) > 0:
-                print(metar.data["properties"]["rawMessage"]+"\n")
-                print (len(metar.data["properties"]["rawMessage"])) # debug
+            if len(metar.data[0]['rawOb']) > 0:
+                print(metar.data[0]['rawOb']+"\n")
+#                print (len(metar.data[0]['rawOb'])) # debug
             else:
                 print("No METAR Being Reported")
-                print (len(metar.data["properties"]["rawMessage"])) # debug
+#                print (len(metar.data[0]['rawOb'])) # debug
                 
             print("Updated " + current_time)
             print("Creating display")

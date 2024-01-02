@@ -1,5 +1,8 @@
 # webapp.py - Mark Harris
 # for E-Paper display
+# Version 2.1
+# UPDATED FAA API 12-2023, https://aviationweather.gov/data/api/
+#
 # This will provide a web interface to control the e-Paper display. 
 
 from flask import Flask, render_template, request, flash, redirect, url_for, send_file, Response
@@ -13,22 +16,37 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 # variables
 PATH = '/home/pi/metar/'
-rem_data = "0"
+data_field4 = "0"
 
 # Routes for flask
 @app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
 @app.route("/metar", methods=["GET", "POST"])
 def metar():
-    data_field1, data_field2, data_field3, rem_data = airport, use_disp_format, interval, use_remarks
-    data_field1, data_field2, data_field3, rem_data = get_data()
+    # Grab default settings from 'metar_settings.py' used if web admin is not used.
+    data_field1,data_field2,data_field3,data_field4, \
+    data_field5,data_field6,data_field7,data_field8,data_field9 \
+    = airport,use_disp_format,interval,use_remarks, \
+    wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units
+    
+    # Now read 'data.txt' and populate these fields with the settings stored from web admin.
+    data_field1, data_field2, data_field3, data_field4, \
+    data_field5,data_field6,data_field7,data_field8,data_field9 \
+    = get_data()
 
     if request.method == "POST":
         display = request.form['display']
-        data_field1 = request.form['data_field1']
-        data_field2 = request.form['data_field2']
-        data_field3 = request.form['data_field3']        
-        rem_data = request.form['rem_data']
+        data_field1 = request.form['data_field1'] # airport
+        data_field2 = request.form['data_field2'] # use_disp_format
+        data_field3 = request.form['data_field3'] # interval      
+        data_field4 = request.form['data_field4'] # use_remarks
+        
+        data_field5 = request.form['data_field5'] # wind_speed_units
+        data_field6 = request.form['data_field6'] # cloud_layer_units
+        data_field7 = request.form['data_field7'] # visibility_units
+        data_field8 = request.form['data_field8'] # temperature_units
+        data_field9 = request.form['data_field9'] # pressure_units
+
         
         if display == "powerdown":
             shutdown() 
@@ -47,25 +65,33 @@ def metar():
 
         else:
             os.system("ps -ef | grep 'metar_main.py' | awk '{print $2}' | xargs sudo kill")
-            os.system('sudo python3 ' + PATH + 'metar_main.py '+ data_field1+' '+data_field2+' '+data_field3+' '+rem_data+' &')
-            flash("Running E-Paper Metar Airport ID = " + data_field1)
+            os.system('sudo python3 ' + PATH + 'metar_main.py '+ data_field1+' '+data_field2+' '+data_field3+' '+data_field4+' &')
+            flash("Running E-Paper Metar Airport ID = " + data_field1.upper())
             if data_field2 != "":
-                flash("Display Layout = " + data_field2)
+                flash("Display Layout = " + data_field2.upper())
                                
         print(data_field1) # debug
-        write_data(data_field1, data_field2, data_field3, rem_data)
-        return render_template("metar.html", data_field1=data_field1, data_field2=data_field2, data_field3=data_field3, rem_data=rem_data)
+        write_data(data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9)
+        return render_template("metar.html",data_field1=data_field1,data_field2=data_field2,data_field3=data_field3,data_field4=data_field4, \
+                               data_field5=data_field5,data_field6=data_field6,data_field7=data_field7,data_field8=data_field8,data_field9=data_field9)
     else:
-        return render_template("metar.html", data_field1=data_field1, data_field2=data_field2, data_field3=data_field3, rem_data=rem_data)
+        return render_template("metar.html", data_field1=data_field1,data_field2=data_field2,data_field3=data_field3,data_field4=data_field4, \
+                               data_field5=data_field5,data_field6=data_field6,data_field7=data_field7,data_field8=data_field8,data_field9=data_field9)
 
  
 # Functions
-def write_data(data_field1, data_field2, data_field3, rem_data):
+def write_data(data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9):
     f= open(PATH + "data.txt","w+")
     f.write(data_field1+"\n")
     f.write(data_field2+"\n")
     f.write(data_field3+"\n")
-    f.write(rem_data+"\n")
+    f.write(data_field4+"\n")
+    
+    f.write(data_field5+"\n")
+    f.write(data_field6+"\n")
+    f.write(data_field7+"\n")
+    f.write(data_field8+"\n")
+    f.write(data_field9+"\n")
     f.close()
     return (True)
     
@@ -75,16 +101,25 @@ def get_data():
     data_field1 = Lines[0].strip()
     data_field2 = Lines[1].strip()
     data_field3 = Lines[2].strip()
-    rem_data = Lines[3].strip()
+    data_field4 = Lines[3].strip()
+    
+    data_field5 = Lines[4].strip()
+    data_field6 = Lines[5].strip()
+    data_field7 = Lines[6].strip()
+    data_field8 = Lines[7].strip()
+    data_field9 = Lines[8].strip()
     f.close()
-    return (data_field1, data_field2, data_field3, rem_data)
+    return (data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9)
 
 
 # Start of Flask
 if __name__ == '__main__':
 #    error = 1/0 # Force webapp to stop executing for debug purposes
-    data_field1, data_field2, data_field3, rem_data = "KFLG","-3","60","0" #get_data()  # read what is in data.txt to get last run
+    data_field1,data_field2,data_field3,data_field4, \
+    data_field5,data_field6,data_field7,data_field8,data_field9 = get_data()  # "KFLG","-3","60","0" # read what is in data.txt to get last run
     
-    os.system('sudo python3 ' + PATH + 'metar_main.py ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + rem_data + ' &')        
+    # create cmdline command to start the main program using the 'data.txt' variables to kick things off.
+    os.system('sudo python3 ' + PATH + 'metar_main.py ' + "metar" + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + data_field4 + \
+              data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + data_field9 + ' &')        
     app.run(debug=True, use_reloader=False, host='0.0.0.0') # use use_reloader=False to stop double loading
              

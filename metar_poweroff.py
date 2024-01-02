@@ -1,5 +1,7 @@
 # metar_poweroff.py - Mark Harris
-
+# Version 2.1
+# UPDATED FAA API 12-2023, https://aviationweather.gov/data/api/
+#
 #from weather import *
 #from news import *
 from metar_display import *

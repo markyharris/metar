@@ -1,5 +1,8 @@
 # metar_remarks.py
 # Metar Remark Codes and their definitions - Mark Harris
+# Version 2.1
+# UPDATED FAA API 12-2023, https://aviationweather.gov/data/api/
+#
 # dictionary created using;
 # https://www.weather.gov/media/wrh/mesowest/metar_decode_key.pdf
 
