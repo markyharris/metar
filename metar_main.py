@@ -78,6 +78,25 @@ if len(sys.argv) == 5:
         use_disp_format = -2
 
 #print(len(sys.argv)) # debug
+#print(sys.argv) # debug
+#['/home/pi/metar/metar_main.py', 'metar', 'kabe', '1', '0', '1', '2', '0', '0', '1', '1']
+#display = int(sys.argv[1])
+metar = str(sys.argv[1])
+airport = str(sys.argv[2])
+remarks = int(sys.argv[3])
+print_table = int(sys.argv[4])
+use_remarks = int(sys.argv[5])
+wind_speed_units = int(sys.argv[6])
+cloud_layer_units = int(sys.argv[7])
+visibility_units = int(sys.argv[8])
+temperature_units = int(sys.argv[9])
+pressure_units = int(sys.argv[10])
+
+print(metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units) # debug
+#sys.exit()
+    
+
+print('len of args:',len(sys.argv)) # debug
 print("Airport\t", "Layout\t", "Update\t", "Remarks")
 print(str(airport)+"\t", str(use_disp_format)+"\t", str(interval)+"\t", str(use_remarks)+"\n")
 
@@ -85,9 +104,9 @@ print(str(airport)+"\t", str(use_disp_format)+"\t", str(interval)+"\t", str(use_
 def main():    
     # Choose which layout to use.
     if use_disp_format == -1:
-        random_layout(display, metar, remarks, print_table, use_remarks, layout_list)
+        random_layout(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
     elif use_disp_format == -2:
-        cycle_layout(display, metar, remarks, print_table, use_remarks, layout_list)
+        cycle_layout(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
     elif use_disp_format == -3:
         disp_ip(display, get_ip_address())
 #        use_disp_format = -2
@@ -97,7 +116,7 @@ def main():
         for index, item in enumerate(layout_list):
             if index == use_disp_format:
                 print("Layout",index) # debug
-                layout_list[index](display, metar, remarks, print_table, use_remarks) # call appropriate layout
+                layout_list[index](display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list) # call appropriate layout
 
     # Print to e-Paper - This is setup to display on 7x5 3 color waveshare panel. epd7in5b_V2
     # To use on 2 color panel, remove ', epd.getbuffer(display.im_red)' from 6 lines lower.
@@ -124,9 +143,9 @@ if __name__ == "__main__":
   
     while True:        
 #        try:
-        while True: # debug
+#        while True: # debug
 #            error = 1/0 #debug  # forces error to test the try-except statements
-#       if True:  # used instead of the try-except statements for debug purposes.
+        if True:  # used instead of the try-except statements for debug purposes.
             current_time = time.strftime("%m/%d/%Y %H:%M", time.localtime())
             
             metar = Metar(airport)
@@ -183,7 +202,8 @@ if __name__ == "__main__":
             epd.init()
             epd.sleep()
             
-            """ except Exception as e:
+#        except Exception as e:
+"""
             time.sleep(2)
             print("Error Occurred in Main While Loop")
             exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -223,4 +243,5 @@ if __name__ == "__main__":
             print("Done")
             time.sleep(60) # Sets interval of updates. 60 = 1 minute
             epd.init()
-            epd.sleep() """           
+            epd.sleep()          
+"""

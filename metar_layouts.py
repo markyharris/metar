@@ -73,11 +73,11 @@ def disp_ip(display, ip_address):
 ###########################
 #  Cycle Through Each -2  #
 ###########################
-def cycle_layout(display, metar, remarks, print_table, use_remarks, layout_list):
+def cycle_layout(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list):
     global cycle_num
-    print("Layout",cycle_num) # debug
+    print('Layout:',cycle_num) # debug
     cycle_pick = layout_list[cycle_num]
-    cycle_pick(display, metar, remarks, print_table, use_remarks)
+    cycle_pick(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
     cycle_num += 1
     if cycle_num == len(layout_list):
         cycle_num = 0
@@ -86,17 +86,17 @@ def cycle_layout(display, metar, remarks, print_table, use_remarks, layout_list)
 ##################
 #  Randomize -1  #
 ##################
-def random_layout(display, metar, remarks, print_table, use_remarks, layout_list):
+def random_layout(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list):
     rand_pick = random.choice(layout_list)
     print(str(rand_pick)[10:18]) # debug
-    rand_pick(display, metar, remarks, print_table, use_remarks)
+    rand_pick(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
 
 
 ################
 #   Layout 0   #
 ################
 # Simple large flight category and metar
-def layout0(display, metar, remarks, print_table, use_remarks):
+def layout0(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -184,7 +184,7 @@ def layout0(display, metar, remarks, print_table, use_remarks):
 #   Layout 1   #
 ################
 # Information with Icons and flight category in top row
-def layout1(display, metar, remarks, print_table, use_remarks):    
+def layout1(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):    
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -444,7 +444,7 @@ def layout1(display, metar, remarks, print_table, use_remarks):
 #   Layout 2   #
 ################
 # Information with Icons and flight category in the center
-def layout2(display,metar, remarks, print_table, use_remarks):
+def layout2(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -662,7 +662,7 @@ def layout2(display,metar, remarks, print_table, use_remarks):
 #   Layout 3   #
 ################
 # Large flight category, no metar listed
-def layout3(display, metar, remarks, print_table, use_remarks):
+def layout3(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -722,7 +722,7 @@ def layout3(display, metar, remarks, print_table, use_remarks):
 #   Layout 4   #
 ################
 # 3 Area Layout with big flight category in lower right
-def layout4(display, metar, remarks, print_table, use_remarks):
+def layout4(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -928,7 +928,7 @@ def layout4(display, metar, remarks, print_table, use_remarks):
 #   Layout 5   #
 ################
 # Multiple Airport Layout
-def layout5(display, metar, remarks, print_table, use_remarks):
+def layout5(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     global airports_list
     global airport
 
@@ -1146,7 +1146,7 @@ def layout5(display, metar, remarks, print_table, use_remarks):
 # layout6  #
 ############
 # Map with Flight Category
-def layout6(display, metar, remarks, print_table, use_remarks):
+def layout6(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
     = decode_rawmessage(get_rawOb(metar))
@@ -1205,7 +1205,7 @@ def layout6(display, metar, remarks, print_table, use_remarks):
 # layout7  #
 ############
 # Circles theme
-def layout7(display, metar, remarks, print_table, use_remarks):    
+def layout7(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):    
     def circle_points(r, n):
         circles = []
         for r, n in zip(r, n):
@@ -1421,7 +1421,7 @@ def layout7(display, metar, remarks, print_table, use_remarks):
 # layout8  #
 ############
 # Worst Weather by airport
-def layout8(display, metar, remarks, print_table, use_remarks):
+def layout8(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     fc_ap_dict = {}
     vfr_dict,mvfr_dict,ifr_dict,lifr_dict = get_flightcat()
 
@@ -1556,7 +1556,7 @@ def layout8(display, metar, remarks, print_table, use_remarks):
 #   Layout 9   #
 ################
 # Metar with Large Winds Icons
-def layout9(display, metar, remarks, print_table, use_remarks):    
+def layout9(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):    
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \

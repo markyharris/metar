@@ -39,8 +39,7 @@ def metar():
         data_field1 = request.form['data_field1'] # airport
         data_field2 = request.form['data_field2'] # use_disp_format
         data_field3 = request.form['data_field3'] # interval      
-        data_field4 = request.form['data_field4'] # use_remarks
-        
+        data_field4 = request.form['data_field4'] # use_remarks        
         data_field5 = request.form['data_field5'] # wind_speed_units
         data_field6 = request.form['data_field6'] # cloud_layer_units
         data_field7 = request.form['data_field7'] # visibility_units
@@ -65,7 +64,11 @@ def metar():
 
         else:
             os.system("ps -ef | grep 'metar_main.py' | awk '{print $2}' | xargs sudo kill")
-            os.system('sudo python3 ' + PATH + 'metar_main.py '+ data_field1+' '+data_field2+' '+data_field3+' '+data_field4+' &')
+#            os.system('sudo python3 ' + PATH + 'metar_main.py '+ data_field1+' '+data_field2+' '+data_field3+' '+data_field4+' &')
+            os.system('sudo python3 ' + PATH + 'metar_main.py ' + "metar" + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + data_field4 \
+          + " " + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + " " + data_field9 + ' &')        
+
+
             flash("Running E-Paper Metar Airport ID = " + data_field1.upper())
             if data_field2 != "":
                 flash("Display Layout = " + data_field2.upper())
@@ -85,8 +88,7 @@ def write_data(data_field1,data_field2,data_field3,data_field4,data_field5,data_
     f.write(data_field1+"\n")
     f.write(data_field2+"\n")
     f.write(data_field3+"\n")
-    f.write(data_field4+"\n")
-    
+    f.write(data_field4+"\n")    
     f.write(data_field5+"\n")
     f.write(data_field6+"\n")
     f.write(data_field7+"\n")
@@ -101,8 +103,7 @@ def get_data():
     data_field1 = Lines[0].strip()
     data_field2 = Lines[1].strip()
     data_field3 = Lines[2].strip()
-    data_field4 = Lines[3].strip()
-    
+    data_field4 = Lines[3].strip()    
     data_field5 = Lines[4].strip()
     data_field6 = Lines[5].strip()
     data_field7 = Lines[6].strip()
@@ -118,8 +119,15 @@ if __name__ == '__main__':
     data_field1,data_field2,data_field3,data_field4, \
     data_field5,data_field6,data_field7,data_field8,data_field9 = get_data()  # "KFLG","-3","60","0" # read what is in data.txt to get last run
     
+#    print(data_field1,data_field2,data_field3,data_field4, \
+#    data_field5,data_field6,data_field7,data_field8,data_field9) # debug
+    
     # create cmdline command to start the main program using the 'data.txt' variables to kick things off.
-    os.system('sudo python3 ' + PATH + 'metar_main.py ' + "metar" + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + data_field4 + \
-              data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + data_field9 + ' &')        
-    app.run(debug=True, use_reloader=False, host='0.0.0.0') # use use_reloader=False to stop double loading
+    print('sudo python3 ' + PATH + 'metar_main.py ' + "metar" + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + data_field4 \
+          + " " + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + " " + data_field9 + ' &')  # debug       
+
+    os.system('sudo python3 ' + PATH + 'metar_main.py ' + "metar" + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + data_field4 \
+          + " " + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + " " + data_field9 + ' &')
+    
+    app.run(debug=True, use_reloader=True, host='0.0.0.0') # use use_reloader=False to stop double loading
              
