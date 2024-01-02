@@ -1,8 +1,9 @@
 # E-Paper METAR Display
 This project is explained and amplified on Instructables.com. See; https://www.instructables.com/7x5-E-Paper-METAR-Display/<p>
-<b>NOTE:</b>The FAA has changed their API access causing earlier version (1.xxx) to become non-functional. This update (v2.1xx) 
-utilizes the newly release API located at https://aviationweather.gov/data/api/. Be sure to update to this new version.<p>
-This version also adds a newly configured Wed Admin Page which allows for changing the Units to display various data points.<p>
+<b>NOTE:</b>The FAA has changed their API access causing the earlier version (1.xxx) to become non-functional. This update (v2.1xx) 
+utilizes the newly released API located at https://aviationweather.gov/data/api/. Be sure to update to this new version.<p>
+This version also adds a newly configured Web Admin Page which allows for changing the Units to display various data points.<p>
+<h3>Updating from Github</h3>
 If this software is already installed and you just want to update to the latest version of this software enter;
 <pre><code>
 cd metar
