@@ -17,6 +17,20 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 # variables
 PATH = '/home/pi/metar/'
 data_field4 = "0"
+dis_select = [
+    'Cycle Through All Layouts',
+    'Display Random Layouts',
+    'Large Flight Category and METAR',
+    'METAR with Data Display',
+    'Data Display with Icons',
+    'Basic Large Flight Category',
+    '3 Area Display with METAR',
+    'Multiple Airport Flight Categories',
+    'Airport Map and Flight Category',
+    'Flight Category In Circles',
+    'Worst Class B & C Airport Weather',
+    'Metar and Large Wind Icons'
+    ]
 
 # Routes for flask
 @app.route("/", methods=["GET", "POST"])
@@ -65,15 +79,15 @@ def metar():
         else:
             os.system("ps -ef | grep 'metar_main.py' | awk '{print $2}' | xargs sudo kill")
 #            os.system('sudo python3 ' + PATH + 'metar_main.py '+ data_field1+' '+data_field2+' '+data_field3+' '+data_field4+' &')
-            os.system('sudo python3 ' + PATH + 'metar_main.py ' + "metar" + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + data_field4 \
+            os.system('sudo python3 ' + PATH + 'metar_main.py ' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + data_field4 \
           + " " + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + " " + data_field9 + ' &')        
 
 
             flash("Running E-Paper Metar Airport ID = " + data_field1.upper())
             if data_field2 != "":
-                flash("Display Layout = " + data_field2.upper())
+                flash("Display Layout = " + dis_select[int(data_field2)+2])
                                
-        print(data_field1) # debug
+        print('Writing to Data:',data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9) # debug
         write_data(data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9)
         return render_template("metar.html",data_field1=data_field1,data_field2=data_field2,data_field3=data_field3,data_field4=data_field4, \
                                data_field5=data_field5,data_field6=data_field6,data_field7=data_field7,data_field8=data_field8,data_field9=data_field9)
@@ -116,18 +130,23 @@ def get_data():
 # Start of Flask
 if __name__ == '__main__':
 #    error = 1/0 # Force webapp to stop executing for debug purposes
+
+    # airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units
+    # Example: kabe,1,60,1,2,0,0,1,1
     data_field1,data_field2,data_field3,data_field4, \
-    data_field5,data_field6,data_field7,data_field8,data_field9 = get_data()  # "KFLG","-3","60","0" # read what is in data.txt to get last run
+    data_field5,data_field6,data_field7,data_field8,data_field9 = get_data()  
     
 #    print(data_field1,data_field2,data_field3,data_field4, \
 #    data_field5,data_field6,data_field7,data_field8,data_field9) # debug
     
     # create cmdline command to start the main program using the 'data.txt' variables to kick things off.
-    print('sudo python3 ' + PATH + 'metar_main.py ' + "metar" + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + data_field4 \
-          + " " + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + " " + data_field9 + ' &')  # debug       
+#    print('sudo python3 ' + PATH + 'metar_main.py ' + 'metar' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + ' ' + data_field4 \
+#          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + ' ' + data_field9 + ' &')  # debug       
+    print('sudo python3 ' + PATH + 'metar_main.py ' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + ' ' + data_field4 \
+          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + ' ' + data_field9 + ' &')  # debug       
 
-    os.system('sudo python3 ' + PATH + 'metar_main.py ' + "metar" + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + data_field4 \
-          + " " + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + " " + data_field9 + ' &')
+    os.system('sudo python3 ' + PATH + 'metar_main.py ' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + ' ' + data_field4 \
+          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + ' ' + data_field8 + " " + data_field9 + ' &')
     
-    app.run(debug=True, use_reloader=True, host='0.0.0.0') # use use_reloader=False to stop double loading
-             
+    app.run(debug=True, use_reloader=False, host='0.0.0.0') # use use_reloader=False to stop double loading
+              

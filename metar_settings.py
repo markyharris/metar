@@ -7,8 +7,8 @@
 
 # Default User Settings
 airport = "KFLG"         # enter default airport identifier to display
-interval = 60           # enter default time in seconds between METAR updates - i.e. 3600 = 1 hour
 use_disp_format = -2      # Choose which display layout to use. -1 = Random layout, -2 = Cycle layouts
+interval = 60           # enter default time in seconds between METAR updates - i.e. 3600 = 1 hour
 use_remarks = 0          # 0 = display airport information, 1 = display metar remarks info
 
 # Display Units

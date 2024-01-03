@@ -73,11 +73,12 @@ def disp_ip(display, ip_address):
 ###########################
 #  Cycle Through Each -2  #
 ###########################
-def cycle_layout(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list):
+    
+def cycle_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list):
     global cycle_num
     print('Layout:',cycle_num) # debug
     cycle_pick = layout_list[cycle_num]
-    cycle_pick(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
+    cycle_pick(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
     cycle_num += 1
     if cycle_num == len(layout_list):
         cycle_num = 0
@@ -86,17 +87,17 @@ def cycle_layout(display,metar,remarks,print_table,use_remarks,wind_speed_units,
 ##################
 #  Randomize -1  #
 ##################
-def random_layout(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list):
+def random_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list):
     rand_pick = random.choice(layout_list)
     print(str(rand_pick)[10:18]) # debug
-    rand_pick(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
+    rand_pick(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
 
 
 ################
 #   Layout 0   #
 ################
 # Simple large flight category and metar
-def layout0(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
+def layout0(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -184,7 +185,8 @@ def layout0(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
 #   Layout 1   #
 ################
 # Information with Icons and flight category in top row
-def layout1(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):    
+#           display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units
+def layout1(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):    
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -307,7 +309,7 @@ def layout1(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
         display.draw_icon(COL1+desc_icon_offset, LINE2+5, "r", 50, 50, "sun")        
         
     # Display Temperature
-    tempf,dis_unit = get_temp(metar)
+    tempf,dis_unit = get_temp(metar,temperature_units)
         
     if float(tempf) >= 70:
         display.draw_icon(COL2+ICON_OFFSET, LINE2+5, "r", 50, 50, "hot")
@@ -325,7 +327,7 @@ def layout1(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_icon(COL1+ICON_OFFSET, LINE3+5, "r", 50, 50, wind_arrow(winddir_raw))  
 
     # Display Wind Speed
-    windsp,dis_unit = get_wspd(metar)
+    windsp,dis_unit = get_wspd(metar,wind_speed_units)
 
     if windsp == "Calm" or float(windsp) < 5.0:
         display.draw_icon(COL2+ICON_OFFSET, LINE3+5, "r", 50, 50, "windvanelow")
@@ -337,7 +339,7 @@ def layout1(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_black.text((COL2, LINE3), "Wind Speed:\n"+windsp+dis_unit, fill=0, font=font24b) 
         
     # Display Wind Gust Speed
-    gustsp,dis_unit = get_wgst(metar)
+    gustsp,dis_unit = get_wgst(metar,wind_speed_units)
           
     display.draw_black.text((COL1, LINE4), "Wind Gust:\n"+gustsp+dis_unit, fill=0, font=font24b)
     if gustsp == "n/a":
@@ -346,7 +348,7 @@ def layout1(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
         display.draw_icon(COL1+ICON_OFFSET, LINE4+5, "r", 50, 50, "windy1") 
     
     # Display Baro Pressure
-    baro,dis_unit = get_altim(metar)
+    baro,dis_unit = get_altim(metar,pressure_units)
 
     if float(baro) >= 28.0 and float(baro) < 29.0:
         display.draw_icon(COL2+ICON_OFFSET, LINE4+5, "r", 50, 50, "baro0")  
@@ -362,7 +364,7 @@ def layout1(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_black.text((COL2, LINE4), "Baro Press:\n"+baro+dis_unit, fill=0, font=font24b)    
         
     # Display Visibility
-    vis,dis_unit = get_visib(metar)
+    vis,dis_unit = get_visib(metar,visibility_units)
 
     display.draw_black.text((COL1, LINE5), "Visibility:\n"+vis+dis_unit, fill=0, font=font24b)
     display.draw_icon(COL1+ICON_OFFSET, LINE5+5, "r", 50, 50, "vis")
@@ -377,7 +379,7 @@ def layout1(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     # Display Cloud Cover - Grab the first 3 layers of clouds being reported
     display.draw_black.text((COL1, LINE6), "Cloud Cover:\n", fill=0, font=font24b)
     
-    cctype_lst,ccheight_lst,dis_unit = get_clouds(metar)
+    cctype_lst,ccheight_lst,dis_unit = get_clouds(metar,cloud_layer_units)
     for i in range(len(cctype_lst)):
         cctype = cctype_lst[i]
         ccheight = ccheight_lst[i]
@@ -444,7 +446,7 @@ def layout1(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
 #   Layout 2   #
 ################
 # Information with Icons and flight category in the center
-def layout2(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
+def layout2(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -533,7 +535,7 @@ def layout2(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
         display.draw_icon(COL1+300, LINE2+5, "r", 50, 50, "sun")        
         
     # Display Temperature
-    tempf,dis_unit = get_temp(metar)
+    tempf,dis_unit = get_temp(metar,temperature_units)
         
     if float(tempf) >= 70:
         display.draw_icon(COL2+300, LINE2+5, "r", 50, 50, "hot")
@@ -552,12 +554,12 @@ def layout2(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
 #    print(wind_arrow(winddir_raw)) # debug
 
     # Display Wind Speed
-    windsp,dis_unit = get_wspd(metar)
+    windsp,dis_unit = get_wspd(metar,wind_speed_units)
 
     display.draw_black.text((COL2, LINE3), "Wind Speed:\n"+windsp+dis_unit, fill=0, font=font24b) 
         
     # Display Wind Gust Speed
-    gustsp,dis_unit = get_wgst(metar)
+    gustsp,dis_unit = get_wgst(metar,wind_speed_units)
 
     display.draw_black.text((COL1, LINE4), "Wind Gust:\n"+gustsp+dis_unit, fill=0, font=font24b)
     if gustsp == "Not Present":
@@ -566,7 +568,7 @@ def layout2(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
         display.draw_icon(COL1+300, LINE4+5, "r", 50, 50, "windy1") 
     
     # Display Baro Pressure
-    baro,dis_unit = get_altim(metar)
+    baro,dis_unit = get_altim(metar,pressure_units)
     
     if float(baro) >= 28.0 and float(baro) < 29.0:
         display.draw_icon(COL2+300, LINE4+5, "r", 50, 50, "baro0")  
@@ -582,7 +584,7 @@ def layout2(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_black.text((COL2, LINE4), "Baro Pressure:\n"+baro+dis_unit, fill=0, font=font24b)    
         
     # Display Visibility
-    vis,dis_unit = get_visib(metar)   
+    vis,dis_unit = get_visib(metar,visibility_units)   
 
     display.draw_black.text((COL1, LINE5), "Visibility:\n"+vis+dis_unit, fill=0, font=font24b)
     display.draw_icon(COL1+300, LINE5+5, "r", 50, 50, "vis")
@@ -597,7 +599,7 @@ def layout2(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     # Display Cloud Cover - Grab the first 3 layers of clouds being reported
     display.draw_black.text((COL1, LINE6), "Cloud Cover:\n", fill=0, font=font24b)
     
-    cctype_lst,ccheight_lst,dis_unit = get_clouds(metar)
+    cctype_lst,ccheight_lst,dis_unit = get_clouds(metar,cloud_layer_units)
     for i in range(len(cctype_lst)):
         cctype = cctype_lst[i]
         ccheight = ccheight_lst[i]
@@ -662,7 +664,7 @@ def layout2(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
 #   Layout 3   #
 ################
 # Large flight category, no metar listed
-def layout3(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
+def layout3(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -722,7 +724,7 @@ def layout3(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
 #   Layout 4   #
 ################
 # 3 Area Layout with big flight category in lower right
-def layout4(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
+def layout4(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -863,7 +865,7 @@ def layout4(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_black.text((COL0+5, LINE2+25), descript, fill=255, font=font16b)
     
     # Display Temperature
-    tempf,dis_unit = get_temp(metar)
+    tempf,dis_unit = get_temp(metar,temperature_units)
         
     display.draw_black.text((COL0+5, LINE3), "Temperature:\n"+tempf+dis_unit, fill=255, font=font24b)
 
@@ -874,7 +876,7 @@ def layout4(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_icon(COL0+ICON_OFFSET-5, LINE4-3, "wb", 50, 50, wind_arrow(winddir_raw))  
 
     # Display Wind Speed
-    windsp,dis_unit = get_wspd(metar)
+    windsp,dis_unit = get_wspd(metar,wind_speed_units)
         
     if windsp == "Calm" or float(windsp) < 5.0:
         display.draw_icon(COL0+ICON_OFFSET-5, LINE5-3, "wb", 50, 50, "windvanelow")
@@ -886,12 +888,12 @@ def layout4(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_black.text((COL0+5, LINE5), "Wind Speed:\n"+windsp+dis_unit, fill=255, font=font24b)
         
     # Display Wind Gust Speed
-    gustsp,dis_unit = get_wgst(metar)
+    gustsp,dis_unit = get_wgst(metar,wind_speed_units)
 
     display.draw_black.text((COL0+5, LINE6), "Wind Gust:\n"+gustsp+dis_unit, fill=255, font=font24b)
 
     # Display Visibility
-    vis,dis_unit = get_visib(metar)
+    vis,dis_unit = get_visib(metar,visibility_units)
    
     display.draw_black.text((COL0+5, LINE7), "Visibility:\n"+vis+dis_unit, fill=255, font=font24b)
     
@@ -899,7 +901,7 @@ def layout4(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     # Grab the first layer of clouds being reported
     display.draw_black.text((COL0+5, LINE8), "Cloud Cover:\n", fill=255, font=font24b)
     
-    cctype_lst,ccheight_lst,dis_unit = get_clouds(metar)
+    cctype_lst,ccheight_lst,dis_unit = get_clouds(metar,cloud_layer_units)
     for i in range(len(cctype_lst)):
         cctype = cctype_lst[i]
         ccheight = ccheight_lst[i]
@@ -928,7 +930,7 @@ def layout4(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
 #   Layout 5   #
 ################
 # Multiple Airport Layout
-def layout5(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
+def layout5(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     global airports_list
     global airport
 
@@ -1146,7 +1148,7 @@ def layout5(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
 # layout6  #
 ############
 # Map with Flight Category
-def layout6(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
+def layout6(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
     = decode_rawmessage(get_rawOb(metar))
@@ -1205,7 +1207,7 @@ def layout6(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
 # layout7  #
 ############
 # Circles theme
-def layout7(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):    
+def layout7(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):    
     def circle_points(r, n):
         circles = []
         for r, n in zip(r, n):
@@ -1340,7 +1342,7 @@ def layout7(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
         
     # Display weather info in outer circles
     # Display Temperature
-    tempf,dis_unit = get_temp(metar)
+    tempf,dis_unit = get_temp(metar,temperature_units)
     
     x_pos, y_pos = center_text("Temp", font24b, OUTER_CIRCLES[0][0], OUTER_CIRCLES[0][1]-10) #OUTER_CIRCLES[0], OUTER_CIRCLES[1])
     display.draw_red.text((x_pos, y_pos), "Temp", fill=0, font=font24b)
@@ -1356,7 +1358,7 @@ def layout7(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_red.text((x_pos, y_pos), winddir, fill=0, font=font24b)
 
     # Display Wind Speed
-    windsp,dis_unit = get_wspd(metar)
+    windsp,dis_unit = get_wspd(metar,wind_speed_units)
         
     x_pos, y_pos = center_text("Speed", font24b, OUTER_CIRCLES[2][0], OUTER_CIRCLES[2][1]-10)
     display.draw_red.text((x_pos, y_pos), "Speed", fill=0, font=font24b) 
@@ -1364,7 +1366,7 @@ def layout7(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_red.text((x_pos, y_pos), windsp, fill=0, font=font24b) 
         
     # Display Wind Gust Speed
-    gustsp,dis_unit = get_wgst(metar)
+    gustsp,dis_unit = get_wgst(metar,wind_speed_units)
             
     x_pos, y_pos = center_text("Gust", font24b, OUTER_CIRCLES[3][0], OUTER_CIRCLES[3][1]-10)
     display.draw_red.text((x_pos, y_pos), "Gust", fill=0, font=font24b)
@@ -1372,7 +1374,7 @@ def layout7(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_red.text((x_pos, y_pos), gustsp+dis_unit, fill=0, font=font24b)
     
     # Display Baro Pressure
-    baro,dis_unit = get_altim(metar)
+    baro,dis_unit = get_altim(metar,pressure_units)
     
     x_pos, y_pos = center_text("Baro", font24b, OUTER_CIRCLES[4][0], OUTER_CIRCLES[4][1]-10)
     display.draw_red.text((x_pos, y_pos), "Baro", fill=0, font=font24b)    
@@ -1380,7 +1382,7 @@ def layout7(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_red.text((x_pos, y_pos), baro, fill=0, font=font24b)    
         
     # Display Visibility
-    vis,dis_unit = get_visib(metar)
+    vis,dis_unit = get_visib(metar,visibility_units)
         
     x_pos, y_pos = center_text("Vis", font24b, OUTER_CIRCLES[5][0], OUTER_CIRCLES[5][1]-10)
     display.draw_red.text((x_pos, y_pos), "Vis", fill=0, font=font24b)
@@ -1399,7 +1401,7 @@ def layout7(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_red.text((x_pos, y_pos), metartype, fill=0, font=font24b)
 
     # Grab the first layer of clouds being reported
-    cctype_lst,ccheight_lst,dis_unit = get_clouds(metar)
+    cctype_lst,ccheight_lst,dis_unit = get_clouds(metar,cloud_layer_units)
             
     ccheight = ccheight_lst[0]
     cctype = cctype_lst[0]
@@ -1421,7 +1423,7 @@ def layout7(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
 # layout8  #
 ############
 # Worst Weather by airport
-def layout8(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
+def layout8(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     fc_ap_dict = {}
     vfr_dict,mvfr_dict,ifr_dict,lifr_dict = get_flightcat()
 
@@ -1556,7 +1558,7 @@ def layout8(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
 #   Layout 9   #
 ################
 # Metar with Large Winds Icons
-def layout9(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):    
+def layout9(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):    
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -1630,7 +1632,7 @@ def layout9(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
     display.draw_icon(COL2+ICON_OFFSET, LINE5, "r", ICON_SIZE, ICON_SIZE, wind_arrow(winddir_raw))  
 
     # Display Wind Speed
-    windsp,dis_unit = get_wspd(metar)
+    windsp,dis_unit = get_wspd(metar,wind_speed_units)
 
     if windsp == "Calm" or float(windsp) < 5.0:
         display.draw_icon(COL1+ICON_OFFSET, LINE5, "r", ICON_SIZE, ICON_SIZE, "windvanelow")
@@ -1640,10 +1642,10 @@ def layout9(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud
         display.draw_icon(COL1+ICON_OFFSET, LINE5, "r", ICON_SIZE, ICON_SIZE, "windvanehigh")
         
     # Display Wind Gust Speed
-    gustsp,dis_unit = get_wgst(metar)
+    gustsp,dis_unit = get_wgst(metar,wind_speed_units)
     if gustsp == 'n/a':
         gustsp = ''
-        windsp,dis_unit = get_wspd(metar)
+        windsp,dis_unit = get_wspd(metar,wind_speed_units)
     else:
         windsp = windsp + ' G'
             

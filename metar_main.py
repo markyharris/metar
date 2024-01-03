@@ -43,6 +43,7 @@ import requests
 import json
 import sys
 import os
+import sys
 
 # epd7in5b_V2 = 3-color 7 by 5 display. Change this based on the display used.
 # find 'epd = epd7in5b_V2.EPD()' towards bottom and change also if needed.
@@ -53,7 +54,10 @@ from waveshare_epd import epd7in5b_V2
 layout_list = [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7,layout8,layout9] # ,layout6 Add layout routine names here
 
 # Check for cmdline args and use passed variables instead of the defaults above
-if len(sys.argv) > 1:
+# The args being passed are;
+# airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units
+# Example: kabe,1,60,1,2,0,0,1,1
+"""if len(sys.argv) > 1:
     airport_tmp = str(sys.argv[1].upper())
     if len(airport_tmp) != 4: # verify that 4 character ICAO id was entered
         airport_tmp = airport # otherwise use default airport from settings.
@@ -75,27 +79,26 @@ if len(sys.argv) == 5:
     interval = int(sys.argv[3])
     use_disp_format = int(sys.argv[2])
     if (use_disp_format < -3 or use_disp_format > len(layout_list)-1):
-        use_disp_format = -2
+        use_disp_format = -2 """
 
 #print(len(sys.argv)) # debug
-#print(sys.argv) # debug
+print(sys.argv) # debug
 #['/home/pi/metar/metar_main.py', 'metar', 'kabe', '1', '0', '1', '2', '0', '0', '1', '1']
 #display = int(sys.argv[1])
-metar = str(sys.argv[1])
-airport = str(sys.argv[2])
-remarks = int(sys.argv[3])
-print_table = int(sys.argv[4])
-use_remarks = int(sys.argv[5])
-wind_speed_units = int(sys.argv[6])
-cloud_layer_units = int(sys.argv[7])
-visibility_units = int(sys.argv[8])
-temperature_units = int(sys.argv[9])
-pressure_units = int(sys.argv[10])
+# airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units
+# Example: kabe 1 60 1 2 0 0 1 1
+airport = str(sys.argv[1].upper())
+use_disp_format = int(sys.argv[2])
+interval = int(sys.argv[3])
+use_remarks = int(sys.argv[4])
+wind_speed_units = int(sys.argv[5])
+cloud_layer_units = int(sys.argv[6])
+visibility_units = int(sys.argv[7])
+temperature_units = int(sys.argv[8])
+pressure_units = int(sys.argv[9])
 
-print(metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units) # debug
-#sys.exit()
+print(airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units) # debug
     
-
 print('len of args:',len(sys.argv)) # debug
 print("Airport\t", "Layout\t", "Update\t", "Remarks")
 print(str(airport)+"\t", str(use_disp_format)+"\t", str(interval)+"\t", str(use_remarks)+"\n")
@@ -104,9 +107,13 @@ print(str(airport)+"\t", str(use_disp_format)+"\t", str(interval)+"\t", str(use_
 def main():    
     # Choose which layout to use.
     if use_disp_format == -1:
-        random_layout(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
+#        random_layout(display,metar,airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
+        random_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
+
     elif use_disp_format == -2:
-        cycle_layout(display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
+#        cycle_layout(display,metar,airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
+        cycle_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
+
     elif use_disp_format == -3:
         disp_ip(display, get_ip_address())
 #        use_disp_format = -2
@@ -116,7 +123,8 @@ def main():
         for index, item in enumerate(layout_list):
             if index == use_disp_format:
                 print("Layout",index) # debug
-                layout_list[index](display,metar,remarks,print_table,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list) # call appropriate layout
+#                layout_list[index](display,metar,airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list) # call appropriate layout
+                layout_list[index](display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units) # call appropriate layout
 
     # Print to e-Paper - This is setup to display on 7x5 3 color waveshare panel. epd7in5b_V2
     # To use on 2 color panel, remove ', epd.getbuffer(display.im_red)' from 6 lines lower.
@@ -148,14 +156,14 @@ if __name__ == "__main__":
         if True:  # used instead of the try-except statements for debug purposes.
             current_time = time.strftime("%m/%d/%Y %H:%M", time.localtime())
             
-            metar = Metar(airport)
+            metar = Metar(airport) # pass to routines
 
             remarks, print_table = decode_remarks(metar.data[0]['rawOb']) #["properties"]["rawMessage"]
+            print('remarks:',remarks,'print_table:',print_table) # debut
             flightcategory, icon = flight_category(metar)
             
             if len(metar.data[0]['rawOb']) > 0:
-                print(metar.data[0]['rawOb']+"\n")
-#                print (len(metar.data[0]['rawOb'])) # debug
+                print(metar.data[0]['rawOb']+"\n") # debug
             else:
                 print("No METAR Being Reported")
 #                print (len(metar.data[0]['rawOb'])) # debug
@@ -164,7 +172,7 @@ if __name__ == "__main__":
             print("Creating display")
             epd.init()
             epd.Clear()
-            display = Display()
+            display = Display() # pass to routines
 
             # Update values
             metar.update(airport)

@@ -69,7 +69,7 @@ def get_metartype(metar): # "Type of encoding" string
     print('metartype:',metartype)
     return(metartype)
 
-def get_clouds(metar):
+def get_clouds(metar,cloud_layer_units):
     cctype_lst = []   # "Cloud layer - Cover coverage" string
     ccheight_lst = [] # "Cloud base in feet" integer
     dis_unit = ' ft'
@@ -82,7 +82,8 @@ def get_clouds(metar):
         ccheight = metar.data[0]['clouds'][i]['base']
         
         if ccheight is None:
-            ccheight = "n/a"
+            ccheight = " "
+            dis_unit = ' '
         else:
             if cloud_layer_units == 1:
                 ccheight,dis_unit = feet_to_meters(ccheight)
@@ -90,7 +91,8 @@ def get_clouds(metar):
                 ccheight = '{0:.0f}'.format(ccheight)
             
         if cctype is None:
-            cctype == "n/a"
+            cctype == " "
+            dis_unit = ' '
             
         cctype_lst.append(cctype)
         ccheight_lst.append(ccheight)
@@ -98,7 +100,7 @@ def get_clouds(metar):
     print('cctype_lst:',cctype_lst,', ccheight_lst:',ccheight_lst,'dis_unit:',dis_unit)
     return(cctype_lst,ccheight_lst,dis_unit)
 
-def get_altim(metar): # "Altimeter setting in hectoPascals" number
+def get_altim(metar,pressure_units): # "Altimeter setting in hectoPascals" number
     print('metar.data[0]["altim"]:', metar.data[0]["altim"]) # debug
     dis_unit = ' hPa'
     if metar.data[0]["altim"] != None:
@@ -111,7 +113,7 @@ def get_altim(metar): # "Altimeter setting in hectoPascals" number
     print('baro:',baro,'dis_unit:',dis_unit) # debug
     return(baro,dis_unit)
 
-def get_temp(metar): # "Temperature in Celcius" number
+def get_temp(metar,temperature_units): # "Temperature in Celcius" number
     print('metar.data[0]["temp"]:',metar.data[0]["temp"]) # debug
     dis_unit = ' '+chr(176)+'C'
     if metar.data[0]["temp"] != None:
@@ -125,7 +127,7 @@ def get_temp(metar): # "Temperature in Celcius" number
     print('tempf:', tempf,'dis_unit:',dis_unit) # debug
     return(str(tempf),dis_unit)
 
-def get_visib(metar): # "Visibility in statute miles, 10+ is greater than 10 sm" number
+def get_visib(metar,visibility_units): # "Visibility in statute miles, 10+ is greater than 10 sm" number
     print('metar.data[0]["visib"]:',metar.data[0]["visib"]) # debug
     dis_unit = ' miles'
     if metar.data[0]["visib"] != None:
@@ -188,7 +190,7 @@ def get_wdir(metar): # "Wind direction in degrees or VRB for variable winds" int
     print('winddir:',winddir) # debug
     return(winddir,winddir_raw)
 
-def get_wspd(metar): # "Wind speed in knots" integer
+def get_wspd(metar,wind_speed_units): # "Wind speed in knots" integer
     print('metar.data[0]["wspd"]:',metar.data[0]["wspd"]) # debug
     dis_unit = ''
     if metar.data[0]["wspd"] != None:
@@ -214,7 +216,7 @@ def get_wspd(metar): # "Wind speed in knots" integer
     print('windsp:',windsp,'dis_unit:',dis_unit) # debug
     return(windsp,dis_unit)
 
-def get_wgst(metar): # "Wind gusts in knots" integer
+def get_wgst(metar,wind_speed_units): # "Wind gusts in knots" integer
     print('metar.data[0]["wgst"]:',metar.data[0]["wgst"]) # debug
     dis_unit = ''
     if metar.data[0]["wgst"] != None:
