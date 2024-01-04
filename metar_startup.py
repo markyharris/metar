@@ -1,3 +1,14 @@
+# metar_startup.py - Mark Harris
+# for E-Paper display
+# Version 2.1
+# Part of Epaper Display project found at; https://github.com/markyharris/metar/
+#
+# UPDATED FAA API 12-2023, https://aviationweather.gov/data/api/
+#
+# This script is run only once upon boot/reboot to display the Admin Page's URL.
+# rc.local runs this script, then waits for a bit then runs the 'metar_main.py' script and the 'webapp.py' script
+
+# imports
 from metar_layouts import *
 from metar_routines import *
 import time

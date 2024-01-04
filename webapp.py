@@ -1,6 +1,8 @@
 # webapp.py - Mark Harris
 # for E-Paper display
 # Version 2.1
+# Part of Epaper Display project found at; https://github.com/markyharris/metar/
+#
 # UPDATED FAA API 12-2023, https://aviationweather.gov/data/api/
 #
 # This will provide a web interface to control the e-Paper display. 
@@ -78,7 +80,6 @@ def metar():
 
         else:
             os.system("ps -ef | grep 'metar_main.py' | awk '{print $2}' | xargs sudo kill")
-#            os.system('sudo python3 ' + PATH + 'metar_main.py '+ data_field1+' '+data_field2+' '+data_field3+' '+data_field4+' &')
             os.system('sudo python3 ' + PATH + 'metar_main.py ' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + data_field4 \
           + " " + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + " " + data_field9 + ' &')        
 
@@ -138,7 +139,7 @@ if __name__ == '__main__':
     
     # create cmdline command to start the main program using the 'data.txt' variables to kick things off.     
     print('sudo python3 ' + PATH + 'metar_main.py ' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + ' ' + data_field4 \
-          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + ' ' + data_field9 + ' &')  # debug
+          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + ' ' + data_field9 + ' &\n')  # debug
     
     # first run at startup. display web admin ip url for 60 seconds
     os.system('sudo python3 ' + PATH + 'metar_main.py ' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + ' ' + data_field4 \

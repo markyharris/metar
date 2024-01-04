@@ -1,6 +1,8 @@
 # metar_routines.py
 # Metar Decoding Routines - Mark Harris
 # Version 2.1
+# Part of Epaper Display project found at; https://github.com/markyharris/metar/
+#
 # UPDATED FAA API 12-2023, https://aviationweather.gov/data/api/
 
 # Imports
@@ -134,9 +136,7 @@ def get_visib(metar,visibility_units): # "Visibility in statute miles, 10+ is gr
         if type(metar.data[0]["visib"]) == int or type(metar.data[0]["visib"]) == float:
             tmp_vis = float(metar.data[0]["visib"])
         else:
-#            print('metar.data[0]["visib"]',metar.data[0]["visib"]) # debug
             tmp_vis = metar.data[0]["visib"].strip('+')
-#            print(tmp_vis) # debug
             tmp_vis = float(tmp_vis)
         vis = '{0:.1f}'.format(tmp_vis)
         if visibility_units == 1:
@@ -160,7 +160,6 @@ def get_rawOb(metar): # "Raw text of observation" string
         rawmetar = metar.data[0]['rawOb']
     else:
         rawmetar = 'n/a'
-#    print ('rawmetar:',rawmetar) # debug
     return(rawmetar)
 
 def get_wdir(metar): # "Wind direction in degrees or VRB for variable winds" integer
@@ -247,7 +246,8 @@ def get_misc(metar): # icaoid,obstime,elev,lat,lon,name = get_misc(metar)
     lat = metar.data[0]["lat"]         # "Latitude of site in degrees" number
     lon = metar.data[0]["lon"]         # "Longitude of site in degrees" number
     name = metar.data[0]["name"]       # "Full name of the site" string
-    print(icaoid,obstime,elev,lat,lon,name) 
+    
+    print(icaoid,obstime,elev,lat,lon,name) # debug
     return(icaoid,obstime,elev,lat,lon,name)
 
 
@@ -261,14 +261,12 @@ def get_ip_address():
     return ip_address
 
 
-
-
 # Get Flight Categories for Class B and Class C airports
 def get_flightcat():
-    # api url
+    # api url; the first 2 are old FAA API's that have been sunsetted. Required significant rewrite to accomodate the new system.
 #    url = "https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&mostRecentForEachStation=constraint&hoursBeforeNow=2.5&stationString="
-    url = "https://aviationweather-cprk.ncep.noaa.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&mostRecentForEachStation=constraint&hoursBeforeNow=2.5&stationString="
-
+#    url = "https://aviationweather-cprk.ncep.noaa.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&mostRecentForEachStation=constraint&hoursBeforeNow=2.5&stationString="
+    url = "https://aviationweather.gov/api/data/metar?format=xml&hours=2.5&ids=" # Latest API from FAA, https://aviationweather.gov/data/api/
     fc_dict = {}
     vfr_dict = {}
     mvfr_dict = {}
@@ -282,13 +280,10 @@ def get_flightcat():
         url = url+ap+","
         
     content = urllib.request.urlopen(url).read()
-    
     root = ET.fromstring(content) #Process XML data returned from FAA
-#    print(root) # debug
     
     for data in root.iter('data'):
             num_results = data.attrib['num_results']
-            print(num_results)
             
     for metar in root.iter('METAR'):
         stationId = metar.find('station_id').text
@@ -308,6 +303,7 @@ def get_flightcat():
         else:
             vfr_dict[key] = "VFR"
 
+#    print(vfr_dict,mvfr_dict,ifr_dict,lifr_dict) # debug
     return(vfr_dict,mvfr_dict,ifr_dict,lifr_dict)
     
     
@@ -327,9 +323,9 @@ def flight_category(metar):
     print("num_clouds layers:",len(metar.data[0]['clouds'])) # debug
       
     # Get Cloud Cover
-    for i in range(len(metar.data[0]['clouds'])): #["properties"]["cloudLayers"])):
-        sky_condition = metar.data[0]['clouds'][i]['cover'] #["properties"]["cloudLayers"][i]["amount"]
-        sky_ceiling = metar.data[0]['clouds'][i]['base'] #["properties"]["cloudLayers"][i]["amount"]
+    for i in range(len(metar.data[0]['clouds'])):
+        sky_condition = metar.data[0]['clouds'][i]['cover'] 
+        sky_ceiling = metar.data[0]['clouds'][i]['base'] 
             
         if sky_condition == "OVC" or sky_condition == "BKN" or sky_condition == "OVX" or sky_condition == "VV":                 
             if sky_ceiling < 500:
@@ -395,9 +391,10 @@ def decode_remarks(rawmessage):
 
 # Provides the proper icon to display depending on wind direction
 def wind_arrow(deg):
-    if deg == "000" or deg == "VRB":
+    if deg == "000" or deg == "VRB" or deg == "n/a":
         arrow = "compass"
         return arrow
+    
     deg = int(deg)
     if deg < 30 or deg >= 330:
         arrow = "north"
@@ -421,7 +418,6 @@ def wind_arrow(deg):
     return (arrow)
 
 
-
 # decodes raw metar string to grab wind direction wind speed, gusts, temperature and baro
 # This info is used as backup if the api does not provide this data in its normal response.
 def decode_rawmessage(airport_name):
@@ -439,7 +435,6 @@ def decode_rawmessage(airport_name):
     # use either live metar or test_metar from above.
     try:
         decode = airport_name.split()
-#        print("***",decode) # debug
     except:
         print("*decode try failed") # debug
         decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
@@ -468,7 +463,6 @@ def decode_rawmessage(airport_name):
 
     # Get Visibility    NEEDS WORK
     for i in range(len(decode)):
-#        print("i: ",i) # debug
         
         if len(decode[i]) == 1 and i < len(decode): 
             decode[i] = decode[i]+" "+decode[i+1]

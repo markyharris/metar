@@ -1,6 +1,8 @@
 # metar_layouts.py
 # Layouts for Metar Display - Mark Harris
 # Version 2.1
+# Part of Epaper Display project found at; https://github.com/markyharris/metar/
+#
 # UPDATED FAA API 12-2023, https://aviationweather.gov/data/api/
 #
 # Each Layout offers a different look and amount of information.
@@ -330,7 +332,7 @@ def layout1(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
     # Display Wind Speed
     windsp,dis_unit = get_wspd(metar,wind_speed_units)
 
-    if windsp == "Calm" or float(windsp) < 5.0:
+    if windsp == "Calm" or windsp == "n/a" or float(windsp) < 5.0:
         display.draw_icon(COL2+ICON_OFFSET, LINE3+5, "r", 50, 50, "windvanelow")
     elif float(windsp) >= 5.0 and float(windsp) < 15.0:
         display.draw_icon(COL2+ICON_OFFSET, LINE3+5, "r", 50, 50, "windvanemed")

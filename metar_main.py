@@ -1,6 +1,8 @@
 # metar_main.py
 # E-Paper METAR Display - by Mark Harris
 # Version 2.1
+# Part of Epaper Display project found at; https://github.com/markyharris/metar/
+#
 # UPDATED to New FAA API 12-2023, https://aviationweather.gov/data/api/
 #
 # Thanks to Aerodynamics for providing a great start for this project

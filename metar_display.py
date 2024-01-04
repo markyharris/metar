@@ -2,16 +2,19 @@
 # Metar Display - Mark Harris
 # Version 2.1
 # UPDATED FAA API 12-2023, https://aviationweather.gov/data/api/
+# Part of Epaper Display project found at; https://github.com/markyharris/metar/
 # 
 # Altered from https://github.com/aerodynamics-py/WEATHER_STATION_PI
 #
 # Added a number of bold fonts
 # Added a number of drawing routines for rounded corners, etc.
 
+
 # Imports
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 import requests
 import urllib.request
+
 
 # Setup fonts that could be chosen. Default font_choice is #5
 # Look in '/usr/share/fonts/truetype/' to see what is installed on 
@@ -63,20 +66,16 @@ font296b = ImageFont.truetype(project_fontbold, 296)
 class Metar:
     def __init__(self, airport):
         self.data = requests.get(
-#            f"https://api.weather.gov/stations/"+airport+"/observations/latest", timeout=5).json()
             f"https://aviationweather.gov/api/data/metar?ids="+airport+"&format=json&hours=2.5").json()
         self.data2 = requests.get(
-#            f"https://api.weather.gov/stations/"+airport, timeout=5).json()
             f"https://aviationweather.gov/api/data/metar?ids="+airport+"&format=json&hours=2.5").json()
         requests.session().close()
         pass
 
     def update(self, airport):
         self.data = requests.get(
-#            f"https://api.weather.gov/stations/"+airport+"/observations/latest", timeout=5).json()
             f"https://aviationweather.gov/api/data/metar?ids="+airport+"&format=json&hours=2.5").json()
         self.data2 = requests.get(
-#            f"https://api.weather.gov/stations/"+airport, timeout=5).json()
             f"https://aviationweather.gov/api/data/metar?ids="+airport+"&format=json&hours=2.5").json()
         requests.session().close()
         return self.data, self.data2
