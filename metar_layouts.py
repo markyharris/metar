@@ -20,7 +20,7 @@
 # Then using the other layouts as a guide create your own.
 # You must add the name of your layout to 2 locations;
 #   metar_main.py to the variable "layout_list"
-#   epaper.html to the '<select name="data_field2" id="myselection">' option list
+#   metar.html to the '<select name="data_field2" id="myselection">' option list
 
 
 # Imports
@@ -68,12 +68,13 @@ def disp_ip(display, ip_address):
     display.draw_red.text((center_line(display,"Into a Web Browser",font36b), LINE2), "Into a Web Browser", fill=0, font=font36b)
     display.draw_red.text((center_line(display,"on Same Network",font36b), LINE3), "on Same Network", fill=0, font=font36b)
     display.draw_black.text((center_line(display,msg1,font16b), LINE4), msg1, fill=0, font=font16b)
+    
+    print('\nWeb Admin URL:',admin_url,'\n') # debug
 
 
 ###########################
 #  Cycle Through Each -2  #
 ###########################
-    
 def cycle_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list):
     global cycle_num
     print('Layout:',cycle_num) # debug

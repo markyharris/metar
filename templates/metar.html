@@ -69,14 +69,21 @@ $(document).ready(function(){
   
 <form action="{{ url_for('metar') }}" method="post"> 
 
-        <label for="display"><b>Choose a Function:</b></label><br>
-		<select name="display" id="display">
-		  <option value="metar" {% if display=="metar" %} selected="selected" {% endif %}>Display METAR Info</option>
-		  <option value="off" {% if display=="off" %} selected="selected" {% endif %}>Clear E-Paper Display</option>
-		  <option value="reboot" {% if display=="reboot" %} selected="selected" {% endif %}>Reboot RPi</option>
-		  <option value="powerdown" {% if display=="powerdown" %} selected="selected" {% endif %}>Power Down RPi</option>
-		</select>
-		<br><p>
+		<table class="table table-bordered">
+		  <tbody>
+            <tr class="table-warning">
+              <td>
+                <label for="display"><b>Choose a Function:</b></label><br>
+                <select name="display" id="display">
+                  <option value="metar" {% if display=="metar" %} selected="selected" {% endif %}>Display METAR Info</option>
+                  <option value="off" {% if display=="off" %} selected="selected" {% endif %}>Clear E-Paper Display</option>
+                  <option value="reboot" {% if display=="reboot" %} selected="selected" {% endif %}>Reboot RPi</option>
+                  <option value="powerdown" {% if display=="powerdown" %} selected="selected" {% endif %}>Power Down RPi</option>
+                </select>
+		      </td>
+            </tr>
+          </tbody>
+        </table>
 					
 					
 					

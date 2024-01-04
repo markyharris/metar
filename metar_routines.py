@@ -160,7 +160,7 @@ def get_rawOb(metar): # "Raw text of observation" string
         rawmetar = metar.data[0]['rawOb']
     else:
         rawmetar = 'n/a'
-    print ('rawmetar:',rawmetar) # debug
+#    print ('rawmetar:',rawmetar) # debug
     return(rawmetar)
 
 def get_wdir(metar): # "Wind direction in degrees or VRB for variable winds" integer
@@ -182,7 +182,7 @@ def get_wdir(metar): # "Wind direction in degrees or VRB for variable winds" int
     if winddir == "VRB":
         pass
     else:
-        winddir = winddir + chr(176)
+        winddir = winddir + chr(176) # chr(176) is the degree symbol
         
     if winddir == "000"+chr(176):
         winddir = "Calm"
@@ -258,8 +258,10 @@ def get_ip_address():
     s.connect(("8.8.8.8",80))
     ip_address = s.getsockname()[0]
     s.close()
-#    print(ip_address) # debug
     return ip_address
+
+
+
 
 # Get Flight Categories for Class B and Class C airports
 def get_flightcat():

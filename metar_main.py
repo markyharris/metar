@@ -38,6 +38,8 @@
 
 # Imports
 from metar_layouts import *
+from metar_settings import *
+from metar_routines import *
 import time
 import requests
 import json
@@ -52,78 +54,53 @@ from waveshare_epd import epd7in5b_V2
 
 # Layouts - add new layouts to this list as necessary
 layout_list = [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7,layout8,layout9] # ,layout6 Add layout routine names here
+global startup_flag
+startup_flag = 0 # will be reset to 1 once the IP URL is displayed.
 
-# Check for cmdline args and use passed variables instead of the defaults above
-# The args being passed are;
-# airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units
-# Example: kabe,1,60,1,2,0,0,1,1
-"""if len(sys.argv) > 1:
-    airport_tmp = str(sys.argv[1].upper())
-    if len(airport_tmp) != 4: # verify that 4 character ICAO id was entered
-        airport_tmp = airport # otherwise use default airport from settings.
-    airport = airport_tmp
-    
-if len(sys.argv) == 3:
+# Check for cmdline args and use passed variables instead of the defaults
+# example ['/home/pi/metar/metar_main.py', 'metar', 'kabe', '1', '0', '1', '2', '0', '0', '1', '1']
+print('len(sys.argv):',len(sys.argv)) # debug
+print('sys.argv:',sys.argv,'\n') # debug
+
+# check to see if web admin is supplying the args. If not, use settings.py
+if len(sys.argv) >= 10:
+    print('Using Args passed from web admin')
+    airport = str(sys.argv[1].upper())
     use_disp_format = int(sys.argv[2])
-    if (use_disp_format < -3 or use_disp_format > len(layout_list)-1):
-        use_disp_format = -2
-        
-if len(sys.argv) == 4:
     interval = int(sys.argv[3])
-    use_disp_format = int(sys.argv[2])
-    if (use_disp_format < -3 or use_disp_format > len(layout_list)-1):
-        use_disp_format = -2
-        
-if len(sys.argv) == 5:
     use_remarks = int(sys.argv[4])
-    interval = int(sys.argv[3])
-    use_disp_format = int(sys.argv[2])
-    if (use_disp_format < -3 or use_disp_format > len(layout_list)-1):
-        use_disp_format = -2 """
+    wind_speed_units = int(sys.argv[5])
+    cloud_layer_units = int(sys.argv[6])
+    visibility_units = int(sys.argv[7])
+    temperature_units = int(sys.argv[8])
+    pressure_units = int(sys.argv[9])
+else:
+    print('Using Args from settings.py file')
 
-#print(len(sys.argv)) # debug
-print(sys.argv) # debug
-#['/home/pi/metar/metar_main.py', 'metar', 'kabe', '1', '0', '1', '2', '0', '0', '1', '1']
-#display = int(sys.argv[1])
-# airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units
-# Example: kabe 1 60 1 2 0 0 1 1
-airport = str(sys.argv[1].upper())
-use_disp_format = int(sys.argv[2])
-interval = int(sys.argv[3])
-use_remarks = int(sys.argv[4])
-wind_speed_units = int(sys.argv[5])
-cloud_layer_units = int(sys.argv[6])
-visibility_units = int(sys.argv[7])
-temperature_units = int(sys.argv[8])
-pressure_units = int(sys.argv[9])
-
-print(airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units) # debug
-    
-print('len of args:',len(sys.argv)) # debug
-print("Airport\t", "Layout\t", "Update\t", "Remarks")
+print("\nAirport\t", "Layout\t", "Update\t", "Remarks")
 print(str(airport)+"\t", str(use_disp_format)+"\t", str(interval)+"\t", str(use_remarks)+"\n")
 
 
-def main():    
-    # Choose which layout to use.
-    if use_disp_format == -1:
-#        random_layout(display,metar,airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
+def main():
+    global display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list
+    global startup_flag
+    
+    # Choose  which layout to use.
+    if startup_flag == 0: #use_disp_format == -3:
+        disp_ip(display, get_ip_address())
+        print('---> use_disp_format:',use_disp_format) # debug
+        print('---> interval:',interval,'\n') # debug
+        
+    elif use_disp_format == -1:
         random_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
 
     elif use_disp_format == -2:
-#        cycle_layout(display,metar,airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
         cycle_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
-
-    elif use_disp_format == -3:
-        disp_ip(display, get_ip_address())
-#        use_disp_format = -2
-#        interval = 1800
 
     else:    
         for index, item in enumerate(layout_list):
             if index == use_disp_format:
-                print("Layout",index) # debug
-#                layout_list[index](display,metar,airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list) # call appropriate layout
+                print("Layout -->",index,'<--') # debug
                 layout_list[index](display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units) # call appropriate layout
 
     # Print to e-Paper - This is setup to display on 7x5 3 color waveshare panel. epd7in5b_V2
@@ -158,15 +135,14 @@ if __name__ == "__main__":
             
             metar = Metar(airport) # pass to routines
 
-            remarks, print_table = decode_remarks(metar.data[0]['rawOb']) #["properties"]["rawMessage"]
-            print('remarks:',remarks,'print_table:',print_table) # debut
+            remarks, print_table = decode_remarks(get_rawOb(metar)) # metar.data[0]['rawOb'])
+            print('remarks:',remarks,'print_table:',print_table) # debug
             flightcategory, icon = flight_category(metar)
             
-            if len(metar.data[0]['rawOb']) > 0:
-                print(metar.data[0]['rawOb']+"\n") # debug
+            if len(get_rawOb(metar)) > 0: # metar.data[0]['rawOb']) > 0:
+                print(get_rawOb(metar)) # metar.data[0]['rawOb']+"\n") # debug
             else:
                 print("No METAR Being Reported")
-#                print (len(metar.data[0]['rawOb'])) # debug
                 
             print("Updated " + current_time)
             print("Creating display")
@@ -184,27 +160,27 @@ if __name__ == "__main__":
             # The update interval can be selected via cmd line or web iterface
             # If Auto Interval is selected, then Flight Category dictates update
             # So the worse the weather, the more often it updates.
-            if interval != 0: # if not auto interval selected
+            if startup_flag == 0:
+                startup_flag = 1
+                print("sleep 1 min for Admin URL")
+                time.sleep(60)
+
+            elif interval != 0: # if not auto interval selected
                 print("sleep ",interval) # debug
                 time.sleep(interval) # Sets interval of updates. 3600 = 1 hour
 
-                # Reset display format and interval when RPi first boots up and displays URL
-                if use_disp_format == -3: # -3 = Display Admin URL
-                    use_disp_format = -2 # -2 = Cycle through all layouts
-                    interval = 1800
-
             else:
                 if flightcategory == "VFR":
-                    print("Sleep 3600") # debug
+                    print("Auto Interval VFR - Sleep 1 hour") # debug
                     time.sleep(3600) # 1 hour if weather is good
                 elif flightcategory == "MVFR":
-                    print("Sleep 1800") # debug
+                    print("Auto Interval MVFR - Sleep 30 mins") # debug
                     time.sleep(1800) # 30 mins if marginal
                 elif flightcategory == "IFR":
-                    print("Sleep 1200") # debug
+                    print("Auto Interval IFR - Sleep 20 mins") # debug
                     time.sleep(1200) # 20 mins if stormy
                 elif flightcategory == "LIFR": 
-                    print("Sleep 600") # debug
+                    print("Auto Interval LIFR - Sleep 10 mins") # debug
                     time.sleep(600) # 10 mins if stormy and low visibility
           
             epd.init()

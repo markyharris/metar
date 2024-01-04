@@ -99,30 +99,30 @@ def metar():
 # Functions
 def write_data(data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9):
     f= open(PATH + "data.txt","w+")
-    f.write(data_field1+"\n")
-    f.write(data_field2+"\n")
-    f.write(data_field3+"\n")
-    f.write(data_field4+"\n")    
-    f.write(data_field5+"\n")
-    f.write(data_field6+"\n")
-    f.write(data_field7+"\n")
-    f.write(data_field8+"\n")
-    f.write(data_field9+"\n")
+    f.write(data_field1+"\n") # airport
+    f.write(data_field2+"\n") # use_disp_format
+    f.write(data_field3+"\n") # interval 
+    f.write(data_field4+"\n") # use_remarks
+    f.write(data_field5+"\n") # wind_speed_units
+    f.write(data_field6+"\n") # cloud_layer_units
+    f.write(data_field7+"\n") # visibility_units
+    f.write(data_field8+"\n") # temperature_units
+    f.write(data_field9+"\n") # pressure_units
     f.close()
     return (True)
     
 def get_data():
     f=open(PATH + "data.txt", "r")
     Lines = f.readlines() 
-    data_field1 = Lines[0].strip()
-    data_field2 = Lines[1].strip()
-    data_field3 = Lines[2].strip()
-    data_field4 = Lines[3].strip()    
-    data_field5 = Lines[4].strip()
-    data_field6 = Lines[5].strip()
-    data_field7 = Lines[6].strip()
-    data_field8 = Lines[7].strip()
-    data_field9 = Lines[8].strip()
+    data_field1 = Lines[0].strip() # airport
+    data_field2 = Lines[1].strip() # use_disp_format
+    data_field3 = Lines[2].strip() # interval 
+    data_field4 = Lines[3].strip() # use_remarks
+    data_field5 = Lines[4].strip() # wind_speed_units
+    data_field6 = Lines[5].strip() # cloud_layer_units
+    data_field7 = Lines[6].strip() # visibility_units
+    data_field8 = Lines[7].strip() # temperature_units
+    data_field9 = Lines[8].strip() # pressure_units
     f.close()
     return (data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9)
 
@@ -136,15 +136,11 @@ if __name__ == '__main__':
     data_field1,data_field2,data_field3,data_field4, \
     data_field5,data_field6,data_field7,data_field8,data_field9 = get_data()  
     
-#    print(data_field1,data_field2,data_field3,data_field4, \
-#    data_field5,data_field6,data_field7,data_field8,data_field9) # debug
-    
-    # create cmdline command to start the main program using the 'data.txt' variables to kick things off.
-#    print('sudo python3 ' + PATH + 'metar_main.py ' + 'metar' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + ' ' + data_field4 \
-#          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + ' ' + data_field9 + ' &')  # debug       
+    # create cmdline command to start the main program using the 'data.txt' variables to kick things off.     
     print('sudo python3 ' + PATH + 'metar_main.py ' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + ' ' + data_field4 \
-          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + ' ' + data_field9 + ' &')  # debug       
-
+          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + ' ' + data_field9 + ' &')  # debug
+    
+    # first run at startup. display web admin ip url for 60 seconds
     os.system('sudo python3 ' + PATH + 'metar_main.py ' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + ' ' + data_field4 \
           + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + ' ' + data_field8 + " " + data_field9 + ' &')
     
