@@ -54,8 +54,6 @@ from waveshare_epd import epd7in5b_V2
 
 # Layouts - add new layouts to this list as necessary
 layout_list = [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7,layout8,layout9] # ,layout6 Add layout routine names here
-global startup_flag
-startup_flag = 0 # will be reset to 1 once the IP URL is displayed.
 
 # Check for cmdline args and use passed variables instead of the defaults
 # example ['/home/pi/metar/metar_main.py', 'metar', 'kabe', '1', '0', '1', '2', '0', '0', '1', '1']
@@ -83,15 +81,9 @@ print(str(airport)+"\t", str(use_disp_format)+"\t", str(interval)+"\t", str(use_
 
 def main():
     global display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list
-    global startup_flag
     
-    # Choose  which layout to use.
-    if startup_flag == 0: #use_disp_format == -3:
-        disp_ip(display, get_ip_address())
-        print('---> use_disp_format:',use_disp_format) # debug
-        print('---> interval:',interval,'\n') # debug
-        
-    elif use_disp_format == -1:
+    # Choose  which layout to use.        
+    if use_disp_format == -1:
         random_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
 
     elif use_disp_format == -2:
@@ -160,12 +152,8 @@ if __name__ == "__main__":
             # The update interval can be selected via cmd line or web iterface
             # If Auto Interval is selected, then Flight Category dictates update
             # So the worse the weather, the more often it updates.
-            if startup_flag == 0:
-                startup_flag = 1
-                print("sleep 1 min for Admin URL")
-                time.sleep(60)
 
-            elif interval != 0: # if not auto interval selected
+            if interval != 0: # if not auto interval selected
                 print("sleep ",interval) # debug
                 time.sleep(interval) # Sets interval of updates. 3600 = 1 hour
 

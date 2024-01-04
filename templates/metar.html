@@ -23,11 +23,11 @@
 }
 .myDiv span{
 	text-align: center;
-    background: #b1cafc;
+    background: #ffffff;
     padding: 6px 6px;
     display: block;
-    width: 400px;
-    border: 1px solid blue;
+    width: 120px;
+    border: 0px solid blue;
     margin: 8px auto;
 	font-family: Arial, Helvetica, sans-serif;
 }
@@ -72,7 +72,7 @@ $(document).ready(function(){
 		<table class="table table-bordered">
 		  <tbody>
             <tr class="table-warning">
-              <td>
+              <td width="50%">
                 <label for="display"><b>Choose a Function:</b></label><br>
                 <select name="display" id="display">
                   <option value="metar" {% if display=="metar" %} selected="selected" {% endif %}>Display METAR Info</option>
@@ -81,6 +81,48 @@ $(document).ready(function(){
                   <option value="powerdown" {% if display=="powerdown" %} selected="selected" {% endif %}>Power Down RPi</option>
                 </select>
 		      </td>
+		      <td>
+		      	<div id="show0" class="myDiv">
+             <span><p>
+                   <img src="./static/layout0.jpg" width="100"><p><p>
+                   </span>
+             </div>
+            <div id="show1" class="myDiv">
+             <span><p>
+                   <img src="./static/layout1.jpg" width="100"><p><p>
+                   </span>
+             </div>
+            <div id="show2" class="myDiv">
+             <span><p>
+                   <img src="./static/layout2.jpg" width="100"><p><p>
+                   </span>
+             </div>
+            <div id="show3" class="myDiv">
+             <span><p>
+                   <img src="./static/layout3.jpg" width="100"><p><p>
+                   </span>
+             </div>
+            <div id="show4" class="myDiv">
+             <span><p>
+                   <img src="./static/layout4.jpg" width="100"><p><p>
+                   </span>
+             </div>
+            <div id="show5" class="myDiv">
+             <span><p>
+                   <img src="./static/layout5.jpg" width="100"><p><p>
+                   </span>
+             </div>
+            <div id="show6" class="myDiv">
+                 <span><p>
+                   <img src="./static/layout6.jpg" width="100"><p><p>
+                 </span>
+                 </div>
+            <div id="show7" class="myDiv">
+             <span><p>
+                   <img src="./static/layout7.jpg" width="100"><p><p>
+                 </span>
+                 </div>
+	         </td>
             </tr>
           </tbody>
         </table>
@@ -200,26 +242,32 @@ $(document).ready(function(){
           </tbody>
         </table>
         </div>
-        <button class="btn btn-primary" type="submit">Submit</button>
 
-</form>
-<p>
-	
-	
-	<hr>
-	<!-- Flash message via flask and jinja to announce what is currently being displayed -->
-	<div class="flashes">
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-		<div class=flashes>
-		{% for message in messages %}
-		  </div><b class="text-danger">{{ message }}</b>
-		{% endfor %}
+		<table class="table table-bordered">
+		  <tbody>
+            <tr class="table-secondary">
+              <td width="50%">
+                <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+              </td>
+              <td>
+                <!-- Flash message via flask and jinja to announce what is currently being displayed -->
+                <div class="flashes">
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <div class=flashes>
+                    {% for message in messages %}
+                      </div><b class="text-danger">{{ message }}</b>
+                    {% endfor %}
+                  {% endif %}
+	            {% endwith %}
+	            </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-	  {% endif %}
-	{% endwith %}
-	</div>
-	<hr>
+<!--	<hr>
 
 	<div id="show0" class="myDiv">
      <span><p>
@@ -261,7 +309,7 @@ $(document).ready(function(){
 	       <img src="./static/layout7.jpg" width="300"><p><p>
 		   </span>
 	 </div>
-
+-->
 
 </div>
 </div>	
