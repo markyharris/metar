@@ -51,6 +51,7 @@ def knots_to_mph(knots):
 
 def cel_to_fahren(celsius): # Celsius to Fahrenheit
     fahrenheit = (float(celsius) * 9 / 5) + 32
+    fahrenheit = '{0:.1f}'.format(fahrenheit)
     return (fahrenheit, ' '+chr(176)+'F')
 
 def miles_to_kil(miles): # Statute Miles to Kilometers
@@ -247,7 +248,7 @@ def get_misc(metar): # icaoid,obstime,elev,lat,lon,name = get_misc(metar)
     lon = metar.data[0]["lon"]         # "Longitude of site in degrees" number
     name = metar.data[0]["name"]       # "Full name of the site" string
     
-    print(icaoid,obstime,elev,lat,lon,name) # debug
+    print('\nget_misc:',icaoid,obstime,elev,lat,lon,name) # debug
     return(icaoid,obstime,elev,lat,lon,name)
 
 

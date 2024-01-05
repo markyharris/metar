@@ -25,11 +25,11 @@
 	text-align: center;
     background: #ffffff;
     background-color: transparent;
-    padding: 6px 6px;
+    padding: 2px 2px;
     display: block;
     width: 120px;
     border: 0px solid blue;
-    margin: 8px auto;
+    margin: 2px auto;
 	font-family: Arial, Helvetica, sans-serif;
 }
 </style>
@@ -58,7 +58,6 @@ $(document).ready(function(){
 });
 </script>
 
-<p>
  
 <!-- Main HTML code to display dropdown and submit button -->
 <div class="container-fluid">
@@ -66,14 +65,13 @@ $(document).ready(function(){
   <section class="py-5">
 
 <div class="container">
-  <h2>METAR E-Paper Display Admin Page</h2>
-  
 <form action="{{ url_for('metar') }}" method="post"> 
 
 		<table class="table table-bordered">
 		  <tbody>
             <tr class="table-warning">
               <td width="50%">
+                <h2>METAR E-Paper Display Admin Page</h2>
                 <label for="display"><b>Choose a Function:</b></label><br>
                 <select name="display" id="display">
                   <option value="metar" {% if display=="metar" %} selected="selected" {% endif %}>Display METAR Info</option>
@@ -83,46 +81,56 @@ $(document).ready(function(){
                 </select>
 		      </td>
 		      <td>
-		      	<div id="show0" class="myDiv">
-             <span><p>
-                   <img src="./static/layout0.jpg" width="100"><p><p>
+		    <div id="show0" class="myDiv">
+                 <span><p>
+                   <img src="./static/layout0.jpg" width="120"><p><p>
                    </span>
-             </div>
+                   </div>
             <div id="show1" class="myDiv">
-             <span><p>
-                   <img src="./static/layout1.jpg" width="100"><p><p>
+                 <span><p>
+                   <img src="./static/layout1.jpg" width="120"><p><p>
                    </span>
-             </div>
+                   </div>
             <div id="show2" class="myDiv">
-             <span><p>
-                   <img src="./static/layout2.jpg" width="100"><p><p>
+                 <span><p>
+                   <img src="./static/layout2.jpg" width="120"><p><p>
                    </span>
-             </div>
+                   </div>
             <div id="show3" class="myDiv">
-             <span><p>
-                   <img src="./static/layout3.jpg" width="100"><p><p>
+                 <span><p>
+                   <img src="./static/layout3.jpg" width="120"><p><p>
                    </span>
-             </div>
+                   </div>
             <div id="show4" class="myDiv">
-             <span><p>
-                   <img src="./static/layout4.jpg" width="100"><p><p>
+                 <span><p>
+                   <img src="./static/layout4.jpg" width="120"><p><p>
                    </span>
-             </div>
+                   </div>
             <div id="show5" class="myDiv">
-             <span><p>
-                   <img src="./static/layout5.jpg" width="100"><p><p>
+                 <span><p>
+                   <img src="./static/layout5.jpg" width="120"><p><p>
                    </span>
-             </div>
+                   </div>
             <div id="show6" class="myDiv">
                  <span><p>
-                   <img src="./static/layout6.jpg" width="100"><p><p>
-                 </span>
-                 </div>
+                  <img src="./static/layout6.jpg" width="120"><p><p>
+                  </span>
+                  </div>
             <div id="show7" class="myDiv">
-             <span><p>
-                   <img src="./static/layout7.jpg" width="100"><p><p>
-                 </span>
-                 </div>
+                 <span><p>
+                  <img src="./static/layout7.jpg" width="120"><p><p>
+                  </span>
+                  </div>
+            <div id="show8" class="myDiv">
+                 <span><p>
+                  <img src="./static/layout8.jpg" width="120"><p><p>
+                  </span>
+                  </div>
+            <div id="show9" class="myDiv">
+                 <span><p>
+                  <img src="./static/layout9.jpg" width="120"><p><p>
+                  </span>
+                  </div>
 	         </td>
             </tr>
           </tbody>
@@ -308,6 +316,16 @@ $(document).ready(function(){
 	<div id="show7" class="myDiv">
      <span><p>
 	       <img src="./static/layout7.jpg" width="300"><p><p>
+		   </span>
+	 </div>
+	<div id="show8" class="myDiv">
+     <span><p>
+	       <img src="./static/layout8.jpg" width="300"><p><p>
+		   </span>
+	 </div>
+	<div id="show9" class="myDiv">
+     <span><p>
+	       <img src="./static/layout9.jpg" width="300"><p><p>
 		   </span>
 	 </div>
 -->

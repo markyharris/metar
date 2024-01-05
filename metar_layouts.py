@@ -881,7 +881,7 @@ def layout4(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
     # Display Wind Speed
     windsp,dis_unit = get_wspd(metar,wind_speed_units)
         
-    if windsp == "Calm" or float(windsp) < 5.0:
+    if windsp == "Calm" or windsp == "n/a" or float(windsp) < 5.0:
         display.draw_icon(COL0+ICON_OFFSET-5, LINE5-3, "wb", 50, 50, "windvanelow")
     elif float(windsp) >= 5.0 and float(windsp) < 15.0:
         display.draw_icon(COL0+ICON_OFFSET-5, LINE5-3, "wb", 50, 50, "windvanemed")
@@ -1637,7 +1637,7 @@ def layout9(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
     # Display Wind Speed
     windsp,dis_unit = get_wspd(metar,wind_speed_units)
 
-    if windsp == "Calm" or float(windsp) < 5.0:
+    if windsp == "Calm" or windsp == "n/a" or float(windsp) < 5.0:
         display.draw_icon(COL1+ICON_OFFSET, LINE5, "r", ICON_SIZE, ICON_SIZE, "windvanelow")
     elif float(windsp) >= 5.0 and float(windsp) < 15.0:
         display.draw_icon(COL1+ICON_OFFSET, LINE5, "r", ICON_SIZE, ICON_SIZE, "windvanemed")

@@ -130,11 +130,11 @@ if __name__ == "__main__":
             metar = Metar(airport) # pass to routines
 
             remarks, print_table = decode_remarks(get_rawOb(metar)) # metar.data[0]['rawOb'])
-            print('remarks:',remarks,'print_table:',print_table) # debug
+#            print('remarks:',remarks,'print_table:',print_table) # debug
             flightcategory, icon = flight_category(metar)
             
-            if len(get_rawOb(metar)) > 0: # metar.data[0]['rawOb']) > 0:
-                print(get_rawOb(metar)) # metar.data[0]['rawOb']+"\n") # debug
+            if len(get_rawOb(metar)) > 0: 
+                print('get_rawOb(metar):',get_rawOb(metar),'\n') # debug
             else:
                 print("No METAR Being Reported")
                 
