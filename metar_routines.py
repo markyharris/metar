@@ -321,7 +321,7 @@ def flight_category(metar):
         vis_in_miles = 1 # Set an assumed default
         
     print("vis_in_miles: ",vis_in_miles) # debug
-    print("num_clouds layers:",len(metar.data[0]['clouds'])) # debug
+#    print("num_clouds layers:",len(metar.data[0]['clouds'])) # debug
       
     # Get Cloud Cover
     for i in range(len(metar.data[0]['clouds'])):

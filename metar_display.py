@@ -226,3 +226,58 @@ class Display:
             self.im_red.paste(inverted_image, (pos_x, pos_y))                     
         else:
             self.im_red.paste(im_pic, (pos_x, pos_y))
+            
+            
+    def show_pic1(self, url, pos_x, pos_y, color="b", nourl=1):
+        if nourl != 0:
+            urllib.request.urlretrieve(url, "temp_pic.png")
+  
+        im_pic = Image.open("temp_pic.png")
+        if nourl == 0:
+            im_pic = im_pic.resize((800, 480))
+        
+        if color == "b":
+            self.im_black.paste(im_pic, (pos_x, pos_y))
+            
+        elif color == "wb": # Invert black image if necessary for tide image
+            if im_pic.mode == 'RGBA':
+                r,g,b,a = im_pic.split()
+                rgb_image = Image.merge('RGB', (r,g,b))
+                inverted_image = ImageOps.invert(rgb_image)
+                r2,g2,b2 = inverted_image.split()
+                final_transparent_image = Image.merge('RGBA', (r2,g2,b2,a))
+            else:
+                inverted_image = ImageOps.invert(im_pic)
+                
+            ###################################################
+            if nourl != 0:
+                inverted_image = inverted_image.resize((1750, 710))
+            thresh = 100 # threshold to compare color to
+            fn = lambda x : 255 if x > thresh else 0
+            inverted_image = inverted_image.convert('L').point(fn, mode='1')
+            ###################################################    
+
+            self.im_black.paste(inverted_image, (pos_x, pos_y))
+            
+        elif color == "wr": # Invert red image if necessary
+            if im_pic.mode == 'RGBA':
+                r,g,b,a = im_pic.split()
+                rgb_image = Image.merge('RGB', (r,g,b))
+                inverted_image = ImageOps.invert(rgb_image)
+                r2,g2,b2 = inverted_image.split()
+                final_transparent_image = Image.merge('RGBA', (r2,g2,b2,a))
+            else:
+                inverted_image = ImageOps.invert(im_pic)
+                
+            ###################################################
+            if nourl != 0:
+                inverted_image = inverted_image.resize((1750, 710))
+            thresh = 100 # threshold to compare color to
+            fn = lambda x : 255 if x > thresh else 0
+            inverted_image = inverted_image.convert('L').point(fn, mode='1')
+            ###################################################    
+
+            self.im_red.paste(inverted_image, (pos_x, pos_y))                     
+        else:
+            self.im_red.paste(im_pic, (pos_x, pos_y))
+            

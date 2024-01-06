@@ -145,10 +145,15 @@ $(document).ready(function(){
             <tr class="table-primary">
               <td width="50%">
                 <label for="fname"><b>Enter 4 Character ICAO Airport ID:</b></label><br>
-                <input style="text-transform: uppercase;" name="data_field1" id="data_field1" placeholder="KFLG" type="text" maxlength="4" minlength="4" size="4" list="list1" onfocus="this.value=''" value="{{ data_field1 }}">									
+                <input style="text-transform: uppercase;" name="data_field1" id="data_field1" placeholder="KFLG" type="text" maxlength="4" minlength="4" size="4" list="list1" onfocus="this.value=''" value="{{ data_field1 }}" onchange="myFunction(this)" value="{{ data_field1 }}">									
                 <br>
                 <a href="https://www.world-airport-codes.com/" target="_blank">https://www.world-airport-codes.com/</a> to lookup ICAO ID's
-              </td>            
+              </td> 
+              
+            <!--  <td width="30%"
+              <div name='apinfo'>&nbsp</div>
+              </td> -->
+              
               <td width="50%">
                 <label for="fname"><b>Choose Layout:</b></label><br>
                 <select name="data_field2" id="myselection">
@@ -333,5 +338,20 @@ $(document).ready(function(){
 </div>
 </div>	
 <center><i>Copyright 2024, 2025 - Mark Harris, <a href=https://github.com/markyharris/metar>https://github.com/markyharris/metar</a></i></center>
+
+<script>
+function myFunction(selectObject) {
+    var x = selectObject.value;
+
+    if (x.length != 4) {
+        window.alert("You Must Enter 4 Char Airport ID");
+        document.getElementById('data_field1').focus();
+        return;
+    }
+    
+    document.getElementById('apinfo').innerHTML = "<a href=https://nfdc.faa.gov/nfdcApps/services/ajv5/airportDisplay.jsp?airportId="+x+" target="+"_blank"+">You entered: "+x+". Click for more info.</a>";
+}
+</script>
+
 </body>
 </html>

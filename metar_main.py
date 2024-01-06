@@ -9,8 +9,8 @@
 # Visit his page at;
 #   https://github.com/aerodynamics-py/WEATHER_STATION_PI
 #
-# This script uses the api at weather.gov;
-#   https://www.weather.gov/documentation/services-web-api#
+# This script uses the NEW FAA API at aviationweather.gov;
+#   https://aviationweather.gov/data/api/#/Dataserver/dataserverMetars
 # This script also uses IFR Low maps from;
 #   https://vfrmap.com/map_api.html
 # 
@@ -29,14 +29,16 @@
 #   metar_main.py - loads the other files as necessary and executes layout routine
 #   metar_routines.py - metar specific routines, typically needed for decoding and scraping
 #   metar_layouts.py - houses all the different layouts available for display
-#   metar_display.py - provides the routines and fonts needed to pring to e-paper
+#   metar_display.py - provides the routines and fonts needed to print to e-paper
 #   metar_settings.py - User defined default settings such as airport and update interval
 #   metar_remarks.py - file created from FAA's definitions of a METAR's remarks (RMK)
 #   shutdown.py - Used to blank e-Paper on shutdown.
-#   epaper.html - html file used to control the metar display
+#   metar_startup.py - Used to display the web admin URL upon boot/reboot
+#   metar.html - html file used to control the metar display
 #   data.txt - stores the last run setup for restart purposes
 #   temp_pic.png - temporary storage of IFR Low map image when that layout is used
 #   webapp.py - flask module to provide needed data to epaper.html and provide simple web server
+
 
 # Imports
 from metar_layouts import *
@@ -49,13 +51,14 @@ import sys
 import os
 import sys
 
+
 # epd7in5b_V2 = 3-color 7 by 5 display. Change this based on the display used.
 # find 'epd = epd7in5b_V2.EPD()' towards bottom and change also if needed.
 # These are located in the directory 'waveshare_epd'
 from waveshare_epd import epd7in5b_V2 
 
 # Layouts - add new layouts to this list as necessary
-layout_list = [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7,layout8,layout9] # ,layout6 Add layout routine names here
+layout_list = [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7,layout8,layout9] # Add layout routine names here
 
 # Check for cmdline args and use passed variables instead of the defaults
 # example ['/home/pi/metar/metar_main.py', 'metar', 'kabe', '1', '0', '1', '2', '0', '0', '1', '1']
@@ -83,7 +86,10 @@ print(str(airport)+"\t", str(use_disp_format)+"\t", str(interval)+"\t", str(use_
 
 def main():
     global display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list
-    
+
+    # testing
+#    layout10(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
+
     # Choose  which layout to use.        
     if use_disp_format == -1:
         random_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
@@ -158,7 +164,7 @@ if __name__ == "__main__":
             if interval != 0: # if not auto interval selected
                 print("sleep ",interval) # debug
                 time.sleep(interval) # Sets interval of updates. 3600 = 1 hour
-
+                
             else:
                 if flightcategory == "VFR":
                     print("Auto Interval VFR - Sleep 1 hour") # debug
@@ -172,7 +178,7 @@ if __name__ == "__main__":
                 elif flightcategory == "LIFR": 
                     print("Auto Interval LIFR - Sleep 10 mins") # debug
                     time.sleep(600) # 10 mins if stormy and low visibility
-          
+                
             epd.init()
             epd.sleep()
             

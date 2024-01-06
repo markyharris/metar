@@ -38,7 +38,6 @@ import numpy as np
 d = " " # d = delimiter used to split metar on 'spaces' then re-join them into 2 parts
 cycle_num = 0
 
-
 # Utility routines   
 def center_line(display,text,font=font24b,pos_x=400):
     w, h = display.draw_black.textsize(text, font=font)
@@ -48,6 +47,37 @@ def last_update():
     now = datetime.now()
     last_update = "Last Updated at "+now.strftime("%I:%M %p") #, %m/%d/%Y"
     return(last_update)
+ 
+def check_preferred_layout(layout_name):
+    global preferred_flag
+    preferred_flag = 0
+    if use_preferred == 0:
+        print('use_preferred = 0') # debug
+        preferred_flag = False
+        return(False)
+    if layout_name in preferred_layouts:
+        print('use_preferred = 1 and found in layout_list') # debug
+        preferred_flag = True
+        return(True)
+    else:
+        print('use_preferred = 1 and NOT in layout_list') # debug
+        preferred_flag = False
+        return(False)
+    
+
+# test layout10
+def layout10(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
+    # Get metar data along with flightcategory and related icon
+    decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
+    decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
+    = decode_rawmessage(get_rawOb(metar))   
+    flightcategory, icon = flight_category(metar)
+    airport = decoded_airport
+    icaoid,obstime,elev,lat,lon,name = get_misc(metar)
+    print(lat,lon)
+
+    chart_url = "https://forecast.weather.gov/meteograms/Plotter.php?lat=37.431&lon=-122.253&wfo=MTR&zcode=CAZ508&gset=18&gdiff=3&unit=0&tinfo=PY8&ahour=0&pcmd=11011111000000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=1&bw=1&hrspan=48&pqpfhr=6&psnwhr=6"
+    display.show_pic(chart_url, 2, 2, "b") # COL0, LINE2, "b")
 
 
 ###########################
@@ -79,13 +109,32 @@ def disp_ip(display, ip_address):
 ###########################
 def cycle_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list):
     global cycle_num
-    print('Layout:',cycle_num) # debug
-    cycle_pick = layout_list[cycle_num]
-    cycle_pick(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
-    cycle_num += 1
-    if cycle_num == len(layout_list):
-        cycle_num = 0
+    print('--> Layout:',cycle_num,'<--') # debug
     
+    if use_preferred == 1:
+        for j in range(len(preferred_layouts)):
+            if preferred_layouts[cycle_num] == 1:
+                print('!!! Layout:',cycle_num,' IN LIST !!!')
+                cycle_pick = layout_list[cycle_num]
+                cycle_pick(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
+                cycle_num += 1
+                if cycle_num == len(layout_list):
+                    cycle_num = 0
+                return
+            else:
+                print('!!! Layout:',cycle_num,' NOT IN LIST !!!')
+                pass
+                cycle_num += 1
+                if cycle_num == len(layout_list):
+                    cycle_num = 0
+                
+    else:
+        cycle_pick = layout_list[cycle_num]
+        cycle_pick(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
+        cycle_num += 1
+        if cycle_num == len(layout_list):
+            cycle_num = 0
+
     
 ##################
 #  Randomize -1  #
@@ -109,7 +158,7 @@ def layout0(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
     flightcategory, icon = flight_category(metar)
     airport = decoded_airport
    
-    # Data layout for layout1 using pixels.
+    # Data layout for layout0 using pixels.
     # 0,0 in upper left hand corner. 800,480 in lower right corner
     LINE0 = 50
     LINE1 = 382
@@ -667,7 +716,7 @@ def layout2(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
 #   Layout 3   #
 ################
 # Large flight category, no metar listed
-def layout3(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
+def layout3(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):    
     # Get metar data along with flightcategory and related icon
     decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
     decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
@@ -680,7 +729,7 @@ def layout3(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
     
     print(get_rawOb(metar)) # debug
    
-    # Data layout for layout1 using pixels.
+    # Data layout for layout3 using pixels.
     # 0,0 in upper left hand corner. 800,480 in lower right corner
     LINE0 = 100
     LINE1 = 15
@@ -736,7 +785,7 @@ def layout4(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
     flightcategory, icon = flight_category(metar)
     airport = decoded_airport
    
-    # Data layout for layout1 using pixels.
+    # Data layout for layout4 using pixels.
     # 0,0 in upper left hand corner. 800,480 in lower right corner
     LINE0 = 10
     LINE1 = 40
@@ -831,7 +880,7 @@ def layout4(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
         
     display.draw_red.text((center_line(display,last_update(),font16,534), LINE0+130), last_update(), fill=255, font=font16)
 
-    # Display Airport ID and weather Icon
+    # Display Airport ID andIcon
     # Display Weather Description
     descript = get_wxstring(metar)
 
@@ -936,7 +985,6 @@ def layout4(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
 def layout5(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
     global airports_list
     global airport
-
     icaoid,obstime,elev,lat,lon,name = get_misc(metar)
     
     # Data layout for layout5.
@@ -1571,7 +1619,7 @@ def layout9(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
     airport = decoded_airport
     icaoid,obstime,elev,lat,lon,name = get_misc(metar)
    
-    # Data layout for layout1 using pixels.
+    # Data layout for layout9 using pixels.
     # 0,0 in upper left hand corner. 800,480 in lower right corner
     LINE0 = 50
     LINE1 = 10
