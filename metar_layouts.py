@@ -37,6 +37,7 @@ import numpy as np
 # Misc Variables
 d = " " # d = delimiter used to split metar on 'spaces' then re-join them into 2 parts
 cycle_num = 0
+pref_cycle = 0
 
 # Utility routines   
 def center_line(display,text,font=font24b,pos_x=400):
@@ -65,21 +66,6 @@ def check_preferred_layout(layout_name):
         return(False)
     
 
-# test layout10
-def layout10(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
-    # Get metar data along with flightcategory and related icon
-    decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
-    decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
-    = decode_rawmessage(get_rawOb(metar))   
-    flightcategory, icon = flight_category(metar)
-    airport = decoded_airport
-    icaoid,obstime,elev,lat,lon,name = get_misc(metar)
-    print(lat,lon)
-
-    chart_url = "https://forecast.weather.gov/meteograms/Plotter.php?lat=37.431&lon=-122.253&wfo=MTR&zcode=CAZ508&gset=18&gdiff=3&unit=0&tinfo=PY8&ahour=0&pcmd=11011111000000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=1&bw=1&hrspan=48&pqpfhr=6&psnwhr=6"
-    display.show_pic(chart_url, 2, 2, "b") # COL0, LINE2, "b")
-
-
 ###########################
 #  Display IP Address -3  #
 ###########################
@@ -107,28 +93,24 @@ def disp_ip(display, ip_address):
 ###########################
 #  Cycle Through Each -2  #
 ###########################
-def cycle_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list):
+def cycle_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list,preferred_layouts,use_preferred):
     global cycle_num
-    print('--> Layout:',cycle_num,'<--') # debug
+    global pref_cycle
+#    print('use_preferred:',use_preferred) # debug
     
-    if use_preferred == 1:
-        for j in range(len(preferred_layouts)):
-            if preferred_layouts[cycle_num] == 1:
-                print('!!! Layout:',cycle_num,' IN LIST !!!')
-                cycle_pick = layout_list[cycle_num]
-                cycle_pick(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
-                cycle_num += 1
-                if cycle_num == len(layout_list):
-                    cycle_num = 0
-                return
-            else:
-                print('!!! Layout:',cycle_num,' NOT IN LIST !!!')
-                pass
-                cycle_num += 1
-                if cycle_num == len(layout_list):
-                    cycle_num = 0
+    if use_preferred == 1:        
+        p_layouts_lst = [int(a) for a in str(preferred_layouts)]
+        print('p_layouts_lst:',p_layouts_lst) # debug
+           
+        print('\033[96m!!! Preferred Layout:',p_layouts_lst[pref_cycle],' IN LIST !!!\033[0m')
+        cycle_pick = layout_list[p_layouts_lst[pref_cycle]]           
+        cycle_pick(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
+        pref_cycle += 1
+        if pref_cycle == len(p_layouts_lst):
+            pref_cycle = 0
                 
     else:
+        print('\033[91m--> cycle_num Layout:',cycle_num,'<--\033[0m') # debug
         cycle_pick = layout_list[cycle_num]
         cycle_pick(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
         cycle_num += 1
@@ -141,7 +123,7 @@ def cycle_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,i
 ##################
 def random_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list):
     rand_pick = random.choice(layout_list)
-    print(str(rand_pick)[10:18]) # debug
+    print('\033[91m--> Random Layout:',str(rand_pick)[10:18],'<--\033[0m') # debug
     rand_pick(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
 
 
@@ -1701,4 +1683,22 @@ def layout9(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
         windsp = windsp + ' G'
             
     windsp_txt = "Speed:"+windsp+gustsp+dis_unit
-    display.draw_black.text((center_line(display,windsp_txt,font24b,200), LINE4-25), windsp_txt, fill=0, font=font24b) 
+    display.draw_black.text((center_line(display,windsp_txt,font24b,200), LINE4-25), windsp_txt, fill=0, font=font24b)
+
+#################
+# test layout10 #
+#################
+# used for testing/playing. Not part of the available layouts
+def layout10(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units):
+    # Get metar data along with flightcategory and related icon
+    decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
+    decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
+    = decode_rawmessage(get_rawOb(metar))   
+    flightcategory, icon = flight_category(metar)
+    airport = decoded_airport
+    icaoid,obstime,elev,lat,lon,name = get_misc(metar)
+    print(lat,lon)
+
+    chart_url = "https://forecast.weather.gov/meteograms/Plotter.php?lat=37.431&lon=-122.253&wfo=MTR&zcode=CAZ508&gset=18&gdiff=3&unit=0&tinfo=PY8&ahour=0&pcmd=11011111000000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=1&bw=1&hrspan=48&pqpfhr=6&psnwhr=6"
+    display.show_pic(chart_url, 2, 2, "b") # COL0, LINE2, "b")
+

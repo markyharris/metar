@@ -190,7 +190,10 @@ $(document).ready(function(){
                 <select name="data_field3" id="data_field3">
                   <option value="0" {% if data_field3=="0" %} selected="selected" {% endif %}>Auto Interval</option>
                   <option value="60" {% if data_field3=="60" %} selected="selected" {% endif %}>1 Minute</option>
+                  <option value="120" {% if data_field3=="120" %} selected="selected" {% endif %}>2 Minutes</option>
+                  <option value="300" {% if data_field3=="300" %} selected="selected" {% endif %}>5 Minutes</option>
                   <option value="600" {% if data_field3=="600" %} selected="selected" {% endif %}>10 Minutes</option>
+                  <option value="900" {% if data_field3=="900" %} selected="selected" {% endif %}>15 Minutes</option>
                   <option value="1200" {% if data_field3=="1200" %} selected="selected" {% endif %}>20 Minutes</option>
                   <option value="1800" {% if data_field3=="1800" %} selected="selected" {% endif %}>30 Minutes</option>
                   <option value="3600" {% if data_field3=="3600" %} selected="selected" {% endif %}>1 Hour</option>
@@ -256,6 +259,34 @@ $(document).ready(function(){
           </tbody>
         </table>
         </div>
+
+
+		<table class="table table-bordered">
+		  <tbody>
+            <tr class="table-danger">
+             <td width="50%">
+            <label for="fname"><b>Select Preferred Layouts to Display:</b></label><br> 
+            <b>Note</b>: Select the layouts desired to be displayed.<p> 
+            Works only with '<i>Cycle Through All Layouts</i>' function above.<p>
+            The function '<i>Display Random Layouts</i>' will randomly select from all Layouts.<p>
+            Leave all checkboxes blank if all Layouts are to be used (or select all of them).<p>
+           </td>
+             <td width="50%">
+            <input type="checkbox" value="0" class="danger" name='data_field10' {% if "0" in data_field10 %} checked {% endif %}> Large Flight Category and METAR<br>
+            <input type="checkbox" value="1" class="danger" name='data_field10' {% if "1" in data_field10 %} checked {% endif %}> METAR with Data Display<br>
+            <input type="checkbox" value="2" class="danger" name='data_field10' {% if "2" in data_field10 %} checked {% endif %}> Data Display with Icons<br>
+            <input type="checkbox" value="3" class="danger" name='data_field10' {% if "3" in data_field10 %} checked {% endif %}> Basic Large Flight Category<br>            
+            <input type="checkbox" value="4" class="danger" name='data_field10' {% if "4" in data_field10 %} checked {% endif %}> 3 Area Display with METAR<br>
+            <input type="checkbox" value="5" class="danger" name='data_field10' {% if "5" in data_field10 %} checked {% endif %}> Multiple Airport Flight Categories<br>
+            <input type="checkbox" value="6" class="danger" name='data_field10' {% if "6" in data_field10 %} checked {% endif %}> Airport Map and Flight Category<br>
+            <input type="checkbox" value="7" class="danger" name='data_field10' {% if "7" in data_field10 %} checked {% endif %}> Flight Category In Circles<br>
+            <input type="checkbox" value="8" class="danger" name='data_field10' {% if "8" in data_field10 %} checked {% endif %}> Worst Class B & C Airport Weather<br>
+            <input type="checkbox" value="9" class="danger" name='data_field10' {% if "9" in data_field10 %} checked {% endif %}> Metar and Large Wind Icons<br>        
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
 
 		<table class="table table-bordered">
 		  <tbody>

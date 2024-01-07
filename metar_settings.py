@@ -20,14 +20,9 @@ visibility_units = 1     # 0=miles, 1=kilometers
 temperature_units = 0    # 0=°C Celsius, 1=°F Farhenheit
 pressure_units = 0       # 0=Hectopascal, 1=Inch Hg
 
-
-# preferred_layouts - select the preferred layouts to cycle through by putting a '1' in its location.
-# then change the 'use_preferred' variable below to '1'
-use_preferred = 0        # 0 = No, 1 = Yes
-# Map the list below to match the layout list here; [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7,layout8,layout9]
-#   for instance  - [1,0,0,0,0,0,0,0,0,1] will only display layout0 and layout9.
-preferred_layouts = [0,0,0,1,1,0,0,0,0,1] # 0=Do Not Display layout, 1=Do Display Layout
-
+# preferred_layouts: Populate with the integers of the layout that should be used. i.e. 123 will only display layouts 1, 2 and 3.
+# If no preferred layouts are desired, populate with 'na' 
+preferred_layouts = 123  
 
 # Random Airports Choices (Layout5):
 # This is the only layout that doesn't use cmd line arguments

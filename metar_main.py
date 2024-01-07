@@ -13,7 +13,17 @@
 #   https://aviationweather.gov/data/api/#/Dataserver/dataserverMetars
 # This script also uses IFR Low maps from;
 #   https://vfrmap.com/map_api.html
-# 
+#
+# A new feature was added that allows the user to specify which layouts that should be displayed
+# The user will have to setup a list variable in 'metar_setting.py' and set 'use_preferred' to 1
+# See the file, 'metar_settings.py' for an example.
+#
+# Unit conversions were added to allow the user to choose ft vs meter, km/h vs knots etc.
+# These will be selected from either the 'metar_settings.py' file or better, the web admin page.
+#
+# While not part of the scripts, it is suggested to setup a nightly reboot using crontab
+# see; https://smarthomepursuits.com/how-to-reboot-raspberry-pi-on-a-schedule/ for information
+#
 # The script will then either display the json weather information provided, 
 # or if the json information is not given, the script will use the data scraped 
 # from the raw metar string provided. However, the json data is a bit more accurate.
@@ -56,12 +66,12 @@ import sys
 # find 'epd = epd7in5b_V2.EPD()' towards bottom and change also if needed.
 # These are located in the directory 'waveshare_epd'
 from waveshare_epd import epd7in5b_V2 
-
+ 
 # Layouts - add new layouts to this list as necessary
 layout_list = [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7,layout8,layout9] # Add layout routine names here
 
 # Check for cmdline args and use passed variables instead of the defaults
-# example ['/home/pi/metar/metar_main.py', 'metar', 'kabe', '1', '0', '1', '2', '0', '0', '1', '1']
+# example ['/home/pi/metar/metar_main.py', 'metar', 'kabe', '1', '0', '1', '2', '0', '0', '1', '1', '123']
 print('len(sys.argv):',len(sys.argv)) # debug
 print('sys.argv:',sys.argv,'\n') # debug
 
@@ -77,6 +87,16 @@ if len(sys.argv) >= 10:
     visibility_units = int(sys.argv[7])
     temperature_units = int(sys.argv[8])
     pressure_units = int(sys.argv[9])
+    preferred_layouts = (sys.argv[10]) # string representation of the the list. Needs to be converted back to list
+
+    print('\033[96mpreferred_layouts:',preferred_layouts,'\033[0m') # debug
+    if preferred_layouts == 'na':
+        use_preferred = 0
+#        print('DONT Use Preferred') # debug
+    else:
+        use_preferred = 1
+#        print('YES Use Preferred') # debug
+
 else:
     print('Using Args from settings.py file')
 
@@ -87,15 +107,12 @@ print(str(airport)+"\t", str(use_disp_format)+"\t", str(interval)+"\t", str(use_
 def main():
     global display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list
 
-    # testing
-#    layout10(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units)
-
     # Choose  which layout to use.        
     if use_disp_format == -1:
         random_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
 
     elif use_disp_format == -2:
-        cycle_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list)
+        cycle_layout(display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list,preferred_layouts,use_preferred)
 
     else:    
         for index, item in enumerate(layout_list):
@@ -127,10 +144,10 @@ if __name__ == "__main__":
     epd = epd7in5b_V2.EPD() # Instantiate instance for display.
   
     while True:        
-#        try:
+        try:
 #        while True: # debug
 #            error = 1/0 #debug  # forces error to test the try-except statements
-        if True:  # used instead of the try-except statements for debug purposes.
+#        if True:  # used instead of the try-except statements for debug purposes.
             current_time = time.strftime("%m/%d/%Y %H:%M", time.localtime())
             
             metar = Metar(airport) # pass to routines
@@ -182,8 +199,7 @@ if __name__ == "__main__":
             epd.init()
             epd.sleep()
             
-#        except Exception as e:
-"""
+        except Exception as e:
             time.sleep(2)
             print("Error Occurred in Main While Loop")
             exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -223,5 +239,4 @@ if __name__ == "__main__":
             print("Done")
             time.sleep(60) # Sets interval of updates. 60 = 1 minute
             epd.init()
-            epd.sleep()          
-"""
+            epd.sleep()

@@ -41,14 +41,16 @@ dis_select = [
 def metar():
     # Grab default settings from 'metar_settings.py' used if web admin is not used.
     data_field1,data_field2,data_field3,data_field4, \
-    data_field5,data_field6,data_field7,data_field8,data_field9 \
+    data_field5,data_field6,data_field7,data_field8,data_field9,data_field10 \
     = airport,use_disp_format,interval,use_remarks, \
-    wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units
+    wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,preferred_layouts
     
     # Now read 'data.txt' and populate these fields with the settings stored from web admin.
     data_field1, data_field2, data_field3, data_field4, \
-    data_field5,data_field6,data_field7,data_field8,data_field9 \
+    data_field5,data_field6,data_field7,data_field8,data_field9,data_field10 \
     = get_data()
+    
+    ndata1 = ""
 
     if request.method == "POST":
         display = request.form['display']
@@ -61,13 +63,25 @@ def metar():
         data_field7 = request.form['data_field7'] # visibility_units
         data_field8 = request.form['data_field8'] # temperature_units
         data_field9 = request.form['data_field9'] # pressure_units
-
+        data_field10 = request.form.getlist('data_field10') #
+        
+        if len(data_field10) == 0:
+            print('nothing selected') # debug
+            data_field10 = 'na'
+        
+        # format data_field10 to pass to command line
+        for j in range(len(data_field10)):
+            new = str(data_field10[j])
+            ndata1 = ndata1 + new
+        print(ndata1) # debug
+        data_field10 = ndata1
+        print('>>>>>>>>>>',data_field10,type(data_field10),'///') # debug
         
         if display == "powerdown":
             shutdown() 
             print("Powering Off RPi")
             os.system('sudo shutdown -h now')
-
+ 
         elif display == "reboot":
             os.system("ps -ef | grep 'metar_main.py' | awk '{print $2}' | xargs sudo kill")
             os.system('sudo reboot now')
@@ -81,24 +95,24 @@ def metar():
         else:
             os.system("ps -ef | grep 'metar_main.py' | awk '{print $2}' | xargs sudo kill")
             os.system('sudo python3 ' + PATH + 'metar_main.py ' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + " " + data_field4 \
-          + " " + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + " " + data_field9 + ' &')        
-
+          + " " + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + " " + data_field9 + " " + str(data_field10) +' &')        
+ 
 
             flash("Running E-Paper Metar Airport ID = " + data_field1.upper())
-            if data_field2 != "":
-                flash("Display Layout = " + dis_select[int(data_field2)+2])
+#            if data_field2 != "":
+#                flash("Display Layout = " + dis_select[int(data_field2)+2])
                                
-        print('Writing to Data:',data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9) # debug
-        write_data(data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9)
+        print('Writing to Data:',data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9,data_field10) # debug
+        write_data(data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9,data_field10)
         return render_template("metar.html",data_field1=data_field1,data_field2=data_field2,data_field3=data_field3,data_field4=data_field4, \
-                               data_field5=data_field5,data_field6=data_field6,data_field7=data_field7,data_field8=data_field8,data_field9=data_field9)
+                               data_field5=data_field5,data_field6=data_field6,data_field7=data_field7,data_field8=data_field8,data_field9=data_field9,data_field10=data_field10)
     else:
         return render_template("metar.html", data_field1=data_field1,data_field2=data_field2,data_field3=data_field3,data_field4=data_field4, \
-                               data_field5=data_field5,data_field6=data_field6,data_field7=data_field7,data_field8=data_field8,data_field9=data_field9)
+                               data_field5=data_field5,data_field6=data_field6,data_field7=data_field7,data_field8=data_field8,data_field9=data_field9,data_field10=data_field10)
 
  
 # Functions
-def write_data(data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9):
+def write_data(data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9,data_field10):
     f= open(PATH + "data.txt","w+")
     f.write(data_field1+"\n") # airport
     f.write(data_field2+"\n") # use_disp_format
@@ -109,6 +123,7 @@ def write_data(data_field1,data_field2,data_field3,data_field4,data_field5,data_
     f.write(data_field7+"\n") # visibility_units
     f.write(data_field8+"\n") # temperature_units
     f.write(data_field9+"\n") # pressure_units
+    f.write(data_field10+"\n") # preferred_layouts (list)
     f.close()
     return (True)
     
@@ -124,8 +139,9 @@ def get_data():
     data_field7 = Lines[6].strip() # visibility_units
     data_field8 = Lines[7].strip() # temperature_units
     data_field9 = Lines[8].strip() # pressure_units
+    data_field10 = Lines[9].strip() #preferred_layouts (list)
     f.close()
-    return (data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9)
+    return (data_field1,data_field2,data_field3,data_field4,data_field5,data_field6,data_field7,data_field8,data_field9,data_field10)
 
 
 # Start of Flask
@@ -135,15 +151,15 @@ if __name__ == '__main__':
     # airport,use_disp_format,interval,use_remarks,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units
     # Example: kabe,1,60,1,2,0,0,1,1
     data_field1,data_field2,data_field3,data_field4, \
-    data_field5,data_field6,data_field7,data_field8,data_field9 = get_data()  
+    data_field5,data_field6,data_field7,data_field8,data_field9,data_field10 = get_data()  
     
     # create cmdline command to start the main program using the 'data.txt' variables to kick things off.     
     print('sudo python3 ' + PATH + 'metar_main.py ' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + ' ' + data_field4 \
-          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + ' ' + data_field9 + ' &\n')  # debug
+          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + " " + data_field8 + ' ' + data_field9 +  ' ' + data_field10 + ' &\n')  # debug
     
     # first run at startup. display web admin ip url for 60 seconds
     os.system('sudo python3 ' + PATH + 'metar_main.py ' + ' ' + data_field1 + ' ' + data_field2 + ' ' + data_field3 + ' ' + data_field4 \
-          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + ' ' + data_field8 + " " + data_field9 + ' &')
+          + ' ' + data_field5 + ' ' + data_field6 + ' ' + data_field7 + ' ' + data_field8 + ' ' + data_field9 + ' ' + data_field10 + ' &')
     
     app.run(debug=True, use_reloader=False, host='0.0.0.0') # use use_reloader=False to stop double loading
               
