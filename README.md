@@ -1,6 +1,6 @@
 # E-Paper METAR Display
 <b>Note:</b> 1-7-2024. v2.1 has been updated to work with the new FAA API. Also, new features have been added to include the ability to select a subset of layouts to cycle through. Also, differing units for display are not available and choosable through the web admin page.<p>
-<b>NOTE:</b>The FAA has changed their API access causing the earlier version (1.xxx) to become non-functional. This update (v2.1xx) 
+<b>NOTE:</b> 12-16-2023. The FAA has changed their API access causing the earlier version (1.xxx) to become non-functional. This update (v2.1xx) 
 utilizes the newly released API located at https://aviationweather.gov/data/api/. Be sure to update to this new version.<p>
 This version also adds a newly configured Web Admin Page which allows for changing the Units to display various data points.<p>
 Currently V2.1 is a work in progress. Files will be actively updated, so please report any bugs you find so they can be fixed. Once its
