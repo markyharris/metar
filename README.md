@@ -3,8 +3,6 @@
 <b>NOTE:</b> 12-16-2023. The FAA has changed their API access causing the earlier version (1.xxx) to become non-functional. This update (v2.1xx) 
 utilizes the newly released API located at https://aviationweather.gov/data/api/. Be sure to update to this new version.<p>
 This version also adds a newly configured Web Admin Page which allows for changing the Units to display various data points.<p>
-Currently V2.1 is a work in progress. Files will be actively updated, so please report any bugs you find so they can be fixed. Once its
-stable and working properly, an 'All Good' announcement will be made here<p>
 <center>---------------------------------------------</center><p>
 This project is explained and amplified on Instructables.com. See; https://www.instructables.com/7x5-E-Paper-METAR-Display/<p>
 <h3>Updating from Github</h3>
