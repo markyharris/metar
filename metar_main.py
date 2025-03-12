@@ -1,6 +1,6 @@
 # metar_main.py
 # E-Paper METAR Display - by Mark Harris
-# Version 2.1
+# Version 2.2
 # Part of Epaper Display project found at; https://github.com/markyharris/metar/
 #
 # UPDATED to New FAA API 12-2023, https://aviationweather.gov/data/api/
@@ -69,6 +69,7 @@ from waveshare_epd import epd7in5b_V2
  
 # Layouts - add new layouts to this list as necessary
 layout_list = [layout0,layout1,layout2,layout3,layout4,layout5,layout6,layout7,layout8,layout9] # Add layout routine names here
+use_preferred = 1
 
 # Check for cmdline args and use passed variables instead of the defaults
 # example ['/home/pi/metar/metar_main.py', 'metar', 'kabe', '1', '0', '1', '2', '0', '0', '1', '1', '123']
@@ -105,7 +106,7 @@ print(str(airport)+"\t", str(use_disp_format)+"\t", str(interval)+"\t", str(use_
 
 
 def main():
-    global display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list
+    global display,metar,remarks,print_table,use_remarks,use_disp_format,interval,wind_speed_units,cloud_layer_units,visibility_units,temperature_units,pressure_units,layout_list,preferred_layouts,use_preferred
 
     # Choose  which layout to use.        
     if use_disp_format == -1:
@@ -240,3 +241,4 @@ if __name__ == "__main__":
             time.sleep(60) # Sets interval of updates. 60 = 1 minute
             epd.init()
             epd.sleep()
+            

@@ -308,7 +308,7 @@ def layout1(display,metar,remarks,print_table,use_remarks,use_disp_format,interv
     # Display Weather Description
     descript = get_wxstring(metar)
 
-    display.draw_black.text((COL1, LINE2), "Weather:", fill=0, font=font24)    
+    display.draw_black.text((COL1, LINE2), "Weather:", fill=0, font=font24b)    
     w, h = display.draw_black.textsize(descript, font=font24b)
     
     display.draw_black.text((COL1, LINE2+25), descript, fill=0, font=font24b)
