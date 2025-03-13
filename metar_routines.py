@@ -422,25 +422,29 @@ def wind_arrow(deg):
 # decodes raw metar string to grab wind direction wind speed, gusts, temperature and baro
 # This info is used as backup if the api does not provide this data in its normal response.
 def decode_rawmessage(airport_name):
-    decoded_wngust = "Not Present"
-    decoded_alt = "n/a"
-    decoded_tmp = "n/a"
-    decoded_rvr = []
-    decoded_cloudlayers = []
-    decoded_weather = []
+#    decoded_alt = "n/a"
+#    decoded_rvr = []
+#    decoded_cloudlayers = []
+#    decoded_weather = []
     cloud_types = ["SKC", "FEW", "SCT", "BKN", "OVC", "VV", "CLR"]
     weather_types = ["DZ","GR","GS","IC","PL","RA","SG","SN", \
                      "UP","BR","DU","FG","FU","HZ","PY","SA", \
                      "VA","DS","FC","PO","SQ","SS"]
-    
+    decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
+    decoded_alt,decoded_temp,decoded_dew,decoded_weather,decoded_rvr,decoded_cloudlayers \
+    = "0","0","0","0","0","0","0","0","0",[],[],[]
+    decoded_wngust = "Not Present"
+    decoded_tmp = "n/a"
+
+  
     # use either live metar or test_metar from above.
     try:
         decode = airport_name.split()
     except:
         print("*decode try failed") # debug
         decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
-           decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr \
-           = "0","0","0","0","0","0","0","0","0","0","0","0"
+        decoded_alt,decoded_temp,decoded_dew,decoded_weather,decoded_rvr,decoded_cloudlayers \
+        = "0","0","0","0","0","0","0","0","0","0","0",[]
         return decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
            decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr
 

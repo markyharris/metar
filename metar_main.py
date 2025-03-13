@@ -145,7 +145,7 @@ if __name__ == "__main__":
     epd = epd7in5b_V2.EPD() # Instantiate instance for display.
   
     while True:        
-        try:
+        try: 
 #        while True: # debug
 #            error = 1/0 #debug  # forces error to test the try-except statements
 #        if True:  # used instead of the try-except statements for debug purposes.
