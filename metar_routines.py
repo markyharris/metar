@@ -148,13 +148,17 @@ def get_visib(metar,visibility_units): # "Visibility in statute miles, 10+ is gr
     print('vis:',vis,'dis_unit:',dis_unit) # debug
     return(vis,dis_unit)
 
-def get_wxstring(metar): # "Encoded present weather string" string
-    if metar.data[0]["wxString"] != None:
-        descript = metar.data[0]["wxString"]
-    else:
+#wxString Error Fix
+def get_wxstring(metar):
+    """Safely return the 'wxString' description from METAR data."""
+    try:
+        descript = metar.data[0].get("wxString", "n/a")
+        if descript is None:
+            descript = "n/a"
+    except (KeyError, IndexError, TypeError):
         descript = "n/a"
-    print('descript:',descript) # debug
-    return(descript)
+    print('descript:', descript)  # debug
+    return descript
 
 def get_rawOb(metar): # "Raw text of observation" string
     if metar.data[0]['rawOb'] != None:
@@ -216,29 +220,40 @@ def get_wspd(metar,wind_speed_units): # "Wind speed in knots" integer
     print('windsp:',windsp,'dis_unit:',dis_unit) # debug
     return(windsp,dis_unit)
 
-def get_wgst(metar,wind_speed_units): # "Wind gusts in knots" integer
-    print('metar.data[0]["wgst"]:',metar.data[0]["wgst"]) # debug
+#wgst Error Fix
+def get_wgst(metar, wind_speed_units):
+    """Safely return wind gusts (wgst) from METAR JSON, handling missing keys."""
     dis_unit = ''
-    if metar.data[0]["wgst"] != None:
-        gustsp = '{0:.1f}'.format(metar.data[0]["wgst"])
-        dis_unit = ' kt'
-        if wind_speed_units == 0:
-            gustsp,dis_unit = knots_to_kmh(gustsp)
-            gustsp = str(round(float(gustsp),1))
-        elif wind_speed_units == 1:
-            gustsp,dis_unit = knots_to_ms(gustsp)
-            gustsp = str(round(float(gustsp),1))
-        elif wind_speed_units == 3:
-            gustsp,dis_unit = knots_to_mph(gustsp)
-            gustsp = str(round(float(gustsp),1))
-        else:
-            pass # Knots, default from API
+    try:
+        gust_value = metar.data[0].get("wgst", None)
+    except (KeyError, IndexError, TypeError):
+        gust_value = None
 
+    print('metar.data[0].get("wgst"):', gust_value)  # debug
+
+    if gust_value is not None:
+        try:
+            gustsp = float(gust_value)
+        except ValueError:
+            gustsp = 0.0
+        gustsp = '{0:.1f}'.format(gustsp)
+        dis_unit = ' kt'
+
+        if wind_speed_units == 0:
+            gustsp, dis_unit = knots_to_kmh(gustsp)
+            gustsp = str(round(float(gustsp), 1))
+        elif wind_speed_units == 1:
+            gustsp, dis_unit = knots_to_ms(gustsp)
+            gustsp = str(round(float(gustsp), 1))
+        elif wind_speed_units == 3:
+            gustsp, dis_unit = knots_to_mph(gustsp)
+            gustsp = str(round(float(gustsp), 1))
+        # else default in knots
     else:
         gustsp = 'n/a'
-        
-    print('gustsp:',gustsp,'dis_unit:',dis_unit) # debug
-    return(gustsp,dis_unit)
+
+    print('gustsp:', gustsp, 'dis_unit:', dis_unit)  # debug
+    return (gustsp, dis_unit)
 
 def get_misc(metar): # icaoid,obstime,elev,lat,lon,name = get_misc(metar)
     icaoid = metar.data[0]["icaoId"]   # "ICAO identifier" string
@@ -522,4 +537,5 @@ def decode_rawmessage(airport_name):
     
     return (decoded_airport,decoded_time,decoded_wndir,decoded_wnspd,decoded_wngust,decoded_vis,\
            decoded_alt,decoded_temp,decoded_dew,decoded_cloudlayers,decoded_weather,decoded_rvr)
+
 
